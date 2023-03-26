@@ -1,7 +1,7 @@
 # Restaurant Service System
-___
+
 ## Objectives:
-___
+
 - [Main] Learn and familiarize with Go programming language
 - [Main] Concurrency in practice (with and w/o database features help)
 - [Use]
@@ -18,7 +18,7 @@ ___
 - Design for optimal performance (where to store data and in what form it should be stored)
 
 ## Functional Requirements:
-___
+
 1. User System Functionalities
     - Register / Sign-up
     - Login
@@ -28,7 +28,7 @@ ___
     - 
 
 ## Prerequisites
-___
+
 - Go 1.19.3 or later
 
 ## Entity Relationship Diagram
