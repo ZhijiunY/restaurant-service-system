@@ -16,6 +16,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/gomodule/redigo v1.8.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -36,6 +37,7 @@ require (
 
 require (
 	github.com/GoogleCloudPlatform/cloudsql-proxy v1.33.5
+	github.com/alexedwards/scs/redisstore v0.0.0-20230305153148-62e546ce9d2d
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
