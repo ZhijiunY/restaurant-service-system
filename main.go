@@ -1,13 +1,17 @@
 package main
 
 import (
-	"database/sql"
 	"log"
-	"os"
 	"time"
 
+	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
 	"github.com/gin-gonic/gin"
+
+	// "github.com/glebarez/sqlite"
 	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func main() {
@@ -29,10 +33,12 @@ func main() {
 
 	log.Fatal(router.Run())
 
+	// setup database
 	db := initDB()
 }
 
-func initDB() *sql.DB {
+// init database
+func initDB() *gorm.DB {
 	conn := connectToDB()
 	if conn == nil {
 		log.Panic("can't connect to database")
@@ -40,14 +46,16 @@ func initDB() *sql.DB {
 	return conn
 }
 
-func connectToDB() *sql.DB {
+// connect to the database
+func connectToDB() *gorm.DB {
 	counts := 0
 
-	dsn := os.Getenv("DSN") // 設定環境變數，獲取dsn字串，來自os.Getenv調用環境變數
+	// dsn := os.Getenv("DSN") // 設定環境變數，獲取dsn字串，來自os.Getenv調用環境變數
+	dsn := "gorm.db"
 
 	for {
 		// connection 和 err 來自調用尚不存在的開放資料庫
-		connection, err := openDB(dsn)
+		connection, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 
 		// 確認連接
 		if err != nil {
@@ -69,4 +77,24 @@ func connectToDB() *sql.DB {
 		counts++
 		continue
 	}
+}
+
+// open database
+func openDB(dsn string) (*gorm.DB, error) {
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	err = sqlDB.Ping()
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
