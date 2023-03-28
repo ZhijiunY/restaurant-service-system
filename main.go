@@ -2,16 +2,11 @@ package main
 
 import (
 	"log"
-	"net/http"
-	"os"
 	"sync"
 	"time"
 
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
-	"github.com/alexedwards/scs/redisstore"
-	"github.com/alexedwards/scs/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/gomodule/redigo/redis"
 
 	// "github.com/glebarez/sqlite"
 	"github.com/joho/godotenv"
@@ -34,21 +29,21 @@ func main() {
 	// create waitGroup
 	wg := sync.WaitGroup{}
 
-	// create loggers
-	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	// // create loggers
+	// infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	// errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	// set up the application config
-	app := Config{
-		Session:       session,
-		DB:            db,
-		InfoLog:       infoLog,
-		ErrorLog:      errorLog,
-		Wait:          &wg,
-		Models:        data.New(db),
-		ErrorChan:     make(chan error),
-		ErrorChanDone: make(chan bool),
-	}
+	// // set up the application config
+	// app := Config{
+	// 	Session:       session,
+	// 	DB:            db,
+	// 	InfoLog:       infoLog,
+	// 	ErrorLog:      errorLog,
+	// 	Wait:          &wg,
+	// 	Models:        data.New(db),
+	// 	ErrorChan:     make(chan error),
+	// 	ErrorChanDone: make(chan bool),
+	// }
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -128,29 +123,29 @@ func openDB(dsn string) (*gorm.DB, error) {
 
 // ----------------------------------------------------------------
 
-// Session
-func initSession() *scs.SessionManager {
-	// gob.Register(data.User{})
+// // Session
+// func initSession() *scs.SessionManager {
+// 	// gob.Register(data.User{})
 
-	// set up session
-	session := scs.New()
+// 	// set up session
+// 	session := scs.New()
 
-	session.Store = redisstore.New(initRedis())
-	session.Lifetime = 24 * time.Hour
-	session.Cookie.Persist = true
-	session.Cookie.SameSite = http.SameSiteDefaultMode
-	session.Cookie.Secure = true
+// 	session.Store = redisstore.New(initRedis())
+// 	session.Lifetime = 24 * time.Hour
+// 	session.Cookie.Persist = true
+// 	session.Cookie.SameSite = http.SameSiteDefaultMode
+// 	session.Cookie.Secure = true
 
-	return session
-}
+// 	return session
+// }
 
-// Redis
-func initRedis() *redis.Pool {
-	redisPool := &redis.Pool{
-		MaxIdle: 10, Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", os.Getenv("REDIS"))
-		},
-	}
+// // Redis
+// func initRedis() *redis.Pool {
+// 	redisPool := &redis.Pool{
+// 		MaxIdle: 10, Dial: func() (redis.Conn, error) {
+// 			return redis.Dial("tcp", os.Getenv("REDIS"))
+// 		},
+// 	}
 
-	return redisPool
-}
+// 	return redisPool
+// }

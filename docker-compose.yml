@@ -8,10 +8,8 @@ services:
      ports:
        - "5432:5432"
      restart: always
-     environment:
-       POSTGRES_USER: postgres
-       POSTGRES_PASSWORD: password
-       POSTGRES_DB: restaurant_service
+     env_file:
+       - ./app.env
      volumes:
        - ./db-data/postgres/:/var/lib/postgresql/data/
 
