@@ -2,32 +2,36 @@ package main
 
 import (
 	"log"
-	"sync"
+	"net/http"
+	"os"
 	"time"
 
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
+	"github.com/ZhijiunY/restaurant-service-system/cmd/web/initializers"
+	"github.com/alexedwards/scs/redisstore"
+	"github.com/alexedwards/scs/v2"
 	"github.com/gin-gonic/gin"
-
-	// "github.com/glebarez/sqlite"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
+	"github.com/gomodule/redigo/redis"
 	"gorm.io/gorm"
 )
 
-func main() {
-	err := godotenv.Load()
+var DB *gorm.DB
+
+func init() {
+	config, err := initializers.LoadConfig(".")
 	if err != nil {
-		log.Panic(err)
+		log.Fatal("Could not load environment variables", err)
 	}
 
-	// setup database
-	db := initDB()
+	initializers.ConnectToDB(&config)
+}
 
-	// create sessions to connect to redis
-	session := initSession()
+func main() {
+	// // create sessions to connect to redis
+	// session := initSession()
 
-	// create waitGroup
-	wg := sync.WaitGroup{}
+	// // create waitGroup
+	// wg := sync.WaitGroup{}
 
 	// // create loggers
 	// infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -49,103 +53,34 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	// router.Use(middleware.CorsMiddleware())
-
-	// routes.PublicRoutes(router)
-
-	// router.Use(middleware.Authorization())
-	// routes.PrivateRoutes(router)
-
 	log.Fatal(router.Run())
 }
 
 // ----------------------------------------------------------------
-// init database
-func initDB() *gorm.DB {
-	conn := connectToDB()
-	if conn == nil {
-		log.Panic("can't connect to database")
-	}
-	return conn
+
+// Session
+func initSession() *scs.SessionManager {
+	// gob.Register(data.User{})
+
+	// set up session
+	session := scs.New()
+
+	session.Store = redisstore.New(initRedis())
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteDefaultMode
+	session.Cookie.Secure = true
+
+	return session
 }
 
-// connect to the database
-func connectToDB() *gorm.DB {
-	counts := 0
-
-	dsn := "gorm.db"
-
-	for {
-		// connection 和 err 來自調用尚不存在的開放資料庫
-		// connection, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
-		connection, err := openDB(dsn)
-
-		// 確認連接
-		if err != nil {
-			log.Println("postgres not yet ready...")
-		} else {
-			log.Print("connected to database!")
-			return connection
-		}
-
-		// 如果遇到錯誤，再試十次
-		if counts > 10 {
-			return nil
-		}
-
-		log.Print("Backing off for 1 seconds")
-		time.Sleep(1 * time.Second)
-		// 增加 counts++
-		counts++
-		continue
+// Redis
+func initRedis() *redis.Pool {
+	redisPool := &redis.Pool{
+		MaxIdle: 10, Dial: func() (redis.Conn, error) {
+			return redis.Dial("tcp", os.Getenv("REDIS"))
+		},
 	}
+
+	return redisPool
 }
-
-// open database
-func openDB(dsn string) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-
-	sqlDB, err := db.DB()
-	if err != nil {
-		return nil, err
-	}
-
-	err = sqlDB.Ping()
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
-}
-
-// ----------------------------------------------------------------
-
-// // Session
-// func initSession() *scs.SessionManager {
-// 	// gob.Register(data.User{})
-
-// 	// set up session
-// 	session := scs.New()
-
-// 	session.Store = redisstore.New(initRedis())
-// 	session.Lifetime = 24 * time.Hour
-// 	session.Cookie.Persist = true
-// 	session.Cookie.SameSite = http.SameSiteDefaultMode
-// 	session.Cookie.Secure = true
-
-// 	return session
-// }
-
-// // Redis
-// func initRedis() *redis.Pool {
-// 	redisPool := &redis.Pool{
-// 		MaxIdle: 10, Dial: func() (redis.Conn, error) {
-// 			return redis.Dial("tcp", os.Getenv("REDIS"))
-// 		},
-// 	}
-
-// 	return redisPool
-// }
