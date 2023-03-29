@@ -8,7 +8,6 @@ import (
 
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
 	"github.com/ZhijiunY/restaurant-service-system/cmd/web/initializers"
-	"github.com/ZhijiunY/restaurant-service-system/migrations"
 	"github.com/alexedwards/scs/redisstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/gin-gonic/gin"
@@ -25,15 +24,20 @@ func init() {
 		log.Fatal("Could not load environment variables", err)
 	}
 
-	initializers.ConnectToDB(&config)
+	initializers.ConnectDB(&config)
 }
 
 func main() {
+	config, err := initializers.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Could not load environment variables", err)
+	}
 
+	initializers.ConnectDB(&config)
 	// migrate database
 	// session := initializers.DB.Session(&gorm.Session{})
-	migrations.AutoMigrate()
-	migrations.AddForeignKey()
+	// migrate.AutoMigrate()
+	// migrate.AddForeignKey()
 
 	// // create waitGroup
 	// wg := sync.WaitGroup{}
