@@ -1,95 +1,49 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"os"
-	"time"
-
-	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
-	"github.com/ZhijiunY/restaurant-service-system/cmd/web/initializers"
-	"github.com/alexedwards/scs/redisstore"
-	"github.com/alexedwards/scs/v2"
+	"github.com/ZhijiunY/restaurant-service-system/database"
+	"github.com/ZhijiunY/restaurant-service-system/routes"
 	"github.com/gin-gonic/gin"
-	"github.com/gomodule/redigo/redis"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"gorm.io/gorm"
+	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/lib/pq"
 )
 
-var DB *gorm.DB
+// var db *gorm.DB
 
-func init() {
-	config, err := initializers.LoadConfig(".")
-	if err != nil {
-		log.Fatal("Could not load environment variables", err)
-	}
+// func init() {
+// 	err := godotenv.Load()
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
+// 	dbHost := os.Getenv("DB_HOST")
+// 	dbPort := os.Getenv("DB_PORT")
+// 	dbUser := os.Getenv("DB_USER")
+// 	dbName := os.Getenv("DB_NAME")
+// 	dbPassword := os.Getenv("DB_PASSWORD")
 
-	initializers.ConnectDB(&config)
-}
+// 	dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUser, dbName, dbPassword)
+
+// 	// var err error
+// 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	err = db.Ping()
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	log.Println("Connected to PostgreSQL database")
+// }
 
 func main() {
-	config, err := initializers.LoadConfig(".")
-	if err != nil {
-		log.Fatal("Could not load environment variables", err)
-	}
-
-	initializers.ConnectDB(&config)
-	// migrate database
-	// session := initializers.DB.Session(&gorm.Session{})
-	// migrate.AutoMigrate()
-	// migrate.AddForeignKey()
-
-	// // create waitGroup
-	// wg := sync.WaitGroup{}
-
-	// // create loggers
-	// infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-	// errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-
-	// // set up the application config
-	// app := Config{
-	// 	Session:       session,
-	// 	DB:            db,
-	// 	InfoLog:       infoLog,
-	// 	ErrorLog:      errorLog,
-	// 	Wait:          &wg,
-	// 	Models:        data.New(db),
-	// 	ErrorChan:     make(chan error),
-	// 	ErrorChanDone: make(chan bool),
-	// }
-
 	router := gin.New()
-	router.Use(gin.Logger())
-	router.Use(gin.Recovery())
 
-	log.Fatal(router.Run())
-}
+	// connect to PostgreSQL database
+	database.Connect()
 
-// ----------------------------------------------------------------
+	routes.UserRoutes(router)
 
-// Session
-func initSession() *scs.SessionManager {
-	// gob.Register(data.User{})
-
-	// set up session
-	session := scs.New()
-
-	session.Store = redisstore.New(initRedis())
-	session.Lifetime = 24 * time.Hour
-	session.Cookie.Persist = true
-	session.Cookie.SameSite = http.SameSiteDefaultMode
-	session.Cookie.Secure = true
-
-	return session
-}
-
-// Redis
-func initRedis() *redis.Pool {
-	redisPool := &redis.Pool{
-		MaxIdle: 10, Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", os.Getenv("REDIS"))
-		},
-	}
-
-	return redisPool
+	router.Run(":8080")
 }
