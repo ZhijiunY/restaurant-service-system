@@ -6,7 +6,7 @@ import (
 )
 
 func UserRoutes(router *gin.Engine) {
-	router.GET("/", controllers.GetUsers)
+	router.GET("/index.tmpl", controllers.GetUsers)
 	router.POST("/", controllers.CreateUsers)
 	router.DELETE("/:id", controllers.DeleteUsers)
 	router.PUT("/:id", controllers.UpdateUsers)

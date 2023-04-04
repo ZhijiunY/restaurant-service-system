@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/ZhijiunY/restaurant-service-system/database"
 	"github.com/ZhijiunY/restaurant-service-system/routes"
-	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 )
@@ -38,13 +37,11 @@ import (
 // }
 
 func main() {
-	router := gin.New()
-
-	router.LoadHTMLGlob("./templates/*")
 	// connect to PostgreSQL database
 	database.Connect()
 
-	routes.UserRoutes(router)
+	// Initialize Router
+	router := routes.InitRouter()
 
 	router.Run(":8080")
 }
