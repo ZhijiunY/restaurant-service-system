@@ -1,4 +1,4 @@
-package main
+package migrate
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ import (
 
 func Migrate() {
 	database.DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-	database.DB.AutoMigrate(&models.User{}, &models.Menus{}, &models.Table{}, &models.Order{}, &models.OrderDetails{})
+	database.DB.AutoMigrate(&models.User{}, &models.Menus{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
 	fmt.Println("Migration complete")
 
 	// initializers.DB.Model(&models.User{}).

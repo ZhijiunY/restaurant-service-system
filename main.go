@@ -40,6 +40,7 @@ import (
 func main() {
 	router := gin.New()
 
+	router.LoadHTMLGlob("./templates/*")
 	// connect to PostgreSQL database
 	database.Connect()
 

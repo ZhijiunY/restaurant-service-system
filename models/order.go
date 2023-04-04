@@ -13,7 +13,7 @@ type Order struct {
 	Order_Date time.Time `json:"order_date" validate:"required"`
 	Created_at time.Time `json:"created_at"`
 	Updated_at time.Time `json:"updated_at"`
-	Order_id   string    `json:"order_id"`
+	User_id    *string   `json:"user_id" validate:"required"`
 	Table_id   *string   `json:"table_id" validate:"required"`
 }
 

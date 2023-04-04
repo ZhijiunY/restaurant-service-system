@@ -7,12 +7,7 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
-
-	// find all users
-	users := []models.User{}
-	database.DB.Find(&users)
-
-	c.JSON(200, &users)
+	c.HTML(200, "index.tmpl")
 }
 
 func CreateUsers(c *gin.Context) {

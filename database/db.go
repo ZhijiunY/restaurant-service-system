@@ -14,7 +14,8 @@ func Connect() {
 		panic(err)
 	}
 	DB = db
-	DB.AutoMigrate(&models.User{}, &models.Menus{}, &models.Table{}, &models.Order{}, &models.OrderDetails{})
+
+	DB.AutoMigrate(&models.User{}, &models.Menus{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
 
 	// DB.Migrator().CreateConstraint(&models.User{}, "Order")
 	// DB.Migrator().CreateConstraint(&models.User{}, "fk_users_order")

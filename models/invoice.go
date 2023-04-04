@@ -9,8 +9,7 @@ import (
 
 type Invoice struct {
 	gorm.Model
-	ID               uuid.UUID `bson:"_id"`
-	Invoice_id       string    `json:"invoice_id"`
+	ID               uuid.UUID `bson:"_id" primaryKey:"_id"`
 	Order_id         string    `json:"order_id"`
 	Payment_method   *string   `json:"payment_method" validate:"eq=CARD|eq=CASH|eq="`
 	Payment_status   *string   `json:"payment_status" validate:"required,eq=PENDING|eq=PAID"`

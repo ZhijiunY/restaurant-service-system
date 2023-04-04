@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type OrderDetails struct {
+type OrderItem struct {
 	gorm.Model
 	ID            uuid.UUID `bson:"_id"`
 	Quantity      *string   `json:"quantity" validate:"required,eq=S|eq=M|eq=L"`
