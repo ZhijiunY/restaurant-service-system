@@ -1,9 +1,6 @@
 package routes
 
 import (
-	"github.com/ZhijiunY/restaurant-service-system/controllers"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,26 +14,27 @@ func InitRouter() *gin.Engine {
 	router.Static("/static", "./static")
 
 	UserRoutes(router)
+	ActionRoutes(router)
 
-	// set session middleware
-	store := cookie.NewStore([]byte("loginuser"))
-	router.Use(sessions.Sessions("mysession", store))
+	// // set session middleware
+	// store := cookie.NewStore([]byte("loginuser"))
+	// router.Use(sessions.Sessions("mysession", store))
 
-	{
-		// register
-		router.GET("/signup.tmpl", controllers.RegisterGet)
-		router.POST("/signup.tmpl", controllers.RegisterPost)
+	// {
+	// 	// register
+	// 	router.GET("/signup.tmpl", controllers.RegisterGet)
+	// 	router.POST("/signup.tmpl", controllers.RegisterPost)
 
-		// login
-		router.GET("/login", controllers.LoginGet)
-		router.POST("/login", controllers.LoginPost)
+	// 	// login
+	// 	router.GET("/login", controllers.LoginGet)
+	// 	router.POST("/login", controllers.LoginPost)
 
-		// home
-		router.GET("/", controllers.HomeGet)
+	// 	// home
+	// 	router.GET("/home.tmpl", controllers.HomeGet)
 
-		// exit
-		router.GET("/exit", controllers.ExitGet)
+	// 	// exit
+	// 	router.GET("/exit", controllers.ExitGet)
 
-	}
+	// }
 	return router
 }

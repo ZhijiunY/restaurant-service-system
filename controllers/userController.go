@@ -1,17 +1,15 @@
 package controllers
 
 import (
-	"net/http"
-
 	"github.com/ZhijiunY/restaurant-service-system/database"
 	"github.com/ZhijiunY/restaurant-service-system/models"
 	"github.com/gin-gonic/gin"
 )
 
 func GetUsers(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"title": "Main website",
-	})
+	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
+	// 	"title": "Main website",
+	// })
 }
 
 func CreateUsers(c *gin.Context) {
