@@ -5,10 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ActionRoutes(router *gin.Engine) {
+func LayoutRoutes(router *gin.Engine) {
 	router.GET("/home", controllers.GetHome)
-	router.GET("/about", controllers.GetAbout)
 	router.GET("/menu", controllers.GetMenu)
-	router.GET("/login", controllers.GetLogin)
-	router.GET("/signup", controllers.GetSignup)
+	router.GET("/manager", controllers.GetManager)
 }

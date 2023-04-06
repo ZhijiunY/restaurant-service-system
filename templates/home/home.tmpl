@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{template "head" .}}
+  <body>
+    <!-- Header -->
+    <header class="header" id="home">
+      <!-- Navigation -->
+      {{template "navigation" .}}
+      <!-- Hero -->
+      <div class="hero" data-aos="fade-down" data-aos-duration="2000">
+        <div class="content">
+          <h1>Eat in a healthier way</h1>
+          <p>
+            Eating in a healthier way is about making conscious choices 
+            that nourish your body with essential nutrients, while avoiding 
+            excessive amounts of unhealthy foods.
+          </p>
+          <a href="/menu" data-aos="flip-down" data-aos-duration="2000">OUR MENU</a>
+        </div>
+      </div>
+    </header>
+    <!-- Main -->
+
+      <!-- About -->
+    <section class="section" id="about">
+      <div class="container about">
+        <div
+          class="left"
+          data-aos="fade-down"
+          data-aos-delay="70"
+          data-aos-duration="2000"
+        >
+          <div class="title">
+            <h1>About Us</h1>
+          </div>
+          <p>
+            HealthyFood is a restaurant dedicated to providing 
+            healthy, delicious, and convenient meals. Their meals follow the 
+            principles of balanced nutrition, low oil, low salt, and high fiber, 
+            and are made with fresh ingredients, allowing customers to easily 
+            enjoy healthy meals in their busy lives.
+          </p>
+          <p>
+            At the HealthyFood, customers can choose from a 
+            variety of main dishes, side dishes, and grains, such as braised 
+            meat, steamed fish, pan-fried chicken breast, green curry vegetables, 
+            cold sesame black fungus, sesame bok choy, black rice, brown rice, 
+            and more. The restaurant also offers different types of sauces and 
+            salad dressings for customers to choose from, allowing them to 
+            customize according to their taste.
+
+          </p>
+        </div>
+        <div class="right" data-aos="fade-left" data-aos-duration="2000">
+          <img src="/static/img/pic5.jpg" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Custom Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="./static/js/index.js"></script>
+
+    {{template "footer" .}}
+  </body>
+</html>

@@ -1,0 +1,32 @@
+{{define "base"}}
+  <!DOCTYPE html>
+  <html lang="en">
+
+    {{template "head" .}}
+
+    <body>
+      <!-- Header -->
+      <header class="header" id="home">
+
+        <!-- Navigation -->
+        {{template "navigation" .}}
+        
+      </header>
+      
+      <!-- Main -->
+
+      {{block "content" .}}
+
+      {{end}}
+
+
+      <!-- Custom Script -->
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+      <script src="./static/js/index.js"></script>
+
+      <!-- Footer -->
+      {{template "footer" .}}
+
+    </body>
+  </html>
+{{end}}

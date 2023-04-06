@@ -1,45 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- Favicon -->
-        <!-- Font Awesome -->
-        <link 
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
-        />
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-        <!-- Custom StyleSheet -->
-        <link rel="stylesheet" href="/static/css/styles.css"/>
-        <title>Signup page</title>
-    </head>
+    {{template "head" .}}
 <body>
     <!-- Header -->
     <header class="header" id="home">
       <!-- Navigation -->
-      <nav class="nav">
-        <div class="navigation container">
-          <div class="logo">
-            <h1><span>! </span>HealthyFood<span> !</span></h1>
-          </div>
-
-
-          <div class="menu">
-            <div class="top-nav">
-              <div class="logo">
-                <h1>FastFood<span>.</span></h1>
-              </div>
-              <div class="close">
-                <i class="fas fa-times"></i>
-              </div>
-            </div>
-
-          </div>
-
-
-        </div>
-      </nav>
+      {{template "navigation"}}
 
     <!-- SignUpBox -->
     <div class="loginBox">
@@ -68,10 +34,10 @@
                     <li class="login-li"><a href="#" class="google"><i class="fa fa-google"></i></a></li>
                 </ul>
 
-            <h4>Already have an account ! <a href="/static/templates/login.tmpl" class="txt2"> Login</a></h4>
+            <h4>Already have an account ! <a href="/login" class="txt2"> Login</a></h4>
         </form>
     </div>
     </header>
-
+    {{template "footer" .}}
 </body>
 </html>

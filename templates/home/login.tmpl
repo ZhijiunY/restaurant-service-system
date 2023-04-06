@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+      {{template "head" .}}
+<body>
+    <!-- Header -->
+    <header class="header" id="home">
+        <!-- Navigation -->
+        {{template "navigation" .}}
+        
+        <!-- LoginBox -->
+        <div class="loginBox">
+            <h2>Log In Here</h2>
+            <form>
+                <p>Email</p>
+                <input type="text" name="" placeholder="Enter Email">
+                <p>Password</p>
+                <input type="password" name="" placeholder="••••••••">
+                
+                <input type="submit" name="" value="LOGIN">
+                <hr />
+
+                <h5>Sign Up Using</h5>
+                    <ul class="login-ul">
+                            <li class="login-li"><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
+                            <li class="login-li"><a href="#" class="line"><i class="fa fa-line"></i></a></li>
+                            <li class="login-li"><a href="#" class="google"><i class="fa fa-google"></i></a></li>
+                            <li class="login-li"><a href="#" class="phoneNumber"><i class="fa fa-phoneNumber"></i></a></li>
+                    </ul>
+                
+                <h4>Create account? <a href="/signup" class="txt2"> Register</a></h4>
+            </form>
+        </div>
+    </header>
+    {{template "footer" .}}
+</body>
+</html>

@@ -10,11 +10,12 @@ func InitRouter() *gin.Engine {
 	router.Use(gin.Recovery())
 
 	// connect to template
-	router.LoadHTMLGlob("./static/templates/*")
+	router.LoadHTMLGlob("./templates/**/*")
 	router.Static("/static", "./static")
 
 	UserRoutes(router)
-	ActionRoutes(router)
+	LayoutRoutes(router)
+	SessionRoutes(router)
 
 	// // set session middleware
 	// store := cookie.NewStore([]byte("loginuser"))
