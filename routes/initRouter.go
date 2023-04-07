@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/ZhijiunY/restaurant-service-system/controllers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,32 +11,33 @@ func InitRouter() *gin.Engine {
 	router.Use(gin.Recovery())
 
 	// connect to template
+	// Static file
 	router.LoadHTMLGlob("./templates/**/*")
 	router.Static("/static", "./static")
 
-	UserRoutes(router)
-	LayoutRoutes(router)
-	SessionRoutes(router)
+	// Grouping routes
+	MainRoutes := router.Group("/")
+	{
+		MainRoutes.GET("/", controllers.GetHome)
+		MainRoutes.GET("/menu", controllers.GetMenu)
+		MainRoutes.GET("/manager", controllers.GetManager)
 
-	// // set session middleware
-	// store := cookie.NewStore([]byte("loginuser"))
-	// router.Use(sessions.Sessions("mysession", store))
+	}
 
-	// {
-	// 	// register
-	// 	router.GET("/signup.tmpl", controllers.RegisterGet)
-	// 	router.POST("/signup.tmpl", controllers.RegisterPost)
+	SessionRoutes := router.Group("/")
+	{
+		SessionRoutes.GET("/login", controllers.LoginPage)
+		SessionRoutes.GET("/signup", controllers.SignupPage)
+		// SessionRoutes.POST("login", controllers.Login)
+		// SessionRoutes.POST("signup", controllers.Signup)
+	}
 
-	// 	// login
-	// 	router.GET("/login", controllers.LoginGet)
-	// 	router.POST("/login", controllers.LoginPost)
+	UserRoutes := router.Group("/users")
+	{
+		UserRoutes.POST("/", controllers.CreateUsers)
+		UserRoutes.PUT("/:id", controllers.UpdateUsers)
+		UserRoutes.DELETE("/:id", controllers.DeleteUsers)
+	}
 
-	// 	// home
-	// 	router.GET("/home.tmpl", controllers.HomeGet)
-
-	// 	// exit
-	// 	router.GET("/exit", controllers.ExitGet)
-
-	// }
 	return router
 }

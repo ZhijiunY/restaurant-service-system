@@ -6,14 +6,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Login(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.tmpl", gin.H{
-		"title": "Login website",
-	})
+func LoginPage(c *gin.Context) {
+	c.HTML(
+		http.StatusOK,
+		"login.tmpl",
+		gin.H{},
+	)
+}
+
+func SignupPage(c *gin.Context) {
+	c.HTML(
+		http.StatusOK,
+		"signup.tmpl",
+		gin.H{},
+	)
 }
 
 func Signup(c *gin.Context) {
-	c.HTML(http.StatusOK, "signup.tmpl", gin.H{
-		"title": "Signup website",
-	})
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	confirmPassword := c.PostForm("confirm_password")
 }

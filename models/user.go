@@ -9,11 +9,11 @@ import (
 
 type User struct {
 	gorm.Model
-	ID            uuid.UUID `bson:"_id"`
-	First_name    *string   `json:"first_name" validate:"required,min=2,max=100"`
-	Last_name     *string   `json:"last_name" validate:"required,min=2,max=100"`
-	Password      *string   `json:"Password" validate:"required,min=6"`
-	Email         *string   `json:"email" validate:"email,required"`
+	ID       uuid.UUID `bson:"_id"`
+	UserName *string   `json:"user_name" validate:"required,min=2,max=100"`
+	Password *string   `json:"password" validate:"required,min=6"`
+	Email    *string   `json:"email" validate:"email,required"`
+
 	Token         *string   `json:"token"`
 	Refresh_Token *string   `json:"refresh_token"`
 	Created_at    time.Time `json:"created_at"`
