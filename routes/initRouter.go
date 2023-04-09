@@ -2,13 +2,15 @@ package routes
 
 import (
 	"github.com/ZhijiunY/restaurant-service-system/controllers"
+	"github.com/ZhijiunY/restaurant-service-system/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
 	router := gin.New()
-	router.Use(gin.Logger())
+	router.Use(middleware.Logger())
 	router.Use(gin.Recovery())
+	router.Use(gin.BasicAuth(gin.Accounts{"Simba": "1234"}))
 
 	// connect to template
 	// Static file
