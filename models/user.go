@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -13,12 +11,12 @@ type User struct {
 	UserName *string   `json:"user_name" validate:"required,min=2,max=100"`
 	Password *string   `json:"password" validate:"required,min=6"`
 	Email    *string   `json:"email" validate:"email,required"`
-
-	Token         *string   `json:"token"`
-	Refresh_Token *string   `json:"refresh_token"`
-	Created_at    time.Time `json:"created_at"`
-	Updated_at    time.Time `json:"updated_at"`
 }
+
+//  Token         *string   `json:"token"`
+// 	Refresh_Token *string   `json:"refresh_token"`
+// 	Created_at    time.Time `json:"created_at"`
+// 	Updated_at    time.Time `json:"updated_at"`
 
 // type User struct {
 // 	gorm.Model

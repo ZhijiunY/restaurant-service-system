@@ -51,4 +51,8 @@ links.map(link => {
   });
 });
 
+// document.querySelector('.loginBox input[type="submit"]').addEventListener('click', function() {
+//   window.location.href = '/login';
+// });
+
 AOS.init();

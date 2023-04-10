@@ -20,7 +20,7 @@ func GetMenu(c *gin.Context) {
 }
 
 func GetManager(c *gin.Context) {
-	c.HTML(http.StatusOK, "manager.tmpl", gin.H{
+	c.HTML(http.StatusOK, "order.tmpl", gin.H{
 		"title": "Manager website",
 	})
 }

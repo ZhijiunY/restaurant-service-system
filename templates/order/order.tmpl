@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    {{template "head" .}}
+<body>
+        {{template "navigation" .}}
+	<div id="header">
+			<!-- <img class="logo_img" alt="" src="/static/img/logo.gif" > -->
+			<span class="wel_word">線上訂餐</span>
+			{{if .IsLogin}}
+			<div>
+				<span>歡迎<span class="um_span">{{.Username}}</span>歡迎光臨HealthyFood</span>
+				<a href="/getCartInfo">購物車</a>
+				<a href="/getMyOrder">我的餐點</a>
+				<a href="/logout">登出</a>&nbsp;&nbsp;
+				<a href="/main">返回</a>
+			</div>
+			{{else}}
+			<div>
+				<a href="pages/user/login.html">登入</a> | 
+				<a href="pages/user/regist.html">註冊</a> &nbsp;&nbsp;
+				<a href="/pages/manager/manager.html">後台管理</a>
+			</div>
+			{{end}}
+	</div>
+	
+	<div id="main">
+		<div id="book">
+			<div class="book_cond">
+			<form action="/getPageBooksByPrice" method="POST">
+				價格：<input type="text" name="min"> 元 - 
+					<input type="text" name="max"> 元 <button>查詢</button>
+			</form>			
+			</div>
+			<div style="text-align: center">
+				<!-- <span>您的购物车中有3件商品</span> -->
+				<div>
+					<span style="color: red" id="bookMsg"></span></span>
+				</div>
+			</div>
+
+			{{range .Books}}
+			<div class="b_list">
+				<div class="img_div">
+					<img class="book_img" alt="" src="{{.ImgPath}}" />
+				</div>
+				<div class="book_info">
+					<div class="book_name">
+						<span class="sp1">餐點:</span>
+						<span class="sp2">{{.Title}}</span>
+					</div>
+					<div class="book_author">
+						<span class="sp1">廚師:</span>
+						<span class="sp2">{{.Author}}</span>
+					</div>
+					<div class="book_price">
+						<span class="sp1">價格:</span>
+						<span class="sp2">＄{{.Price}}</span>
+					</div>
+					<div class="book_sales">
+						<span class="sp1">銷量:</span>
+						<span class="sp2">{{.Sales}}</span>
+					</div>
+					<div class="book_amount">
+						<span class="sp1">庫存:</span>
+						<span class="sp2">{{.Stock}}</span>
+					</div>
+					<div class="book_add">
+						{{if .Stock}}
+						<button id="{{.ID}}" class="addBook2Cart">加入購物車 </button>
+						<!-- <input type="hidden" value="{{.ID}}"/> -->
+						{{else}}
+						<span style="color:red">小二拼命补货中...</span>
+						{{end}}
+					</div>
+				</div>
+			</div>
+			{{end}}
+			
+		</div>
+	</div>
+	
+	{{template "footer" .}}
+</body>
+</html>

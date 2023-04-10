@@ -22,7 +22,7 @@ func InitRouter() *gin.Engine {
 	{
 		MainRoutes.GET("/", controllers.GetHome)
 		MainRoutes.GET("/menu", controllers.GetMenu)
-		MainRoutes.GET("/manager", controllers.GetManager)
+		MainRoutes.GET("/order", controllers.GetManager)
 
 	}
 
@@ -36,6 +36,7 @@ func InitRouter() *gin.Engine {
 
 	UserRoutes := router.Group("/users")
 	{
+		UserRoutes.GET("/", controllers.GetUser)
 		UserRoutes.POST("/", controllers.CreateUsers)
 		UserRoutes.PUT("/:id", controllers.UpdateUsers)
 		UserRoutes.DELETE("/:id", controllers.DeleteUsers)

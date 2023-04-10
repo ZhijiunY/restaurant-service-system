@@ -13,21 +13,39 @@ type UserController struct {
 	DB *gorm.DB
 }
 
-func NewPostController(DB *gorm.DB) UserController {
-	return UserController{DB}
-}
+var user models.User
 
-func GetUsers(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"title": "Main website",
-	})
+// get user
+func GetUser(c *gin.Context) {
+	id := c.Param("id")
+	// 使用GORM查詢用户
+	if err := database.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+	c.JSON(http.StatusOK, user)
 }
 
 func CreateUsers(c *gin.Context) {
-	var user models.User
-	c.BindJSON(&user)
-	database.DB.Create(&user)
-	c.JSON(200, &user)
+
+	user := models.User{
+		Model:    gorm.Model{},
+		ID:       "1",
+		UserName: Simba,
+		Password: 123456,
+		Email:    "simba@gmail.com",
+	}
+
+	result := database.DB.Create(&user)
+
+	users := models.User{}
+	err := c.BindJSON(&users)
+	if err != nil {
+		c.String(400, "Error:%s", err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, users)
+
 }
 
 func DeleteUsers(c *gin.Context) {
@@ -45,6 +63,6 @@ func UpdateUsers(c *gin.Context) {
 
 }
 
-func ChackUserPassword(c *gin.Context) {
+// func ChackUserPassword(c *gin.Context) {
 
-}
+// }
