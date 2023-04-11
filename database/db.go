@@ -15,7 +15,10 @@ func Connect() {
 	}
 	DB = db
 
-	DB.AutoMigrate(&models.User{}, &models.Menus{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
+	err = DB.AutoMigrate(&models.User{}, &models.Menu{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
+	if err != nil {
+		panic("Failed to create tables!")
+	}
 
 	// DB.Migrator().CreateConstraint(&models.User{}, "Order")
 	// DB.Migrator().CreateConstraint(&models.User{}, "fk_users_order")

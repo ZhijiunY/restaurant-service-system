@@ -1,17 +1,29 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	ID       uuid.UUID `bson:"_id"`
-	UserName *string   `json:"user_name" validate:"required,min=2,max=100"`
-	Password *string   `json:"password" validate:"required,min=6"`
-	Email    *string   `json:"email" validate:"email,required"`
+	ID          uuid.UUID `gorm:"primaryKey"`
+	Name        string    `gorm:"not null"`
+	PhoneNumber string    `gorm:"not null"`
+	Email       string    `gorm:"not null"`
+	CreatedAt   time.Time `gorm:"not null"`
+	UpdatedAt   time.Time `gorm:"not null"`
 }
+
+// type User struct {
+// 	gorm.Model
+// 	ID       uuid.UUID `bson:"_id"`
+// 	UserName *string   `json:"user_name" validate:"required,min=2,max=100"`
+// 	Password *string   `json:"password" validate:"required,min=6"`
+// 	Email    *string   `json:"email" validate:"email,required"`
+// }
 
 //  Token         *string   `json:"token"`
 // 	Refresh_Token *string   `json:"refresh_token"`

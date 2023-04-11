@@ -7,18 +7,9 @@ import (
 	"github.com/ZhijiunY/restaurant-service-system/models"
 )
 
-// func init() {
-// 	config, err := initializers.LoadConfig(".")
-// 	if err != nil {
-// 		log.Fatal("Could not load environment variables", err)
-// 	}
-
-// 	initializers.ConnectDB(&config)
-// }
-
 func Migrate() {
 	database.DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-	database.DB.AutoMigrate(&models.User{}, &models.Menus{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
+	database.DB.AutoMigrate(&models.User{}, &models.Menu{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
 	fmt.Println("Migration complete")
 
 	// initializers.DB.Model(&models.User{}).

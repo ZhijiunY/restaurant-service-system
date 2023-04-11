@@ -1,23 +1,31 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type OrderItem struct {
 	gorm.Model
-	ID            uuid.UUID `bson:"_id"`
-	Quantity      *string   `json:"quantity" validate:"required,eq=S|eq=M|eq=L"`
-	Unit_price    *float64  `json:"unit_price" validate:"required"`
-	Created_at    time.Time `json:"created_at"`
-	Updated_at    time.Time `json:"updated_at"`
-	Food_id       *string   `json:"food_id" validate:"required"`
-	Order_item_id string    `json:"order_item_id"`
-	Order_id      string    `json:"order_id" validate:"required"`
+	ID         uuid.UUID `gorm:"primaryKey"`
+	OrderID    uint      `gorm:"not null"`
+	MenuItemID uint      `gorm:"not null"`
+	Quantity   uint      `gorm:"not null"`
+	Order      Order     `gorm:"foreignKey:OrderID"`
+	Menu       Menu      `gorm:"foreignKey:MenuID"`
 }
+
+// type OrderItem struct {
+// 	gorm.Model
+// 	ID            uuid.UUID `bson:"_id"`
+// 	Quantity      *string   `json:"quantity" validate:"required,eq=S|eq=M|eq=L"`
+// 	Unit_price    *float64  `json:"unit_price" validate:"required"`
+// 	Created_at    time.Time `json:"created_at"`
+// 	Updated_at    time.Time `json:"updated_at"`
+// 	Food_id       *string   `json:"food_id" validate:"required"`
+// 	Order_item_id string    `json:"order_item_id"`
+// 	Order_id      string    `json:"order_id" validate:"required"`
+// }
 
 // type OrderDetails struct {
 // 	gorm.Model

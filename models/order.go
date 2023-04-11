@@ -9,12 +9,23 @@ import (
 
 type Order struct {
 	gorm.Model
-	ID         uuid.UUID `bson:"_id"`
-	Created_at time.Time `json:"created_at"`
-	Updated_at time.Time `json:"updated_at"`
-	User_id    *string   `json:"user_id" validate:"required"`
-	Table_id   *string   `json:"table_id" validate:"required"`
+	ID          uuid.UUID `gorm:"primaryKey"`
+	CustomerID  uint      `gorm:"not null"`
+	TableID     uint      `gorm:"not null"`
+	OrderDate   time.Time `gorm:"not null"`
+	TotalAmount float64   `gorm:"not null"`
+	User        User      `gorm:"foreignKey:UserID"`
+	Table       Table     `gorm:"foreignKey:TableID"`
 }
+
+// type Order struct {
+// 	gorm.Model
+// 	ID         uuid.UUID `bson:"_id"`
+// 	Created_at time.Time `json:"created_at"`
+// 	Updated_at time.Time `json:"updated_at"`
+// 	User_id    *string   `json:"user_id" validate:"required"`
+// 	Table_id   *string   `json:"table_id" validate:"required"`
+// }
 
 // type Order struct {
 // 	gorm.Model
