@@ -1,4 +1,4 @@
-package migrate
+package migrations
 
 import (
 	"fmt"
@@ -12,19 +12,17 @@ func Migrate() {
 	database.DB.AutoMigrate(&models.User{}, &models.Menu{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
 	fmt.Println("Migration complete")
 
-	// initializers.DB.Model(&models.User{}).
-	// 	AddForeignKey("table_id", "tables(id)", "CASCADE", "RESTRICT")
-	// fmt.Println("cann't add User{} foreign key")
+	// DB.Migrator().CreateConstraint(&models.User{}, "Order")
+	// DB.Migrator().CreateConstraint(&models.User{}, "fk_users_order")
 
-	// initializers.DB.Model(&models.Order{}).
-	// 	AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT").
-	// 	AddForeignKey("table_id", "tables(id)", "CASCADE", "RESTRICT")
-	// fmt.Println("cann't add Order{} foreign key")
+	// DB.Migrator().CreateConstraint(&models.Table{}, "User")
+	// DB.Migrator().CreateConstraint(&models.Table{}, "fk_table_users")
 
-	// initializers.DB.Model(&models.OrderDetails{}).
-	// 	AddForeignKey("order_id", "orders(id)", "CASCADE", "RESTRICT").
-	// 	AddForeignKey("menu_id", "menus(id)", "CASCADE", "RESTRICT")
-	// fmt.Println("cann't add OrderDetails{} foreign key")
+	// DB.Migrator().CreateConstraint(&models.Order{}, "OrderDetails")
+	// DB.Migrator().CreateConstraint(&models.Order{}, "fk_order_orderDetails")
+
+	// DB.Migrator().CreateConstraint(&models.Menus{}, "OrderDetails")
+	// DB.Migrator().CreateConstraint(&models.Menus{}, "fk_menus_orderDetails")
 
 	// fmt.Println("Foreign Keys created successfully")
 

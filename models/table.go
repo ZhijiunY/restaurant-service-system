@@ -1,30 +1,16 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Table struct {
 	gorm.Model
-	ID              uuid.UUID `gorm:"primaryKey"`
-	SeatingCapacity uint      `gorm:"not null"`
+	ID              uuid.UUID `gorm:"primaryKey" json:"id"`
+	SeatingCapacity uint      `gorm:"not null" json:"capacity"`
+	Created_at      time.Time `json:"created_at"`
+	Updated_at      time.Time `json:"updated_at"`
 }
-
-// type Table struct {
-// 	gorm.Model
-// 	ID           uuid.UUID `bson:"_id"`
-// 	Table_number *int      `json:"table_number" validate:"required"`
-// 	Created_at   time.Time `json:"created_at"`
-// 	Updated_at   time.Time `json:"updated_at"`
-// 	Table_id     string    `json:"table_id"`
-// }
-
-// type Table struct {
-// 	gorm.Model
-// 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
-// 	User        []User
-// 	TableNumber int       `gorm:"size:255"`
-// 	CreatedAt   time.Time `json:"created_at"`
-// 	UpdatedAt   time.Time `json:"updated_at"`
-// }

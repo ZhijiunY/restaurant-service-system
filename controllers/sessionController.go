@@ -7,9 +7,13 @@ import (
 )
 
 func LoginPage(c *gin.Context) {
+	// name := c.Param("name")
 	c.HTML(
-		http.StatusOK, "login.tmpl", gin.H{},
+		http.StatusOK, "login.tmpl", gin.H{
+			"name": "Simba",
+		},
 	)
+
 }
 
 func SignupPage(c *gin.Context) {

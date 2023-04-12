@@ -1,14 +1,14 @@
 package main
 
 import (
-	"io"
 	"log"
-	"os"
 
 	"github.com/ZhijiunY/restaurant-service-system/database"
+	"github.com/ZhijiunY/restaurant-service-system/migrations"
 	"github.com/ZhijiunY/restaurant-service-system/routes"
-	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
+
+	// "github.com/kardianos/govendor/migrate"
 	_ "github.com/lib/pq"
 )
 
@@ -41,14 +41,16 @@ import (
 // 	log.Println("Connected to PostgreSQL database")
 // }
 
-func setupLogging() {
-	f, _ := os.Create("gin.log")
-	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
-}
+// func setupLogging() {
+// 	f, _ := os.Create("gin.log")
+// 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+// }
 
 func main() {
 	// connect to PostgreSQL database
 	database.Connect()
+
+	migrations.Migrate()
 
 	// Initialize Router
 	router := routes.InitRouter()

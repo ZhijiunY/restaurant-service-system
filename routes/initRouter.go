@@ -20,21 +20,21 @@ func InitRouter() *gin.Engine {
 	// Grouping routes
 	MainRoutes := router.Group("/")
 	{
-		MainRoutes.GET("/", controllers.GetHome)
+		MainRoutes.GET("/", controllers.GetIndex)
 		MainRoutes.GET("/menu", controllers.GetMenu)
 		MainRoutes.GET("/order", controllers.GetManager)
 
 	}
 
-	SessionRoutes := router.Group("/")
+	AuthRoutes := router.Group("/user", auth)
 	{
-		SessionRoutes.GET("/login", controllers.LoginPage)
-		SessionRoutes.GET("/signup", controllers.SignupPage)
+		AuthRoutes.GET("/login", controllers.LoginPage)
+		AuthRoutes.GET("/signup", controllers.SignupPage)
 		// SessionRoutes.POST("login", controllers.Login)
 		// SessionRoutes.POST("signup", controllers.Signup)
 	}
 
-	UserRoutes := router.Group("/users")
+	UserRoutes := router.Group("/user")
 	{
 		UserRoutes.GET("/", controllers.GetUser)
 		UserRoutes.POST("/", controllers.CreateUsers)
