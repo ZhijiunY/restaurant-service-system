@@ -5,8 +5,9 @@
 - [Main] Learn and familiarize with Go programming language
 - [Main] Concurrency in practice (with and w/o database features help)
 - [Use]
-    - Framework: Gin-Gonic
+    - Framework: Gin-Gonic, Gorm
     - Database: postgresql
+    - Catch: Redis
     - Ｃaching systemr: edis
     - Container: docker
 
@@ -22,7 +23,7 @@
 1. User System Functionalities
     - Register / Sign-up
     - Login
-    - Session
+    - Session, Cookie
     - 
 2. Backend Management Functionalities
     - 
