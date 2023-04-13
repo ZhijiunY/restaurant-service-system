@@ -1,8 +1,10 @@
 package controllers
 
 import (
-	"github.com/ZhijiunY/restaurant-service-system/database"
+	"net/http"
+
 	"github.com/ZhijiunY/restaurant-service-system/models"
+	"github.com/ZhijiunY/restaurant-service-system/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -11,53 +13,68 @@ type UserController struct {
 	DB *gorm.DB
 }
 
-var user models.User
+// var user models.User
 
 // get user
 func GetUser(c *gin.Context) {
-	// id := c.Param("id")
-	// // 使用GORM查詢用户
-	// if err := database.DB.First(&user, id).Error; err != nil {
+	// db := utils.DB
+
+	// // 从URL参数中获取用户ID
+	// userID := c.Param("id")
+
+	// // 在数据库中查找指定ID的用户
+	// if err := db.Where("id = ?", userID).First(&user).Error; err != nil {
 	// 	c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 	// 	return
 	// }
+
 	// c.JSON(http.StatusOK, user)
+
+	var user models.User
+	result := utils.DB.Take(&user).Error //开头就写最简单的，获取一条记录，不指定排序
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 1,
+		"data": result,
+	})
 }
 
-func CreateUsers(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 
-	// user := models.User{
-	// 	Model:    gorm.Model{},
-	// 	ID:       "1",
-	// 	UserName: Simba,
-	// 	Password: 123456,
-	// 	Email:    "simba@gmail.com",
+	// users := models.User{
+	// 	Model:      gorm.Model{},
+	// 	ID:         user.ID,
+	// 	Name:       "Simba",
+	// 	Password:   123456,
+	// 	Email:      "simba@gmail.com",
+	// 	Created_at: time.Time{},
+	// 	Updated_at: time.Time{},
 	// }
 
-	// result := database.DB.Create(&user)
-
-	// users := models.User{}
-	// err := c.BindJSON(&users)
-	// if err != nil {
-	// 	c.String(400, "Error:%s", err.Error())
+	// result := utils.DB.Create(&user)
+	// if result.Error != nil {
+	// 	// 如果出現錯誤，進行相應處理
+	// 	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 	// 	return
 	// }
+
+	// if err := c.BindJSON(&users); err != nil {
+	// 	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 	return
+	// }
+
 	// c.JSON(http.StatusOK, users)
 
 }
 
-func DeleteUsers(c *gin.Context) {
-	var user models.User
-	database.DB.Where("id = ?", c.Param("id")).Delete(&user)
-	c.JSON(200, &user)
+func DeleteUser(c *gin.Context) {
+	// var user models.User
+	// utils.DB.Where("id = ?", c.Param("id")).Delete(&user)
+	// c.JSON(200, &user)
 }
 
-func UpdateUsers(c *gin.Context) {
-	var user models.User
-	database.DB.Where("id = ?", c.Param("id")).First(&user)
-	c.BindJSON(&user)
-	database.DB.Save(&user)
-	c.JSON(200, &user)
+func UpdateUser(c *gin.Context) {
+	// SON(200, &user)
 
 }
 

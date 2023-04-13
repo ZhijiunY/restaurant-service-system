@@ -26,7 +26,7 @@ func InitRouter() *gin.Engine {
 
 	}
 
-	AuthRoutes := router.Group("/user", auth)
+	AuthRoutes := router.Group("/")
 	{
 		AuthRoutes.GET("/login", controllers.LoginPage)
 		AuthRoutes.GET("/signup", controllers.SignupPage)
@@ -37,9 +37,9 @@ func InitRouter() *gin.Engine {
 	UserRoutes := router.Group("/user")
 	{
 		UserRoutes.GET("/", controllers.GetUser)
-		UserRoutes.POST("/", controllers.CreateUsers)
-		UserRoutes.PUT("/:id", controllers.UpdateUsers)
-		UserRoutes.DELETE("/:id", controllers.DeleteUsers)
+		UserRoutes.POST("/", controllers.CreateUser)
+		UserRoutes.PUT("/:id", controllers.UpdateUser)
+		UserRoutes.DELETE("/:id", controllers.DeleteUser)
 	}
 
 	return router
