@@ -60,6 +60,7 @@ func Logout(c *gin.Context) {
 func Signup(c *gin.Context) {
 	var user models.User
 	user.Name = c.Request.FormValue("name")
+	user.Password = c.Request.FormValue("password")
 	user.Email = c.Request.FormValue("email")
 
 	if hasSession := middleware.HasSession(c); hasSession {
@@ -86,6 +87,14 @@ func Signup(c *gin.Context) {
 	middleware.SaveAuthSession(c, user.ID)
 
 	c.String(200, "注册成功")
+}
+
+func Me(c *gin.Context) {
+	currentUser := c.MustGet("userId").(uint)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 1,
+		"data": currentUser,
+	})
 }
 
 // func Signup(c *gin.Context) {

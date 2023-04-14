@@ -13,6 +13,9 @@ import (
 	"github.com/google/uuid"
 )
 
+var Secret = []byte("secret")
+
+// const Userkey = "user"
 const User = "user_id"
 
 // Save session using cookies
