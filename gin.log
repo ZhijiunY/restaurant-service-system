@@ -3,35 +3,39 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (21): 
-	- 
-	- navigation
-	- index.tmpl
-	- content
-	- head
-	- navigation.tmpl
+	- home
 	- menu.tmpl
-	- header.tmpl
-	- header
 	- order.tmpl
+	- index.tmpl
 	- login.tmpl
 	- base.tmpl
+	- navigation
+	- content
 	- base
-	- footer
 	- head.tmpl
+	- header
 	- navlogin
+	- 
+	- full.tmpl
+	- head
+	- header.tmpl
+	- navigation.tmpl
+	- navlogin.tmpl
 	- signup.tmpl
 	- footer.tmpl
-	- full.tmpl
-	- home
-	- navlogin.tmpl
+	- footer
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
 [GIN-debug] GET    /                         --> github.com/ZhijiunY/restaurant-service-system/controllers.GetIndex (4 handlers)
 [GIN-debug] GET    /menu                     --> github.com/ZhijiunY/restaurant-service-system/controllers.GetMenu (4 handlers)
 [GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.GetManager (4 handlers)
-[GIN-debug] GET    /login                    --> github.com/ZhijiunY/restaurant-service-system/controllers.LoginPage (4 handlers)
-[GIN-debug] GET    /signup                   --> github.com/ZhijiunY/restaurant-service-system/controllers.SignupPage (4 handlers)
+[GIN-debug] GET    /user/login               --> github.com/ZhijiunY/restaurant-service-system/controllers.LoginPage (4 handlers)
+[GIN-debug] GET    /user/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.SignupPage (4 handlers)
+[GIN-debug] POST   /user/login               --> github.com/ZhijiunY/restaurant-service-system/controllers.Login (4 handlers)
+[GIN-debug] POST   /user/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.Signup (4 handlers)
+[GIN-debug] GET    /user/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+[GIN-debug] HEAD   /user/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
 [GIN-debug] GET    /user/                    --> github.com/ZhijiunY/restaurant-service-system/controllers.GetUser (4 handlers)
 [GIN-debug] POST   /user/                    --> github.com/ZhijiunY/restaurant-service-system/controllers.CreateUser (4 handlers)
 [GIN-debug] PUT    /user/:id                 --> github.com/ZhijiunY/restaurant-service-system/controllers.UpdateUser (4 handlers)
@@ -39,4 +43,10 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2023-04-13 23:08:51.18035 +0800 CST m=+5.133895383] GET /user/ 200  
+::1 - [2023-04-14 15:12:54.711595 +0800 CST m=+3.555518902] GET / 200  
+::1 - [2023-04-14 15:12:57.236246 +0800 CST m=+6.080169816] GET /user/login 200  
+::1 - [2023-04-14 15:12:58.942121 +0800 CST m=+7.786044253] GET /user/signup 200  
+::1 - [2023-04-14 15:13:00.637272 +0800 CST m=+9.481195415] GET /user/login 200  
+::1 - [2023-04-14 15:13:02.78855 +0800 CST m=+11.632473791] GET /user/signup 200  
+::1 - [2023-04-14 15:13:03.853447 +0800 CST m=+12.697370039] GET /user/login 200  
+::1 - [2023-04-14 15:13:06.553244 +0800 CST m=+15.397167579] GET / 200  

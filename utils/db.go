@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"log"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,6 +27,8 @@ func Connect() {
 	// if err != nil {
 	// 	panic("failed to connect Redis")
 	// }
+
+	log.Println("Connected to PostgreSQL database")
 
 	DB = db
 
