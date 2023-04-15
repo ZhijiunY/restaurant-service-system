@@ -3,27 +3,27 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (21): 
-	- header
-	- navigation
-	- navlogin
-	- signup.tmpl
+	- header.tmpl
+	- 
 	- base.tmpl
 	- footer
-	- full.tmpl
-	- navlogin.tmpl
-	- navigation.tmpl
-	- menu.tmpl
-	- 
-	- index.tmpl
-	- footer.tmpl
-	- head
-	- header.tmpl
-	- order.tmpl
-	- login.tmpl
-	- base
-	- content
-	- head.tmpl
 	- home
+	- navigation
+	- navlogin
+	- order.tmpl
+	- index.tmpl
+	- full.tmpl
+	- header
+	- navlogin.tmpl
+	- menu.tmpl
+	- base
+	- footer.tmpl
+	- head.tmpl
+	- head
+	- navigation.tmpl
+	- login.tmpl
+	- signup.tmpl
+	- content
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
@@ -32,6 +32,7 @@
 [GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.GetManager (7 handlers)
 [GIN-debug] GET    /user/login               --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginGet.func1 (6 handlers)
 [GIN-debug] GET    /user/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupGet.func1 (6 handlers)
+[GIN-debug] POST   /user/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupPost.func1 (6 handlers)
 [GIN-debug] GET    /user/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /user/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] GET    /user/                    --> github.com/ZhijiunY/restaurant-service-system/controllers.GetUser (6 handlers)
@@ -41,14 +42,12 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2023-04-15 18:58:58.213455 +0800 CST m=+5.761728545] GET /user/login 401  
-::1 - [2023-04-15 18:58:58.217493 +0800 CST m=+5.765766396] GET /user/login 401  
-::1 - [2023-04-15 18:58:58.418939 +0800 CST m=+5.967212207] GET / 401  
-::1 - [2023-04-15 18:58:58.422666 +0800 CST m=+5.970939235] GET / 401  
-::1 - [2023-04-15 18:58:58.507214 +0800 CST m=+6.055487216] GET / 401  
-::1 - [2023-04-15 18:58:58.509951 +0800 CST m=+6.058223912] GET / 401  
-::1 - [2023-04-15 18:58:58.59197 +0800 CST m=+6.140242585] GET / 401  
-::1 - [2023-04-15 18:58:58.594748 +0800 CST m=+6.143021390] GET / 401  
-::1 - [2023-04-15 18:58:58.715527 +0800 CST m=+6.263799816] GET / 200  
-::1 - [2023-04-15 18:59:00.020274 +0800 CST m=+7.568546851] GET /user/login 200  
-::1 - [2023-04-15 18:59:01.52063 +0800 CST m=+9.068903110] GET /user/signup 200  
+::1 - [2023-04-15 22:01:51.218699 +0800 CST m=+15.731050224] GET /templates/home/signup.tmpl?name=guu&email=guu%40email.com&password=guuguu 404  
+::1 - [2023-04-15 22:02:05.398436 +0800 CST m=+29.910786598] POST /user/signup 400  
+::1 - [2023-04-15 22:02:43.957526 +0800 CST m=+68.469877138] GET /templates/home/signup.tmpl?name=guu&email=guu%40email.com&password=guuguu 404  
+::1 - [2023-04-15 22:03:28.028923 +0800 CST m=+112.541274123] GET /templates/home/signup.tmpl?name=guu&email=guu%40email.com&password=guuguu 404  
+::1 - [2023-04-15 22:03:31.383602 +0800 CST m=+115.895952768] GET /user/login 200  
+::1 - [2023-04-15 22:03:32.768607 +0800 CST m=+117.280958062] GET /user/signup 200  
+::1 - [2023-04-15 22:03:58.453766 +0800 CST m=+142.966116833] GET /user/signup 200  
+::1 - [2023-04-15 22:04:00.099093 +0800 CST m=+144.611444126] GET /user/login 200  
+::1 - [2023-04-15 22:04:02.137738 +0800 CST m=+146.650089156] GET /user/signup 200  

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -47,60 +48,58 @@ func (sc *SessionController) SignupGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		user := session.Get(userkey)
-		c.HTML(http.StatusOK, "/user/signup", gin.H{
-			// "content": "",
-			"user": user,
+		if user != nil {
+			c.HTML(http.StatusBadRequest, "sighup.tmpl",
+				gin.H{
+					"content": "Please sighup first",
+					"user":    user,
+				})
+			return
+		}
+		c.HTML(http.StatusOK, "signup.tmpl", gin.H{
+			"content": "",
+			"user":    user,
+		})
+	}
+
+	// return func(c *gin.Context) {
+	// 	c.HTML(http.StatusOK, "signup.tmpl", gin.H{
+	// 		"content": "",
+	// 		"user":    nil,
+	// 	})
+	// }
+}
+
+func (sc *SessionController) SignupPost() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		email := c.PostForm("email")
+		password := c.PostForm("password")
+
+		// Validate email and password
+		if email == "" || password == "" {
+			c.HTML(http.StatusBadRequest, "signup.tmpl", gin.H{
+				"content": "Email and password cannot be empty",
+				"user":    nil,
+			})
+			fmt.Println("validate error")
+			return
+		}
+
+		// Store user in session
+		session.Set(userkey, email)
+		err := session.Save()
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+
+		c.HTML(http.StatusOK, "signup.tmpl", gin.H{
+			"content": "Sign up success",
+			"user":    email,
 		})
 	}
 }
-
-// func (sc *SessionController) SignupPost() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		email := c.PostForm("email")
-// 		password := c.PostForm("password")
-
-// 		// Validate email and password
-// 		if email == "" || password == "" {
-// 			c.HTML(http.StatusBadRequest, "signup.tmpl", gin.H{
-// 				"error": "Please provide a valid email and password.",
-// 			})
-// 			return
-// 		}
-
-// 		// Check if user already exists
-// 		if sc.userExists(email) {
-// 			c.HTML(http.StatusBadRequest, "signup.tmpl", gin.H{
-// 				"error": "An account with that email already exists.",
-// 			})
-// 			return
-// 		}
-
-// 		// Create new user and save to database
-// 		user := User{
-// 			Email:    email,
-// 			Password: password,
-// 		}
-// 		if err := sc.db.Save(&user).Error; err != nil {
-// 			c.HTML(http.StatusInternalServerError, "signup.tmpl", gin.H{
-// 				"error": "Something went wrong. Please try again later.",
-// 			})
-// 			return
-// 		}
-
-// 		// Set session user
-// 		session := sessions.Default(c)
-// 		session.Set(userkey, user.Email)
-// 		if err := session.Save(); err != nil {
-// 			c.HTML(http.StatusInternalServerError, "signup.tmpl", gin.H{
-// 				"error": "Something went wrong. Please try again later.",
-// 			})
-// 			return
-// 		}
-
-// 		// Redirect to index page
-// 		c.Redirect(http.StatusSeeOther, "/")
-// 	}
-// }
 
 func (sc *SessionController) LoginGet() gin.HandlerFunc {
 	return func(c *gin.Context) {

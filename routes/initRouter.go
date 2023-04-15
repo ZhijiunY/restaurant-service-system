@@ -51,7 +51,7 @@ func InitRouter() *gin.Engine {
 		AuthRoutes.GET("/signup", controllers.NewSessionController(store).SignupGet())
 		// AuthRoutes.POST("/login", controllers.NewSessionController(store).LoginPost())
 		// AuthRoutes.POST("/logout", controllers.NewSessionController(store).LogoutGet())
-		// AuthRoutes.POST("/signup", controllers.NewSessionController(store).SignupPost())
+		AuthRoutes.POST("/signup", controllers.NewSessionController(store).SignupPost())
 
 		AuthRoutes.Static("/static", "./static")
 	}
