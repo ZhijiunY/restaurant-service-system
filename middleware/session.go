@@ -22,15 +22,31 @@ const User = "user_id"
 func EnableCookieSession() gin.HandlerFunc {
 	store := cookie.NewStore([]byte(User))
 	return sessions.Sessions("mysession", store)
+
 }
+
+// func EnableCookieSession() gin.HandlerFunc {
+// 	sessionName := "mysession"
+// 	store := cookie.NewStore([]byte(User))
+// 	sessionMiddleware := sessions.Sessions(sessionName, store)
+
+// 	sessionController := controllers.NewSessionController(store)
+// 	sessionController.LoadAndSave()
+
+// 	return func(c *gin.Context) {
+// 		sessionMiddleware(c)
+// 		c.Set("sessionController", sessionController)
+// 	}
+// }
 
 // UserAuthSessionMiddle
 // 中間鍵 驗證是否已登入
-func AuthSessionMiddle() gin.HandlerFunc {
+func AuthSession() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		sessionID := session.Get(User)
 		if sessionID == nil {
+			c.Redirect(http.StatusMovedPermanently, "/user/login")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message:": "need to login!",
 			})

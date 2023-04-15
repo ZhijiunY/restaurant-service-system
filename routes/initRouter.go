@@ -8,15 +8,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	sessionName = "my-session"
+	userkey     = "user"
+)
+
 var secret = []byte("secret")
 
 func InitRouter() *gin.Engine {
 	router := gin.New()
 	router.Use(middleware.Logger())
 	router.Use(gin.Recovery())
-	router.Use(sessions.Sessions("mysession", cookie.NewStore(secret)))
 
+	// BasicAuth
 	router.Use(gin.BasicAuth(gin.Accounts{"Simba": "1234"}))
+
+	// session
+	middleware.EnableCookieSession()
+	store := cookie.NewStore(secret)
+	router.Use(sessions.Sessions(sessionName, store))
+	sessionController := controllers.NewSessionController(store)
+	router.Use(sessionController.LoadAndSave())
+	// sessionMiddleware := middleware.EnableCookieSession()
+	// router.Use(sessionMiddleware)
 
 	// connect to template
 	// Static file
@@ -25,19 +39,19 @@ func InitRouter() *gin.Engine {
 
 	// Grouping routes
 	MainRoutes := router.Group("/")
-	{
+	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
 		MainRoutes.GET("/", controllers.GetIndex)
-		MainRoutes.GET("/menu", controllers.GetMenu)
-		MainRoutes.GET("/order", controllers.GetManager)
+		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu)
+		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetManager)
 	}
 
 	AuthRoutes := router.Group("/user")
 	{
-		AuthRoutes.GET("/login", controllers.LoginPage)
-		AuthRoutes.GET("/signup", controllers.SignupPage)
-		AuthRoutes.POST("/login", controllers.Login)
-		AuthRoutes.POST("/logout", controllers.Logout)
-		AuthRoutes.POST("/signup", controllers.Signup)
+		AuthRoutes.GET("/login", controllers.NewSessionController(store).LoginGet())
+		AuthRoutes.GET("/signup", controllers.NewSessionController(store).SignupGet())
+		// AuthRoutes.POST("/login", controllers.NewSessionController(store).LoginPost())
+		// AuthRoutes.POST("/logout", controllers.NewSessionController(store).LogoutGet())
+		// AuthRoutes.POST("/signup", controllers.NewSessionController(store).SignupPost())
 
 		AuthRoutes.Static("/static", "./static")
 	}
@@ -51,6 +65,10 @@ func InitRouter() *gin.Engine {
 	}
 
 	return router
+}
+
+func NewSessionController(store cookie.Store) {
+	panic("unimplemented")
 }
 
 // 上面的代碼中，我們創建了一個名為api的路由組，然後為這個組設置了幾個API路由。最後，我們使用Static()方法為api路由組設置了一個靜態文件路由，將所有以/api/static開頭的請求路徑映射到./static目錄下。

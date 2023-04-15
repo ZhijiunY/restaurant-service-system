@@ -50,7 +50,6 @@ func setupLogging() {
 }
 
 func main() {
-
 	setupLogging()
 
 	// connect to PostgreSQL database
