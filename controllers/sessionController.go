@@ -3,9 +3,13 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
+	"github.com/ZhijiunY/restaurant-service-system/models"
+	"github.com/ZhijiunY/restaurant-service-system/utils"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 const userkey = "user"
@@ -44,60 +48,110 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 	}
 }
 
+// 註冊頁面
 func (sc *SessionController) SignupGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		user := session.Get(userkey)
+
+		// if user != nil, 則表示用戶已經登錄
 		if user != nil {
-			c.HTML(http.StatusBadRequest, "sighup.tmpl",
+			c.HTML(http.StatusBadRequest, "signup.tmpl",
 				gin.H{
-					"content": "Please sighup first",
+					"content": "already logged in",
 					"user":    user,
 				})
+			fmt.Println("already logged in")
 			return
 		}
+
+		// 如果 user 變數為 nil，則表示用戶還沒有登錄
 		c.HTML(http.StatusOK, "signup.tmpl", gin.H{
 			"content": "",
 			"user":    user,
 		})
+		fmt.Println("please sign up first")
 	}
-
-	// return func(c *gin.Context) {
-	// 	c.HTML(http.StatusOK, "signup.tmpl", gin.H{
-	// 		"content": "",
-	// 		"user":    nil,
-	// 	})
-	// }
 }
 
 func (sc *SessionController) SignupPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		// // get form value
 		session := sessions.Default(c)
+		name := c.PostForm("name")
 		email := c.PostForm("email")
 		password := c.PostForm("password")
+		fmt.Println("fet value error")
 
-		// Validate email and password
-		if email == "" || password == "" {
-			c.HTML(http.StatusBadRequest, "signup.tmpl", gin.H{
-				"content": "Email and password cannot be empty",
-				"user":    nil,
-			})
-			fmt.Println("validate error")
-			return
+		// // Validate email and password
+		// if email == "" || password == "" || name == "" {
+		// 	c.HTML(http.StatusBadRequest, "signup.tmpl", gin.H{
+		// 		"content": "Email and password cannot be empty",
+		// 		"user":    nil,
+		// 	})
+		// 	fmt.Println("Email ro Password error ")
+		// 	return
+		// }
+
+		// // Store user in session
+		// session.Set(userkey, email)
+		// err := session.Save()
+		// if err != nil {
+		// 	c.AbortWithError(http.StatusInternalServerError, err)
+		// 	fmt.Println("store session error 400")
+		// 	return
+		// }
+
+		// // Store user in database
+		// user := models.User{Email: email, Password: password}
+		// err = utils.DB.Create(&user).Error
+		// if err != nil {
+		// 	c.AbortWithError(http.StatusInternalServerError, err)
+		// 	fmt.Println("500")
+		// 	return
+		// }
+
+		// // 創建新用戶
+		// user.ID = uuid.New()
+		// user.Created_at = time.Now()
+		// user.Updated_at = time.Now()
+
+		// // Redirect to login page
+		// c.Redirect(http.StatusSeeOther, "/user/login")
+
+		// 編寫處理 POST 請求的代碼
+		// name := c.PostForm("name")
+		// email := c.PostForm("email")
+		// password := c.PostForm("password")
+
+		// 創建新用戶
+		newUser := &models.User{
+			ID:         uuid.New(),
+			Name:       name,
+			Password:   password,
+			Email:      email,
+			Created_at: time.Now(),
+			Updated_at: time.Now(),
 		}
 
-		// Store user in session
-		session.Set(userkey, email)
-		err := session.Save()
+		// 將用戶儲存到數據庫
+		err := utils.DB.Create(newUser).Error
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to create user"})
 			return
 		}
 
-		c.HTML(http.StatusOK, "signup.tmpl", gin.H{
-			"content": "Sign up success",
-			"user":    email,
-		})
+		// 在session中儲存用戶資訊
+		//session := sessions.Default(c)
+		session.Set(userkey, newUser.ID)
+		session.Save()
+
+		// Redirect to login page
+		c.Redirect(http.StatusSeeOther, "/user/login")
+
+		//c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
+
 	}
 }
 
@@ -111,39 +165,69 @@ func (sc *SessionController) LoginGet() gin.HandlerFunc {
 					"content": "Please logout first",
 					"user":    user,
 				})
+			fmt.Println("please louout error")
 			return
 		}
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{
 			"content": "",
 			"user":    user,
 		})
+		fmt.Println("login user error")
 	}
 }
 
 func (sc *SessionController) LoginPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		user := session.Get(userkey)
-		if user != nil {
+		userkey := session.Get(userkey)
+
+		email := c.PostForm("email")
+		password := c.PostForm("password")
+		if userkey != nil {
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"content": "Please logout first"})
+			fmt.Println("please log out firsts")
+			return
+
+		}
+
+		// Validate email and password
+		if email == "" || password == "" {
+			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
+				"content": "Email and password cannot be empty",
+				"user":    nil,
+			})
 			return
 		}
 
-		// username := c.PostForm("username")
-		// password := c.PostForm("password")
+		// Check if user exists in database
+		var user models.User
+		err := utils.DB.Where("email = ?", email).First(&user).Error
+		if err != nil {
+			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
+				"content": "Invalid email or password",
+				"user":    nil,
+			})
+			return
+		}
 
-		// if EmptyUserPass(username, password) {
-		// 	c.HTML(http.StatusBadRequest, "login.html", gin.H{"content": "Parameters can't be empty"})
+		// if userkey.password != password {
+		// 	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
+		// 		"content": "Invalid email or password",
+		// 		"user":    nil,
+		// 	})
 		// 	return
 		// }
 
-		// if !CheckUserPass(username, password) {
-		// 	c.HTML(http.StatusUnauthorized, "login.html", gin.H{"content": "Incorrect username or password"})
-		// 	return
-		// }
+		// Store user in session
+		session.Set("user", email)
+		err = session.Save()
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
 
-		// SaveSession(c, username)
-		// c.Redirect(http.StatusMovedPermanently, "/dashboard")
+		c.Redirect(http.StatusSeeOther, "/menu")
+
 	}
 }
 
@@ -184,97 +268,3 @@ func (sc *SessionController) DashboardGet() gin.HandlerFunc {
 		})
 	}
 }
-
-// // GetLoginPage
-// func LoginPage(c *gin.Context) {
-// 	// name := c.Param("name")
-// 	c.HTML(
-// 		http.StatusOK, "login.tmpl", gin.H{},
-// 	)
-// }
-
-// // GetSignupPage
-// func SignupPage(c *gin.Context) {
-// 	c.HTML(
-// 		http.StatusOK, "signup.tmpl", gin.H{},
-// 	)
-// }
-
-// // PostLogin
-// func Login(c *gin.Context) {
-// 	name := c.Request.FormValue("name")
-// 	password := c.Request.FormValue("password")
-
-// 	if hasSession := middleware.HasSession(c); hasSession {
-// 		c.String(200, "already Logged in")
-// 		return
-// 	}
-
-// 	user := models.UserDetailByName(name)
-
-// 	if err := middleware.Compare(user.Password, password); err != nil {
-// 		c.String(401, "password mismatch")
-// 		return
-// 	}
-
-// 	middleware.SaveAuthSession(c, user.ID)
-
-// 	c.String(200, "login successful")
-// }
-
-// // PostLogout
-// func Logout(c *gin.Context) {
-// 	if hasSession := middleware.HasSession(c); hasSession {
-// 		c.String(401, "用戶未登入")
-// 		return
-// 	}
-// 	middleware.ClearAuthSession(c)
-// 	c.String(200, "退出成功")
-// }
-
-// // PostSignup
-// func Signup(c *gin.Context) {
-// 	var user models.User
-// 	user.Name = c.Request.FormValue("name")
-// 	user.Password = c.Request.FormValue("password")
-// 	user.Email = c.Request.FormValue("email")
-
-// 	if hasSession := middleware.HasSession(c); hasSession {
-// 		c.String(200, "用户已登陆")
-// 		return
-// 	}
-
-// 	if existUser := models.UserDetailByName(user.Name); existUser.ID != uuid.Nil {
-// 		c.String(200, "用户名已存在")
-// 		return
-// 	}
-
-// 	if c.Request.FormValue("password") != c.Request.FormValue("password_confirmation") {
-// 		c.String(200, "密码不一致")
-// 		return
-// 	}
-
-// 	if pwd, err := middleware.Encrypt(c.Request.FormValue("password")); err == nil {
-// 		user.Password = pwd
-// 	}
-
-// 	models.AddUser(&user)
-
-// 	middleware.SaveAuthSession(c, user.ID)
-
-// 	c.String(200, "注册成功")
-// }
-
-// func Me(c *gin.Context) {
-// 	currentUser := c.MustGet("userId").(uint)
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"code": 1,
-// 		"data": currentUser,
-// 	})
-// }
-
-// func Signup(c *gin.Context) {
-// 	email := c.PostForm("email")
-// 	password := c.PostForm("password")
-// 	confirmPassword := c.PostForm("confirm_password")
-// }
