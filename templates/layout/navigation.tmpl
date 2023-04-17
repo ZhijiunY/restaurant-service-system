@@ -17,9 +17,9 @@
             </div>
 
             <ul class="nav-list">
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="/" class="nav-link scroll-link">Home</a>
-              </li>
+              </li> -->
               <!-- <li class="nav-item">
                 <a href="/templates/about.tmpl" class="nav-link scroll-link">About</a>
               </li> -->
@@ -34,11 +34,17 @@
                 <a href="#contact" class="nav-link scroll-link">Contact</a>
               </li>
               <li class="nav-item">
-                <a href="/login" class="nav-link scroll-link">{{.name}}</a>
+                <a href="/user/login" class="nav-link scroll-link">{{.name}}</a>
               </li>
-              <li class="nav-item">
-                <a href="/" class="nav-link scroll-link">LOGOUT</a>
-              </li>
+              <!-- <form action="/user/logout" method="post">
+                <li class="nav-item">
+                  <a href="/user/logout" class="nav-link scroll-link">LOGOUT</a>
+                </li>
+              </form> -->
+
+              <form class="nav-item" action="/user/logout" method="post">
+                <input class="nav-link scroll-link" type="submit" name="" method="post" value="LOGOUT">
+              </form>
             </ul>
           </div>
 

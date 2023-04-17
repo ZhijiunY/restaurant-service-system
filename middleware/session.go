@@ -16,11 +16,15 @@ import (
 var Secret = []byte("secret")
 
 // const Userkey = "user"
-const User = "user_id"
+// const User = "user_id"
+const (
+	userkey  = "user"
+	emailkey = "email"
+)
 
 // Save session using cookies
 func EnableCookieSession() gin.HandlerFunc {
-	store := cookie.NewStore([]byte(User))
+	store := cookie.NewStore([]byte(userkey))
 	return sessions.Sessions("mysession", store)
 
 }
@@ -44,7 +48,7 @@ func EnableCookieSession() gin.HandlerFunc {
 func AuthSession() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		sessionID := session.Get(User)
+		sessionID := session.Get(userkey)
 		if sessionID == nil {
 			c.Redirect(http.StatusMovedPermanently, "/user/login")
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -58,7 +62,7 @@ func AuthSession() gin.HandlerFunc {
 
 func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
 	session := sessions.Default(c)
-	session.Set(User, userID.String()) // 將UUID轉換成字串
+	session.Set(userkey, userID.String()) // 將UUID轉換成字串
 	session.Save()
 }
 
@@ -77,13 +81,13 @@ func HasSession(c *gin.Context) bool {
 	return true
 }
 
-func GetSessionUserId(c *gin.Context) uint {
+func GetSessionUserId(c *gin.Context) uuid.UUID {
 	session := sessions.Default(c)
 	sessionValue := session.Get("userId")
 	if sessionValue == nil {
-		return 0
+		return uuid.UUID{}
 	}
-	return sessionValue.(uint)
+	return sessionValue.(uuid.UUID)
 }
 
 func GetUserSession(c *gin.Context) map[string]interface{} {
@@ -102,50 +106,9 @@ func GetUserSession(c *gin.Context) map[string]interface{} {
 	return data
 }
 
-// // GetSession for User
-// func GetSession(c *gin.Context) int {
-// 	session := sessions.Default(c)
-// 	sessionID := session.Get(User)
-// 	if sessionID == nil {
-// 		return 0
-// 	}
-// 	return sessionID.(int)
-// }
-
-// // CheckSession for User
-// func CheckSession(c *gin.Context) bool {
-// 	session := sessions.Default(c)
-// 	sessionID := session.Get(User)
-// 	return sessionID != nil
-// }
-
-// func HasSession(c *gin.Context) bool {
-// 	session := sessions.Default(c)
-// 	if sessionValue := session.Get("ID"); sessionValue == nil {
-// 		return false
-// 	}
-// 	return true
-// }
-
-// func GetSessionUserId(c *gin.Context) uint {
-// 	session := sessions.Default(c)
-// 	sessionValue := session.Get("userId")
-// 	if sessionValue == nil {
-// 		return 0
-// 	}
-// 	return sessionValue.(uint)
-// }
-
-// func GetUserSession(c *gin.Context) map[string]interface{} {
-
-// 	// hasSession := HasSession(c)
-// 	// userName := ""
-// 	// if hasSession {
-// 	// 	ID := GetSessionUserId(c)
-// 	// 	userName = models.User(ID).Name
-// 	// }
-// 	// data := make(map[string]interface{})
-// 	// data["hasSession"] = hasSession
-// 	// data["userName"] = userName
-// 	return GetUserSession
-// }
+// CheckSession for User
+func CheckSession(c *gin.Context) bool {
+	session := sessions.Default(c)
+	sessionID := session.Get(userkey)
+	return sessionID != nil
+}
