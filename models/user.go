@@ -32,7 +32,7 @@ func UserDetailByEmail(email string) (user User) {
 	return
 }
 
-func UserDetail(id uint) (user User) {
+func UserDetail(id uuid.UUID) (user User) {
 	utils.DB.Where("id = ?", id).First(&user)
 	return
 }

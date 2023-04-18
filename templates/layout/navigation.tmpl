@@ -16,36 +16,37 @@
               </div>
             </div>
 
-            <ul class="nav-list">
-              <!-- <li class="nav-item">
-                <a href="/" class="nav-link scroll-link">Home</a>
-              </li> -->
-              <!-- <li class="nav-item">
-                <a href="/templates/about.tmpl" class="nav-link scroll-link">About</a>
-              </li> -->
-              <li class="nav-item">
-                <a href="/menu" class="nav-link scroll-link">Menu</a>
-              </li>
-              <li class="nav-item">
-                <a href="/order" class="nav-link scroll-link"
-                  >Manager</a>
-              </li>
-              <li class="nav-item">
-                <a href="#contact" class="nav-link scroll-link">Contact</a>
-              </li>
-              <li class="nav-item">
-                <a href="/user/login" class="nav-link scroll-link">{{.name}}</a>
-              </li>
-              <!-- <form action="/user/logout" method="post">
+            {{if .AuthRequired}}
+            <div>
+              <span>hello {{.UserName}}</span>
+              <ul class="nav-list">
                 <li class="nav-item">
-                  <a href="/user/logout" class="nav-link scroll-link">LOGOUT</a>
+                  <a href="/menu" class="nav-link scroll-link">Menu</a>
                 </li>
-              </form> -->
-
-              <form class="nav-item" action="/user/logout" method="post">
-                <input class="nav-link scroll-link" type="submit" name="" method="post" value="LOGOUT">
-              </form>
-            </ul>
+                <li class="nav-item">
+                  <a href="/order" class="nav-link scroll-link"
+                    >Manager</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#contact" class="nav-link scroll-link">Contact</a>
+                </li>
+                <li class="nav-item">
+                  <a href="/user/login" class="nav-link scroll-link">{{.name}}</a>
+                </li>
+                  <form action="/user/logout" method="post">
+                    <input type="submit" name="" value="LOGOUT">
+                  </form>
+              </ul>
+            </div>
+            {{else}}
+            <div>
+              <ul class="nav-list">
+                <li class="nav-item">
+                  <a href="/login" class="nav-link scroll-link">{{.auth}}</a>
+                </li>
+              </ul>
+            </div>
+            {{end}}
           </div>
 
           <div class="hamburger">

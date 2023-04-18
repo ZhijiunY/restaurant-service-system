@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ZhijiunY/restaurant-service-system/middleware"
 	"github.com/ZhijiunY/restaurant-service-system/models"
 	"github.com/ZhijiunY/restaurant-service-system/utils"
 	"github.com/gin-contrib/sessions"
@@ -82,19 +83,26 @@ func (sc *SessionController) SignupGet() gin.HandlerFunc {
 func (sc *SessionController) SignupPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sc.AuthRequired()
-		// // 檢查是否已有有效的 session。
-		// if middleware.CheckSession(c) {
-		// 	// 如果有，則將用戶重定向到主頁面或其他頁面。
-		// 	c.Redirect(http.StatusMovedPermanently, "/")
-		// 	return
-		// }
 
 		// get form value
 		name := c.PostForm("name")
 		email := c.PostForm("email")
 		password := c.PostForm("password")
-
 		fmt.Println("fet value error")
+
+		if hasSession := middleware.HasSession(c); hasSession {
+			c.String(200, "already logged in")
+			return
+		}
+
+		if existUser := models.UserDetailByName(name); existUser.ID != uuid.Nil {
+			c.String(200, "user already exists")
+			return
+		}
+
+		if pwd, err := middleware.Encrypt(c.PostForm("password")); err == nil {
+			password = pwd
+		}
 
 		// Validate email and password
 		if email == "" || password == "" || name == "" {
@@ -105,6 +113,7 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 			fmt.Println("Email, Password or name are empty ")
 			return
 		}
+
 		// create new user
 		newUser := &models.User{
 			ID:         uuid.New(),
@@ -125,49 +134,23 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 		}
 
 		// 在session中儲存用戶資訊
-		session := sessions.Default(c)
-		session.Set(userkey, newUser.ID)
-		session.Set(userkey, email)
-		err = session.Save()
-		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
-			fmt.Println("store session error 400")
-			return
-		}
+		// session := sessions.Default(c)
+		// session.Set(userkey, newUser.ID)
+		// session.Set(userkey, email)
+		// err = session.Save()
+		// if err != nil {
+		// 	c.AbortWithError(http.StatusInternalServerError, err)
+		// 	fmt.Println("store session error 400")
+		// 	return
+		// }
+		middleware.SaveAuthSession(c, newUser.ID)
 
 		// Redirect to login page
 		c.Redirect(http.StatusSeeOther, "/user/login")
-		c.JSON(http.StatusOK, gin.H{
-			"auth": "signup",
-		})
 		//c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 
 	}
 }
-
-// func signupPOST(c *gin.Context) {
-// 	// 檢查是否已有有效的 session。
-// 	if middleware.CheckSession(c) {
-// 		// 如果有，則將用戶重定向到主頁面或其他頁面。
-// 		c.Redirect(http.StatusMovedPermanently, "/")
-// 		return
-// 	}
-
-// 	// 設置 cookie-based session 中間件，以便在該請求中處理 session。
-// 	sessionMiddleware := middleware.EnableCookieSession()
-
-// 	// 解析表單中提交的用戶註冊信息。
-// 	// ...
-
-// 	// 創建新的用戶，並將用戶信息寫入數據庫。
-// 	// ...
-
-// 	// 保存用戶的 session。
-// 	middleware.SaveAuthSession(c, userID)
-
-// 	// 將用戶重定向到註冊成功頁面。
-// 	// ...
-// }
 
 func (sc *SessionController) LoginGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -185,7 +168,7 @@ func (sc *SessionController) LoginGet() gin.HandlerFunc {
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{
 			"content": "",
 			"user":    user,
-			"auth":    "login",
+			"auth":    user,
 		})
 		fmt.Println("login user 200")
 	}
@@ -193,11 +176,20 @@ func (sc *SessionController) LoginGet() gin.HandlerFunc {
 
 func (sc *SessionController) LoginPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var user models.User
+
+		sc.AuthRequired()
 		session := sessions.Default(c)
+		userkey := session.Get(userkey)
+
 		// Get form values
 		email := c.PostForm("email")
 		password := c.PostForm("password")
-		//auth := c.PostForm("auth")
+
+		// check if login was successful
+		if hasSession := middleware.HasSession(c); hasSession {
+			c.String(200, "already logged")
+		}
 
 		// Validate email and password
 		if email == "" || password == "" {
@@ -209,10 +201,16 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 			return
 		}
 
+		// // Check password
+		// middleware.Compare(user.Password, password)
+		// check if password is correct
+		if err := middleware.Compare(password, user.Password); err != nil {
+			c.String(200, "incorrect password")
+			return
+		}
+
 		// Check if user exists in database
 		// Verify user credentials
-		// 驗證用戶憑據
-		var user models.User
 		err := utils.DB.Where("email = ?", email).First(&user).Error
 		if err != nil || user.Password != password {
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
@@ -225,71 +223,95 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 		c.HTML(http.StatusOK, "menu.tmpl", gin.H{
 			"content": "login successfully",
 			"user":    user,
-			//"auth":    auth,
+			"auth":    "login",
 		})
 		fmt.Println("Status OK")
 
-		// // Check password
-		// err = middleware.Compare(user.Password, password)
-		// if err != nil {
-		// 	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-		// 		"content": "無效的郵件或密碼",
-		// 		"user":    nil,
-		// 	})
-		// 	fmt.Println("password error")
-		// 	return
-		// }
-
-		// 為用戶創建新會話
+		// Create a new session for the user
 		session.Set(userkey, user.ID)
 		session.Set(emailkey, email)
 		err = session.Save()
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
-			fmt.Println("Failed to create session")
+
 			return
 		}
+
+		// Save user ID to session
+		middleware.SaveAuthSession(c, user.ID)
 
 		// 重定向到主頁
 		c.Redirect(http.StatusSeeOther, "/menu")
 	}
+
+	// 下面這些跑得動，但還是無法解密
+	// 	// get form value
+	// 	email := c.PostForm("email")
+	// 	password := c.PostForm("password")
+
+	// 	// check if user exists
+	// 	user := models.UserDetailByEmail(email)
+	// 	if user.ID == uuid.Nil {
+	// 		c.String(200, "user does not exist")
+	// 		return
+	// 	}
+
+	// 	// // Compare entered password with stored hash password
+	// 	// if err := middleware.Compare(user.Password, password); err != nil {
+	// 	// 	// Invalid password
+	// 	// 	c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
+	// 	// 		"content": "Invalid Email or Password",
+	// 	// 		"user":    nil,
+	// 	// 	})
+	// 	// 	return
+	// 	// }
+
+	// 	// check if password is correct
+	// 	if err := middleware.Compare(password, user.Password); err != nil {
+	// 		c.String(200, "incorrect password")
+	// 		return
+	// 	}
+
+	// 	// save user info in session
+	// 	middleware.SaveAuthSession(c, user.ID)
+
+	// 	// Redirect to home page
+	// 	c.Redirect(http.StatusSeeOther, "/")
+	// }
 }
 
 func (sc *SessionController) LogoutPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// 獲取現有會話並刪除已經存儲的用戶ID和郵件
+		// Get the existing session and remove the stored user ID and email
 		session := sessions.Default(c)
-		user := session.Get(userkey)
-
-		if user == nil {
-			return
-		}
 		session.Delete(userkey)
-		if err := session.Save(); err != nil {
+		session.Delete(emailkey)
+		err := session.Save()
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, err)
+			fmt.Println("Failed to delete session")
 			return
 		}
 
-		c.Redirect(http.StatusMovedPermanently, "/")
+		// 從用戶中注銷，並將用戶重定向回主頁
+		// Logout from the user and redirect the user back to the homepage.
+		middleware.ClearAuthSession(c)
+		c.Redirect(http.StatusSeeOther, "/")
 	}
-}
 
-func (sc *SessionController) IndexGet() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		session := sessions.Default(c)
-		user := session.Get(userkey)
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"content": "This is an index page...",
-			"user":    user,
-		})
-	}
-}
+	// 	session := sessions.Default(c)
+	// 	user := session.Get(userkey)
 
-func (sc *SessionController) DashboardGet() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		session := sessions.Default(c)
-		user := session.Get(userkey)
-		c.HTML(http.StatusOK, "dashboard.tmpl", gin.H{
-			"content": "This is a dashboard page...",
-			"user":    user,
-		})
-	}
+	// 	if user == nil {
+	// 		return
+	// 	}
+	// 	session.Delete(userkey)
+	// 	if err := session.Save(); err != nil {
+	// 		return
+	// 	}
+
+	// 	c.Redirect(http.StatusMovedPermanently, "/")
+	// }
+
 }

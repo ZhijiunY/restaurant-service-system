@@ -2,9 +2,9 @@ package middleware
 
 import "golang.org/x/crypto/bcrypt"
 
-// 密碼加密
-func Encrypt(source string) (string, error) {
-	hashPwd, err := bcrypt.GenerateFromPassword([]byte(source), bcrypt.DefaultCost)
+// 密碼加密 HashPassword
+func Encrypt(password string) (string, error) {
+	hashPwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(hashPwd), err
 }
 

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ZhijiunY/restaurant-service-system/models"
@@ -63,6 +64,12 @@ func AuthSession() gin.HandlerFunc {
 func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
 	session := sessions.Default(c)
 	session.Set(userkey, userID.String()) // 將UUID轉換成字串
+	err := session.Save()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		fmt.Println("store session error 400")
+		return
+	}
 	session.Save()
 }
 
@@ -73,6 +80,7 @@ func ClearAuthSession(c *gin.Context) {
 	session.Save()
 }
 
+// 檢查當前請求是否包含有效的使用者 session，返回值為布林值；
 func HasSession(c *gin.Context) bool {
 	session := sessions.Default(c)
 	if sessionValue := session.Get("userId"); sessionValue == nil {
@@ -81,6 +89,8 @@ func HasSession(c *gin.Context) bool {
 	return true
 }
 
+// 函數從 session 中獲取使用者的 ID
+// 如果 session 不存在或 ID 為空，則返回一個空的 UUID
 func GetSessionUserId(c *gin.Context) uuid.UUID {
 	session := sessions.Default(c)
 	sessionValue := session.Get("userId")
@@ -90,6 +100,11 @@ func GetSessionUserId(c *gin.Context) uuid.UUID {
 	return sessionValue.(uuid.UUID)
 }
 
+// 函數從當前請求中獲取使用者的 session 資訊
+// 包括是否有有效的 session、使用者名稱等
+// 並將這些資訊封裝到一個 map 中返回。
+// 在這個函數中，如果當前請求包含有效的 session
+// 還會從資料庫中查詢出相應的使用者資訊。
 func GetUserSession(c *gin.Context) map[string]interface{} {
 	hasSession := HasSession(c)
 	userName := ""
