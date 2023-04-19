@@ -17,6 +17,7 @@ var secret = []byte("secret")
 
 func InitRouter() *gin.Engine {
 	router := gin.New()
+
 	router.Use(middleware.Logger())
 	router.Use(gin.Recovery())
 
@@ -42,7 +43,7 @@ func InitRouter() *gin.Engine {
 	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
 		MainRoutes.GET("/", controllers.GetIndex)
 		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu)
-		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetManager)
+		MainRoutes.GET("/order", controllers.GetManager)
 	}
 
 	AuthRoutes := router.Group("/user")

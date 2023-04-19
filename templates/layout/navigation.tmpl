@@ -16,16 +16,15 @@
               </div>
             </div>
 
-            {{if .AuthRequired}}
             <div>
-              <span>hello {{.UserName}}</span>
+              <span>hello{{ .User }} </span>
+              
               <ul class="nav-list">
                 <li class="nav-item">
                   <a href="/menu" class="nav-link scroll-link">Menu</a>
                 </li>
                 <li class="nav-item">
-                  <a href="/order" class="nav-link scroll-link"
-                    >Manager</a>
+                  <a href="/order" class="nav-link scroll-link">Manager</a>
                 </li>
                 <li class="nav-item">
                   <a href="#contact" class="nav-link scroll-link">Contact</a>
@@ -33,20 +32,14 @@
                 <li class="nav-item">
                   <a href="/user/login" class="nav-link scroll-link">{{.name}}</a>
                 </li>
+                <li>
                   <form action="/user/logout" method="post">
                     <input type="submit" name="" value="LOGOUT">
                   </form>
-              </ul>
-            </div>
-            {{else}}
-            <div>
-              <ul class="nav-list">
-                <li class="nav-item">
-                  <a href="/login" class="nav-link scroll-link">{{.auth}}</a>
                 </li>
               </ul>
             </div>
-            {{end}}
+          
           </div>
 
           <div class="hamburger">

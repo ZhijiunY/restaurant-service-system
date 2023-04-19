@@ -9,8 +9,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 
-	//"github.com/gofrs/uuid"
 	"github.com/google/uuid"
 )
 
@@ -29,20 +29,6 @@ func EnableCookieSession() gin.HandlerFunc {
 	return sessions.Sessions("mysession", store)
 
 }
-
-// func EnableCookieSession() gin.HandlerFunc {
-// 	sessionName := "mysession"
-// 	store := cookie.NewStore([]byte(User))
-// 	sessionMiddleware := sessions.Sessions(sessionName, store)
-
-// 	sessionController := controllers.NewSessionController(store)
-// 	sessionController.LoadAndSave()
-
-// 	return func(c *gin.Context) {
-// 		sessionMiddleware(c)
-// 		c.Set("sessionController", sessionController)
-// 	}
-// }
 
 // UserAuthSessionMiddle
 // 中間鍵 驗證是否已登入
@@ -74,13 +60,17 @@ func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
 }
 
 // ClearAuthSession for User
-func ClearAuthSession(c *gin.Context) {
+func ClearAuthSession(c *gin.Context) error {
 	session := sessions.Default(c)
 	session.Clear()
-	session.Save()
+	err := session.Save()
+	if err != nil {
+		return errors.Wrap(err, "failed to delete session")
+	}
+	return nil
 }
 
-// 檢查當前請求是否包含有效的使用者 session，返回值為布林值；
+// Check if the current request contains a valid user session and return a boolean value
 func HasSession(c *gin.Context) bool {
 	session := sessions.Default(c)
 	if sessionValue := session.Get("userId"); sessionValue == nil {
@@ -88,6 +78,19 @@ func HasSession(c *gin.Context) bool {
 	}
 	return true
 }
+
+// func IsLoggedIn(c *gin.Context) (bool, uuid.UUID) {
+// 	session := sessions.Default(c)
+// 	sessionID := session.Get(userkey)
+// 	if sessionID == nil {
+// 		return false, uuid.Nil
+// 	}
+// 	userID, err := uuid.Parse(sessionID.(string))
+// 	if err != nil {
+// 		return false, uuid.Nil
+// 	}
+// 	return true, userID
+// }
 
 // 函數從 session 中獲取使用者的 ID
 // 如果 session 不存在或 ID 為空，則返回一個空的 UUID
