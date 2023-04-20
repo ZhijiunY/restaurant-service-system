@@ -153,6 +153,9 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 
 func (sc *SessionController) LoginGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		middleware.ClearAuthSession(c)
+
 		session := sessions.Default(c)
 		user := session.Get(userkey)
 		if user != nil {
@@ -179,12 +182,6 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 
-		// isLoggedIn, userID := middleware.IsLoggedIn(c)
-		// c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		// 	"IsLoggedIn": isLoggedIn,
-		// 	"UserID":     userID,
-		// 	"IsEqual":    func(a, b uuid.UUID) bool { return a == b },
-		// })
 		middleware.ClearAuthSession(c)
 
 		sc.AuthRequired()
@@ -253,61 +250,6 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 		c.Redirect(http.StatusSeeOther, "/menu")
 	}
 
-	// return func(c *gin.Context) {
-	// 	var user models.User
-
-	// 	sc.AuthRequired()
-
-	// 	// Get form values
-	// 	email := c.PostForm("email")
-	// 	password := c.PostForm("password")
-
-	// 	// Validate email and password
-	// 	if email == "" || password == "" {
-	// 		c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-	// 			"content": "Email and password cannot be empty",
-	// 			"user":    nil,
-	// 		})
-	// 		fmt.Println("Email and password cannot be empty")
-	// 		return
-	// 	}
-
-	// 	// Check if user is already logged in
-	// 	if hasSession := middleware.HasSession(c); hasSession {
-	// 		c.String(200, "already logged")
-	// 		fmt.Println("already logged")
-	// 	}
-
-	// 	// Check if user exists in database
-	// 	// Verify user credentials
-	// 	err := utils.DB.Where("email = ?", email).First(&user).Error
-	// 	if err != nil {
-	// 		c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-	// 			"content": "Invalid email or password",
-	// 			"user":    nil,
-	// 		})
-	// 		fmt.Println("Invalid email or password")
-	// 		return
-	// 	}
-
-	// 	hashedPwd := user.Password
-
-	// 	// Compare password
-	// 	if match := middleware.Compare(password, hashedPwd); !match {
-	// 		c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-	// 			"err": "incorrect password",
-	// 		})
-	// 		fmt.Println("invalid password")
-	// 		return
-	// 	}
-
-	// 	// Save user ID to session
-	// 	middleware.SaveAuthSession(c, user.ID)
-
-	// 	// Redirect to home page
-	// 	c.Redirect(http.StatusSeeOther, "/menu")
-	// }
-
 }
 
 func (sc *SessionController) LogoutPost() gin.HandlerFunc {
@@ -324,7 +266,7 @@ func (sc *SessionController) LogoutPost() gin.HandlerFunc {
 		// 從用戶中注銷，並將用戶重定向回主頁
 		// Logout from the user and redirect the user back to the homepage.
 		middleware.ClearAuthSession(c)
-		c.Redirect(http.StatusSeeOther, "/")
+		c.Redirect(http.StatusMovedPermanently, "/")
 	}
 
 	// 	session := sessions.Default(c)

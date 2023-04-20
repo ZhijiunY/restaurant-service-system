@@ -15,6 +15,10 @@ const (
 
 var secret = []byte("secret")
 
+func NewSessionController(store cookie.Store) {
+	panic("unimplemented")
+}
+
 func InitRouter() *gin.Engine {
 	router := gin.New()
 
@@ -66,8 +70,4 @@ func InitRouter() *gin.Engine {
 	}
 
 	return router
-}
-
-func NewSessionController(store cookie.Store) {
-	panic("unimplemented")
 }
