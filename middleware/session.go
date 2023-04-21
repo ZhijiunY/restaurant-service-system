@@ -16,8 +16,6 @@ import (
 
 var Secret = []byte("secret")
 
-// const Userkey = "user"
-// const User = "user_id"
 const (
 	userkey  = "user"
 	emailkey = "email"
@@ -25,7 +23,7 @@ const (
 
 // Save session using cookies
 func EnableCookieSession() gin.HandlerFunc {
-	store := cookie.NewStore([]byte(userkey))
+	store := cookie.NewStore([]byte(Secret))
 	return sessions.Sessions("mysession", store)
 
 }
@@ -56,7 +54,6 @@ func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
 		fmt.Println("store session error 400")
 		return
 	}
-	session.Save()
 }
 
 // ClearAuthSession for User
@@ -73,7 +70,7 @@ func ClearAuthSession(c *gin.Context) error {
 // Check if the current request contains a valid user session and return a boolean value
 func HasSession(c *gin.Context) bool {
 	session := sessions.Default(c)
-	if sessionValue := session.Get("userId"); sessionValue == nil {
+	if sessionValue := session.Get("userID"); sessionValue == nil {
 		return false
 	}
 	return true
@@ -98,7 +95,7 @@ func GetSessionUserId(c *gin.Context) uuid.UUID {
 	session := sessions.Default(c)
 	sessionValue := session.Get("userId")
 	if sessionValue == nil {
-		return uuid.UUID{}
+		return uuid.Nil
 	}
 	return sessionValue.(uuid.UUID)
 }
@@ -110,6 +107,7 @@ func GetSessionUserId(c *gin.Context) uuid.UUID {
 // 還會從資料庫中查詢出相應的使用者資訊。
 func GetUserSession(c *gin.Context) map[string]interface{} {
 	hasSession := HasSession(c)
+	userID := uuid.Nil
 	userName := ""
 	if hasSession {
 		userId := GetSessionUserId(c)
@@ -120,6 +118,7 @@ func GetUserSession(c *gin.Context) map[string]interface{} {
 	}
 	data := make(map[string]interface{})
 	data["hasSession"] = hasSession
+	data["userId"] = userID
 	data["userName"] = userName
 	return data
 }

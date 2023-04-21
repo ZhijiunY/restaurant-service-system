@@ -1,0 +1,65 @@
+package utils
+
+// var tmpl map[string]*template.Template
+
+// // Load templates on program initialisation
+// func init() {
+// 	if tmpl == nil {
+// 		tmpl = make(map[string]*template.Template)
+// 	}
+
+// 	// var pathToTemplates = "./templates"
+// 	// templatesDir := config.Templates.Path
+// 	templatesDir := "./templates"
+
+// 	homes, err := filepath.Glob(templatesDir + "homes/*.tmpl")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	layouts, err := filepath.Glob(templatesDir + "layouts/*.tmpl")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	// Generate our templates map from our layouts/ and includes/ directories
+// 	for _, home := range homes {
+// 		files := append(layouts, home)
+// 		tmpl[filepath.Base(home)] = template.Must(template.ParseFiles(files...))
+// 	}
+
+// }
+
+// // renderTemplate is a wrapper around template.ExecuteTemplate.
+// func renderTemplate(c *gin.Context, name string, data gin.H) {
+// 	// Ensure the template exists in the map.
+// 	tmpl, ok := tmpl[name]
+// 	if !ok {
+// 		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("The template %s does not exist.", name))
+// 		return
+// 	}
+
+// 	c.Header("Content-Type", "text/html; charset=utf-8")
+// 	err := tmpl.ExecuteTemplate(c.Writer, "base.tmpl", data)
+// 	if err != nil {
+// 		c.AbortWithError(http.StatusInternalServerError, err)
+// 	}
+// }
+
+// // Example route
+// func helloHandler(c *gin.Context) {
+// 	data := gin.H{
+// 		"title":   "Hello, World!",
+// 		"message": "This is a message from the server.",
+// 	}
+// 	renderTemplate(c, "hello.tmpl", data)
+// }
+
+// func main() {
+// 	router := gin.Default()
+
+// 	// Example route
+// 	router.GET("/hello", helloHandler)
+
+// 	router.Run(":8080")
+// }

@@ -3,27 +3,27 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (21): 
-	- header
-	- navlogin
-	- content
-	- base
-	- signup.tmpl
-	- base.tmpl
-	- footer.tmpl
-	- head.tmpl
+	- full.tmpl
+	- head
 	- home
 	- navlogin.tmpl
-	- 
-	- login.tmpl
-	- navigation
-	- menu.tmpl
-	- footer
-	- full.tmpl
+	- signup.tmpl
+	- base
+	- footer.tmpl
 	- header.tmpl
-	- navigation.tmpl
-	- order.tmpl
+	- navlogin
+	- menu.tmpl
+	- 
+	- base.tmpl
+	- footer
 	- index.tmpl
-	- head
+	- login.tmpl
+	- header
+	- navigation
+	- order.tmpl
+	- content
+	- head.tmpl
+	- navigation.tmpl
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
@@ -44,4 +44,8 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2023-04-20 16:24:26.094446 +0800 CST m=+4.609912646] GET /menu 200  
+::1 - [2023-04-22 00:16:29.690054 +0800 CST m=+9.255523651] GET /user/login 200  
+::1 - [2023-04-22 00:16:40.290115 +0800 CST m=+19.855584769] POST /user/login 303  
+::1 - [2023-04-22 00:16:40.300246 +0800 CST m=+19.865716194] GET /menu 200  
+::1 - [2023-04-22 00:17:44.770229 +0800 CST m=+84.335698704] GET / 200  
+::1 - [2023-04-22 00:17:49.521052 +0800 CST m=+89.086521731] GET / 200  
