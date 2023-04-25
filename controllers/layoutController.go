@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/ZhijiunY/restaurant-service-system/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,12 +16,11 @@ func GetIndex(c *gin.Context) {
 // Menu page
 func GetMenu(c *gin.Context) {
 	// tmpl := template.Must(template.ParseFiles("layout.html"))
-	userName := middleware.GetUserSession(c)
+	// userName := middleware.GetUserSession(c)
 	c.HTML(http.StatusOK, "menu.tmpl", gin.H{
 		"title": "Menu website",
-		"Name":  userName,
+		// "Name":  userName,
 	})
-	// utils.tmpl(c, "menu.tmpl", data)
 }
 
 // Manager page

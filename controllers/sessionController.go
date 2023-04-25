@@ -188,7 +188,8 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 
 		hasSession := middleware.HasSession(c)
 		if hasSession {
-
+			c.Redirect(http.StatusSeeOther, "/menu")
+			fmt.Println("Authentication login")
 		} else {
 
 			// Get form values
@@ -245,6 +246,8 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 			}
 			// Set cookie
 			http.SetCookie(c.Writer, cookie)
+			fmt.Println("set cookie")
+
 		}
 		// Redirect to home page
 		c.Redirect(http.StatusSeeOther, "/menu")

@@ -23,7 +23,7 @@ const (
 
 // Save session using cookies
 func EnableCookieSession() gin.HandlerFunc {
-	store := cookie.NewStore([]byte(Secret))
+	store := cookie.NewStore([]byte(userkey))
 	return sessions.Sessions("mysession", store)
 
 }
@@ -56,6 +56,15 @@ func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
 	}
 }
 
+// Check if the current request contains a valid user session and return a boolean value
+func HasSession(c *gin.Context) bool {
+	session := sessions.Default(c)
+	if sessionValue := session.Get(userkey); sessionValue == nil {
+		return false
+	}
+	return true
+}
+
 // ClearAuthSession for User
 func ClearAuthSession(c *gin.Context) error {
 	session := sessions.Default(c)
@@ -67,33 +76,12 @@ func ClearAuthSession(c *gin.Context) error {
 	return nil
 }
 
-// Check if the current request contains a valid user session and return a boolean value
-func HasSession(c *gin.Context) bool {
-	session := sessions.Default(c)
-	if sessionValue := session.Get("userID"); sessionValue == nil {
-		return false
-	}
-	return true
-}
-
-// func IsLoggedIn(c *gin.Context) (bool, uuid.UUID) {
-// 	session := sessions.Default(c)
-// 	sessionID := session.Get(userkey)
-// 	if sessionID == nil {
-// 		return false, uuid.Nil
-// 	}
-// 	userID, err := uuid.Parse(sessionID.(string))
-// 	if err != nil {
-// 		return false, uuid.Nil
-// 	}
-// 	return true, userID
-// }
-
 // 函數從 session 中獲取使用者的 ID
 // 如果 session 不存在或 ID 為空，則返回一個空的 UUID
+// Get Session for User
 func GetSessionUserId(c *gin.Context) uuid.UUID {
 	session := sessions.Default(c)
-	sessionValue := session.Get("userId")
+	sessionValue := session.Get("userkey")
 	if sessionValue == nil {
 		return uuid.Nil
 	}
@@ -111,16 +99,20 @@ func GetUserSession(c *gin.Context) map[string]interface{} {
 	userName := ""
 	if hasSession {
 		userId := GetSessionUserId(c)
+
 		var user models.User
 		if err := utils.DB.Where("id = ?", userId).First(&user).Error; err == nil {
-			userName = user.Name
+			userID = user.ID
 		}
+
 	}
+	// 從HTTP請求參數中獲取名稱
 	data := make(map[string]interface{})
 	data["hasSession"] = hasSession
 	data["userId"] = userID
 	data["userName"] = userName
 	return data
+
 }
 
 // CheckSession for User
