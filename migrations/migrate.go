@@ -2,9 +2,11 @@ package migrations
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ZhijiunY/restaurant-service-system/models"
 	"github.com/ZhijiunY/restaurant-service-system/utils"
+	"github.com/google/uuid"
 )
 
 func Migrate() {
@@ -12,18 +14,21 @@ func Migrate() {
 	utils.DB.AutoMigrate(&models.User{}, &models.Menu{}, &models.Table{}, &models.Order{}, &models.OrderItem{})
 	fmt.Println("Migration complete")
 
-	// DB.Migrator().CreateConstraint(&models.User{}, "Order")
-	// DB.Migrator().CreateConstraint(&models.User{}, "fk_users_order")
+	// create menus
+	menus := []models.Menu{
+		{ID: uuid.New(), Name: "Hambuger", Description: "good", Price: 10, Created_at: time.Now(), Updated_at: time.Now()},
+		{ID: uuid.New(), Name: "Apple", Description: "good", Price: 20, Created_at: time.Now(), Updated_at: time.Now()},
+		{ID: uuid.New(), Name: "Banana", Description: "good", Price: 30, Created_at: time.Now(), Updated_at: time.Now()},
+		{ID: uuid.New(), Name: "Pizza", Description: "good", Price: 40, Created_at: time.Now(), Updated_at: time.Now()},
+		{ID: uuid.New(), Name: "Salads", Description: "good", Price: 50, Created_at: time.Now(), Updated_at: time.Now()},
+		{ID: uuid.New(), Name: "Cake", Description: "good", Price: 60, Created_at: time.Now(), Updated_at: time.Now()},
+	}
 
-	// DB.Migrator().CreateConstraint(&models.Table{}, "User")
-	// DB.Migrator().CreateConstraint(&models.Table{}, "fk_table_users")
-
-	// DB.Migrator().CreateConstraint(&models.Order{}, "OrderDetails")
-	// DB.Migrator().CreateConstraint(&models.Order{}, "fk_order_orderDetails")
-
-	// DB.Migrator().CreateConstraint(&models.Menus{}, "OrderDetails")
-	// DB.Migrator().CreateConstraint(&models.Menus{}, "fk_menus_orderDetails")
-
-	// fmt.Println("Foreign Keys created successfully")
-
+	// store database in postgres
+	for _, menu := range menus {
+		result := utils.DB.Create(&menu)
+		if result.Error != nil {
+			fmt.Println(result.Error)
+		}
+	}
 }

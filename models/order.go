@@ -16,6 +16,7 @@ type Order struct {
 	TotalPrice float64   `gorm:"not null" json:"total_price"`
 	User       User      `gorm:"foreignKey:UserID" json:"user"`
 	Table      Table     `gorm:"foreignKey:TableID" json:"table"`
+	Menu       Menu      `gorm:"foreignKey:MenuID" json:"menu"`
 	State      int64     `gorm:"not null" json:"state"`
 	Created_at time.Time `json:"created_at"`
 	Updated_at time.Time `json:"updated_at"`

@@ -6,122 +6,32 @@
     {{template "navigation" .}}
 
 	<section class="section" id="order">
-		{{if .Order}}
-		<table>
-			<tr>
-				<td>商品名称</td>
-				<td>数量</td>
-				<td>单价</td>
-				<td>金额</td>
-				<td>操作</td>
-			</tr>
-			{{range .Order.OrderItems}}	
-			<tr>
-				<td>{{.Menu.Name}}</td>
-				<td>
-					<input id="{{.TableID}}" class="updateCartItem" type="number" min="1" value="{{.Count}}" style="text-align:center;width: 50px;"/>
-				</td>
-				<td>{{.Menu.Price}}</td>
-				<td>{{.Amount}}</td>
-				<td><a id="{{.Menu.Name}}" class="deleteCartItem" href="/deleteCartItem?cartItemId={{.OrderItemID}}">删除</a></td>
-			</tr>
-		</table>
-		{{end}}
-	</section>
-
-
-	<div id="main">
-		
-		{{if .Order}}
 		<table>
 			<tr>
 				<td>商品名稱</td>
-				<td>數量</td>
+				<td>描述</td>
 				<td>單價</td>
+				<td>數量</td>
 				<td>金額</td>
-				<td>操作</td>
 			</tr>
-		{{range .Order.OrderItems}}	
+		{{range .Menus}}
 			<tr>
-				<td>{{.Book.Title}}</td>
+				<td>{{.Name}}</td>
+				<td>{{.Description}}</td>
+				<td>{{.Price}}</td>
 				<td>
-					<input id="{{.CartItemID}}" class="updateCartItem" type="number" min="1" value="{{.Count}}" style="text-align:center;width: 50px;"/>
+					<input id="{{.Price}}" class="updateCartItem" type="number" min="1" value="{{.Price}}" style="text-align:center;width: 50px;"/>
 				</td>
-				<td>{{.Book.Price}}</td>
-				<td>{{.Amount}}</td>
-				<td><a id="{{.Book.Title}}" class="deleteCartItem" href="/deleteCartItem?cartItemId={{.CartItemID}}">删除</a></td>
 			</tr>
-		{{end}}
-		</table>
-		
-		<div class="cart_info">
-			<span class="cart_span">购物车中共有<span class="b_count" id="totalCount">{{.Cart.TotalCount}}</span>件商品</span>
-			<span class="cart_span">总金额<span class="b_price" id="totalAmount">{{.Cart.TotalAmount}}</span>元</span>
-			<span class="cart_span"><a href="/main">继续购物</a></span>
-			<span class="cart_span"><a href="/deleteCart?cartId={{.Cart.CartID}}" id="emptyCart">清空购物车</a></span>
-			<span class="cart_span"><a href="/checkout">去结账</a></span>
-		</div>
-		{{else}}
-		<br/><br/><br/><br/><br/><br/><br/><br/><br/>
-		<h1 style="text-align: center">您的购物车饥渴难耐，快去<a href="/main" style="color:red">购物</a>吧！</h1>
-		{{end}}
-	</div>
-	
-	<div id="main">
-		<div id="book">
-			<div class="book_cond">
-			<form action="/getPageBooksByPrice" method="POST">
-				價格：<input type="text" name="min"> 元 - 
-					<input type="text" name="max"> 元 <button>查詢</button>
-			</form>			
-			</div>
-			<div style="text-align: center">
-				<!-- <span>您的购物车中有3件商品</span> -->
-				<div>
-					<span style="color: red" id="bookMsg"></span></span>
-				</div>
-			</div>
 
-			{{range .Books}}
-			<div class="b_list">
-				<div class="img_div">
-					<img class="book_img" alt="" src="{{.ImgPath}}" />
-				</div>
-				<div class="book_info">
-					<div class="book_name">
-						<span class="sp1">餐點:</span>
-						<span class="sp2">{{.Title}}</span>
-					</div>
-					<div class="book_author">
-						<span class="sp1">廚師:</span>
-						<span class="sp2">{{.Author}}</span>
-					</div>
-					<div class="book_price">
-						<span class="sp1">價格:</span>
-						<span class="sp2">＄{{.Price}}</span>
-					</div>
-					<div class="book_sales">
-						<span class="sp1">銷量:</span>
-						<span class="sp2">{{.Sales}}</span>
-					</div>
-					<div class="book_amount">
-						<span class="sp1">庫存:</span>
-						<span class="sp2">{{.Stock}}</span>
-					</div>
-					<div class="book_add">
-						{{if .Stock}}
-						<button id="{{.ID}}" class="addBook2Cart">加入購物車 </button>
-						<!-- <input type="hidden" value="{{.ID}}"/> -->
-						{{else}}
-						<span style="color:red">小二拼命补货中...</span>
-						{{end}}
-					</div>
-				</div>
-			</div>
-			{{end}}
-			
-		</div>
-	</div>
+		{{range .Orders}}
+			<tr>
+				<td>{{.TotalPrice}}</td>
+			</tr>
+		{{end}}	
+		</table>
+	</section>
+
 	
 	{{template "footer" .}}
 </body>
