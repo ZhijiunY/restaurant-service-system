@@ -3,36 +3,39 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Order struct {
 	gorm.Model
-	ID         uuid.UUID `gorm:"primaryKey" json:"id"`
-	UserID     int       `gorm:"not null" json:"user_id"`
-	TableID    int       `gorm:"not null" json:"table_id"`
-	OrderDate  time.Time `gorm:"not null" json:"order_date"`
-	TotalPrice float64   `gorm:"not null" json:"total_price"`
-	User       User      `gorm:"foreignKey:UserID" json:"user"`
-	Table      Table     `gorm:"foreignKey:TableID" json:"table"`
-	Menu       Menu      `gorm:"foreignKey:MenuID" json:"menu"`
-	State      int64     `gorm:"not null" json:"state"`
-	Created_at time.Time `json:"created_at"`
-	Updated_at time.Time `json:"updated_at"`
+	ID            string      `gorm:"primaryKey" json:"id"`
+	UserID        int64       `gorm:"not null" json:"user_id"`
+	TableID       int64       `gorm:"not null" json:"table_id"`
+	OrderDate     time.Time   `gorm:"not null" json:"order_date"`
+	TotalPrice    float64     `gorm:"not null" json:"total_price"`
+	TotalQuantity int64       `gorm:"not null" json:"total_quantity"`
+	OrderItems    []OrderItem `json:"order_item"`
+	User          User        `gorm:"foreignKey:UserID" json:"user"`
+	Table         Table       `gorm:"foreignKey:TableID" json:"table"`
+	Created_at    time.Time   `json:"created_at"`
+	Updated_at    time.Time   `json:"updated_at"`
 }
 
-// NoSend
-func (order *Order) NoSend() bool {
-	return order.State == 0
+// GetTotalCount
+func (order *Order) GetTotalQuantity() int64 {
+	var totalQuantity int64
+	for _, v := range order.OrderItems {
+		totalQuantity = totalQuantity + v.Quantity
+	}
+	return totalQuantity
 }
 
-// SendComplate
-func (order *Order) SendComplate() bool {
-	return order.State == 1
-}
+// GetTotalPrice
+func (order *Order) GetTotalPrice() float64 {
+	var totalPrice float64
 
-// Complate 交易完成
-func (order *Order) Complate() bool {
-	return order.State == 2
+	for _, v := range order.OrderItems {
+		totalPrice = totalPrice + (float64(v.Quantity) * v.Menu.Price)
+	}
+	return totalPrice
 }

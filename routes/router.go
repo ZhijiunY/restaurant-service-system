@@ -69,5 +69,9 @@ func InitRouter() *gin.Engine {
 		UserRoutes.DELETE("/:id", controllers.DeleteUser)
 	}
 
+	OrderRoutes := router.Group("/order")
+	{
+		OrderRoutes.POST("/confirmPrice", controllers.ConfirmPrice)
+	}
 	return router
 }

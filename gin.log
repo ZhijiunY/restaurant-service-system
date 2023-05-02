@@ -3,26 +3,26 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (21): 
+	- 
+	- index.tmpl
 	- login.tmpl
-	- base
 	- header.tmpl
 	- header
-	- navigation.tmpl
 	- navigation
 	- order.tmpl
-	- 
-	- home
+	- footer.tmpl
+	- head
+	- navlogin
 	- menu.tmpl
 	- signup.tmpl
 	- content
-	- footer
-	- head
-	- navlogin
-	- index.tmpl
-	- base.tmpl
-	- footer.tmpl
 	- full.tmpl
+	- base.tmpl
+	- base
+	- footer
 	- head.tmpl
+	- home
+	- navigation.tmpl
 	- navlogin.tmpl
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
@@ -41,12 +41,17 @@
 [GIN-debug] POST   /user/                    --> github.com/ZhijiunY/restaurant-service-system/controllers.CreateUser (6 handlers)
 [GIN-debug] PUT    /user/:id                 --> github.com/ZhijiunY/restaurant-service-system/controllers.UpdateUser (6 handlers)
 [GIN-debug] DELETE /user/:id                 --> github.com/ZhijiunY/restaurant-service-system/controllers.DeleteUser (6 handlers)
+[GIN-debug] POST   /order/confirmPrice       --> github.com/ZhijiunY/restaurant-service-system/controllers.ConfirmPrice (6 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2023-04-26 23:03:25.66706 +0800 CST m=+5.432688356] GET /order 200  
-::1 - [2023-04-26 23:04:08.287164 +0800 CST m=+48.052791810] GET /order 500  
-::1 - [2023-04-26 23:04:18.676885 +0800 CST m=+58.442513097] GET /order 500  
-::1 - [2023-04-26 23:04:32.759955 +0800 CST m=+72.525582655] GET /order 200  
-::1 - [2023-04-26 23:05:40.100801 +0800 CST m=+139.866429131] GET /order 200  
-::1 - [2023-04-26 23:07:09.572053 +0800 CST m=+229.337681525] GET /order 500  
+::1 - [2023-04-27 18:43:40.965561 +0800 CST m=+6.615926618] GET / 401  
+::1 - [2023-04-27 18:43:40.968641 +0800 CST m=+6.619005943] GET / 401  
+::1 - [2023-04-27 18:43:41.037513 +0800 CST m=+6.687878281] GET / 401  
+::1 - [2023-04-27 18:43:41.040917 +0800 CST m=+6.691282242] GET / 401  
+::1 - [2023-04-27 18:43:41.166671 +0800 CST m=+6.817035988] GET / 200  
+::1 - [2023-04-27 18:43:43.230806 +0800 CST m=+8.881171512] GET /user/login 200  
+::1 - [2023-04-27 18:43:49.856236 +0800 CST m=+15.506601458] POST /user/login 303  
+::1 - [2023-04-27 18:43:49.864647 +0800 CST m=+15.515012561] GET /menu 200  
+::1 - [2023-04-27 18:43:52.075424 +0800 CST m=+17.725789484] GET /order 200  
+::1 - [2023-04-27 18:43:55.015012 +0800 CST m=+20.665377509] POST /confirmPrice 404  
