@@ -27,7 +27,7 @@
 		</table>
 
 		<form action="/confirmPrice" method="post">
-			<input type="submit" name="submit" value="Confirm Price">
+			<input type="submit" name="submit" value="Go To Checkout">
 
 			<table>
 				<tr>
@@ -39,6 +39,10 @@
 				</tr>
 			</table>
 		</form>
+
+		<div class="">
+			<span>總金額<span class="" id="totalPrice">{{.Order.TotalPrice}}</span>元</span>
+		</div>
 
 
 		

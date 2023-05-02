@@ -50,7 +50,7 @@ func InitRouter() *gin.Engine {
 		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.OrderAction)
 	}
 
-	AuthRoutes := router.Group("/user")
+	AuthRoutes := router.Group("/auth")
 	{
 		AuthRoutes.GET("/login", controllers.NewSessionController(store).LoginGet())
 		AuthRoutes.GET("/signup", controllers.NewSessionController(store).SignupGet())
@@ -72,6 +72,8 @@ func InitRouter() *gin.Engine {
 	OrderRoutes := router.Group("/order")
 	{
 		OrderRoutes.POST("/confirmPrice", controllers.ConfirmPrice)
+
+		OrderRoutes.Static("/static", "./static")
 	}
 	return router
 }
