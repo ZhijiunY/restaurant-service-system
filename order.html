@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    {{template "head" .}}
+<body>
+
+	<header class="header" id="home">
+    <!--Navigation -->
+    {{template "navigation" .}}
+	
+	
+		<section class="section" id="order">
+			<table>
+				<tr>
+					<td>商品名稱</td>
+					<td>描述</td>
+					<td>單價</td>
+					<td>數量</td>
+				</tr>
+			{{range .Menus}}
+				<tr>
+					<td>{{ .Name }}</td>
+					<td>{{ .Description }}</td>
+					<td>{{ .Price }}</td>
+					<td>
+						<input id="{{ .Count }}" class="updateCartItem" type="number" min="0" value="{{.Count}}" style="text-align:center;width: 50px;"/>
+					</td>
+				</tr>
+
+			{{end}}	
+			</table>
+
+			<form action="/confirmPrice" method="post">
+				<input type="submit" name="submit" value="Go To Checkout">
+
+				<table>
+					<tr>
+						<td>金額總計</td>
+					</tr>
+				
+					<tr>
+						<td>{{ .TotalPrice }}</td>
+					</tr>
+				</table>
+			</form>
+
+			<div class="">
+				<span>總金額<span class="" id="totalPrice">{{ .Order.TotalPrice }}</span>元</span>
+			</div>
+
+
+			
+		</section>
+
+	</header>
+	{{template "footer" .}}
+</body>
+</html>

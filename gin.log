@@ -3,28 +3,28 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (22): 
-	- base
-	- footer.tmpl
+	- content
+	- footer
 	- full.tmpl
+	- header.tmpl
+	- contact.tmpl
+	- menu.tmpl
+	- navigation
+	- index.tmpl
+	- login.tmpl
+	- signup.tmpl
+	- base
 	- head.tmpl
 	- head
 	- navigation.tmpl
-	- order.tmpl
 	- 
-	- index.tmpl
-	- signup.tmpl
 	- base.tmpl
-	- content
-	- footer
-	- header.tmpl
-	- login.tmpl
 	- home
-	- navlogin
-	- contact.tmpl
-	- header
-	- navigation
 	- navlogin.tmpl
-	- menu.tmpl
+	- navlogin
+	- order.tmpl
+	- footer.tmpl
+	- header
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
@@ -48,20 +48,20 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2023-06-07 03:15:49.127333 +0800 CST m=+5.464512887] GET /order 200  
-::1 - [2023-06-07 03:15:49.130713 +0800 CST m=+5.467893404] GET /static/css/styles.css 304  
-::1 - [2023-06-07 03:15:49.236005 +0800 CST m=+5.573184586] GET /static/img/banner.jpg 304  
-::1 - [2023-06-07 03:15:51.81825 +0800 CST m=+8.155429626] GET / 200  
-::1 - [2023-06-07 03:15:51.841708 +0800 CST m=+8.178888023] GET /static/js/index.js 304  
-::1 - [2023-06-07 03:15:51.853858 +0800 CST m=+8.191037423] GET /static/img/pic5.jpg 304  
-::1 - [2023-06-07 03:15:53.391509 +0800 CST m=+9.728688821] GET /auth/login 200  
-::1 - [2023-06-07 03:15:53.395312 +0800 CST m=+9.732491421] GET /auth/static/css/styles.css 304  
-::1 - [2023-06-07 03:16:02.124321 +0800 CST m=+18.461501168] POST /auth/login 400  
-::1 - [2023-06-07 03:16:12.754773 +0800 CST m=+29.091952699] POST /auth/login 303  
-::1 - [2023-06-07 03:16:12.76738 +0800 CST m=+29.104559557] GET /menu 200  
-::1 - [2023-06-07 03:16:12.826416 +0800 CST m=+29.163595719] GET /static/img/pic3.jpg 304  
-::1 - [2023-06-07 03:16:12.826688 +0800 CST m=+29.163867374] GET /static/img/pic2.jpg 304  
-::1 - [2023-06-07 03:16:12.837602 +0800 CST m=+29.174782208] GET /static/img/pic7.jpg 304  
-::1 - [2023-06-07 03:16:12.84567 +0800 CST m=+29.182849778] GET /static/img/pic1.jpg 304  
-::1 - [2023-06-07 03:16:12.848495 +0800 CST m=+29.185674789] GET /static/img/pic6.jpg 304  
-::1 - [2023-06-07 03:16:12.849655 +0800 CST m=+29.186834843] GET /static/img/pic4.jpg 304  
+::1 - [2023-12-28 16:04:39.153239 +0800 CST m=+18.093800322] GET / 401  
+::1 - [2023-12-28 16:04:39.324658 +0800 CST m=+18.265219951] GET / 401  
+::1 - [2023-12-28 16:04:39.432548 +0800 CST m=+18.373109433] GET / 401  
+::1 - [2023-12-28 16:04:39.442676 +0800 CST m=+18.383237397] GET / 401  
+::1 - [2023-12-28 16:04:39.538175 +0800 CST m=+18.478736796] GET / 401  
+::1 - [2023-12-28 16:04:39.545001 +0800 CST m=+18.485562801] GET / 401  
+::1 - [2023-12-28 16:04:39.648816 +0800 CST m=+18.589377922] GET / 401  
+::1 - [2023-12-28 16:04:39.658384 +0800 CST m=+18.598945858] GET / 401  
+::1 - [2023-12-28 16:04:39.819751 +0800 CST m=+18.760313217] GET / 200  
+::1 - [2023-12-28 16:04:41.458495 +0800 CST m=+20.399057536] GET /auth/login 200  
+::1 - [2023-12-28 16:04:50.756242 +0800 CST m=+29.696804171] POST /auth/login 303  
+::1 - [2023-12-28 16:04:50.766441 +0800 CST m=+29.707002303] GET /menu 200  
+::1 - [2023-12-28 16:04:55.590793 +0800 CST m=+34.531355068] GET /order 200  
+::1 - [2023-12-28 16:04:55.620009 +0800 CST m=+34.560570637] GET /static/img/logo.gif 404  
+::1 - [2023-12-28 16:05:29.998343 +0800 CST m=+68.938904983] GET /order 200  
+::1 - [2023-12-28 16:05:30.01193 +0800 CST m=+68.952491783] GET /static/img/logo.gif 404  
+::1 - [2023-12-28 16:05:39.353037 +0800 CST m=+78.293598425] POST /updateOraddBook 404  
