@@ -34,11 +34,8 @@ func InitRouter() *gin.Engine {
 	router.Use(sessions.Sessions(sessionName, store))
 	sessionController := controllers.NewSessionController(store)
 	router.Use(sessionController.LoadAndSave())
-	// sessionMiddleware := middleware.EnableCookieSession()
-	// router.Use(sessionMiddleware)
 
-	// connect to template
-	// Static file
+	// connect to template | Static file
 	router.LoadHTMLGlob("./templates/**/*")
 	router.Static("/static", "./static")
 
@@ -46,10 +43,11 @@ func InitRouter() *gin.Engine {
 	MainRoutes := router.Group("/")
 	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
 		MainRoutes.GET("/", controllers.GetIndex)
-		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu)
-		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.OrderAction)
+		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired())
+		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired())
 	}
 
+	// auth
 	AuthRoutes := router.Group("/auth")
 	{
 		AuthRoutes.GET("/login", controllers.NewSessionController(store).LoginGet())
@@ -61,14 +59,21 @@ func InitRouter() *gin.Engine {
 		AuthRoutes.Static("/static", "./static")
 	}
 
+	// user
 	UserRoutes := router.Group("/user")
 	{
-		UserRoutes.GET("/", controllers.GetUser)
-		UserRoutes.POST("/", controllers.CreateUser)
-		UserRoutes.PUT("/:id", controllers.UpdateUser)
-		UserRoutes.DELETE("/:id", controllers.DeleteUser)
+		// UserRoutes.GET("/", controllers.GetUser)
+		// UserRoutes.POST("/", controllers.CreateUser)
+		// UserRoutes.PUT("/:id", controllers.UpdateUser)
+		// UserRoutes.DELETE("/:id", controllers.DeleteUser)
+
+		UserRoutes.GET("/users", controllers.NewSessionController(store).GetUsers())
+		UserRoutes.GET("/users/:user_id", controllers.NewSessionController(store).GetUser())
+		UserRoutes.POST("/users/signup", controllers.NewSessionController(store).SignUp())
+		UserRoutes.POST("/users/login", controllers.NewSessionController(store).Login())
 	}
 
+	// order
 	OrderRoutes := router.Group("/order")
 	{
 		OrderRoutes.POST("/confirmPrice", controllers.ConfirmPrice)

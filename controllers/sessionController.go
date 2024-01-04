@@ -272,18 +272,16 @@ func (sc *SessionController) LogoutPost() gin.HandlerFunc {
 		c.Redirect(http.StatusMovedPermanently, "/")
 	}
 
-	// 	session := sessions.Default(c)
-	// 	user := session.Get(userkey)
+	// session := sessions.Default(c)
+	// user := session.Get(userkey)
 
-	// 	if user == nil {
-	// 		return
-	// 	}
-	// 	session.Delete(userkey)
-	// 	if err := session.Save(); err != nil {
-	// 		return
-	// 	}
-
-	// 	c.Redirect(http.StatusMovedPermanently, "/")
+	// if user == nil {
+	// 	return nil
+	// }
+	// session.Delete(userkey)
+	// if err := session.Save(); err != nil {
+	// 	return nil
 	// }
 
+	// c.Redirect(http.StatusMovedPermanently, "/")
 }

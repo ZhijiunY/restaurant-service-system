@@ -49,6 +49,8 @@ func setupLogging() {
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
 }
 
+// var foodCollection *mongo.Collection = utils.OpenCollection(utils.Client, "food")
+
 func main() {
 	setupLogging()
 

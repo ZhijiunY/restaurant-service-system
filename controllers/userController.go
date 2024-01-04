@@ -16,7 +16,7 @@ type UserController struct {
 // var user models.User
 
 // get user
-func GetUser(c *gin.Context) {
+func GetUsers(c *gin.Context) {
 	// db := utils.DB
 
 	// // 从URL参数中获取用户ID
@@ -77,7 +77,3 @@ func UpdateUser(c *gin.Context) {
 	// SON(200, &user)
 
 }
-
-// func ChackUserPassword(c *gin.Context) {
-
-// }
