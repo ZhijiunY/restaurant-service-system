@@ -8,7 +8,7 @@
     {{template "navigation" .}}
 	
 	
-		<section class="section" id="order">
+		<!-- <section class="section" id="order">
 			<table>
 				<tr>
 					<td>商品名稱</td>
@@ -49,6 +49,45 @@
 
 
 			
+		</section> -->
+
+		<section class="section" id="order">
+			<table>
+				<tr>
+					<td>商品名稱</td>
+					<td>描述</td>
+					<td>單價</td>
+					<td>數量</td>
+				</tr>
+				<!-- 假設的菜單項目，您應該從後端數據動態生成這些行 -->
+				{{range .menuItems}}
+				<tr>
+					<td>{{.Name}}</td>
+					<td>{{.Description}}</td>
+					<td>{{.Price}}元</td>
+					<td><input type="number" min="0" value="1" style="text-align:center;width: 50px;"/></td>
+				</tr>
+				{{end}}
+					<!-- 更多菜單項目 -->
+				</table>
+	
+			<form action="/confirmPrice" method="post">
+				<input type="submit" name="submit" value="前往結賬">
+	
+				<table>
+					<tr>
+						<td>金額總計</td>
+					</tr>
+					<tr>
+						<td>180元</td> <!-- 這裡應該動態計算總金額 -->
+					</tr>
+			
+				</table>
+			</form>
+	
+			<div>
+				<span>總金額 <span id="totalPrice">{{ .CalculateTotal }}</span>元</span> <!-- 動態顯示總金額 -->
+			</div>
 		</section>
 
 	</header>

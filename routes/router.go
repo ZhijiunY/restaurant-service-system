@@ -60,17 +60,17 @@ func InitRouter() *gin.Engine {
 	}
 
 	// user
-	UserRoutes := router.Group("/user")
+	// UserRoutes := router.Group("/user")
 	{
-		// UserRoutes.GET("/", controllers.GetUser)
-		// UserRoutes.POST("/", controllers.CreateUser)
-		// UserRoutes.PUT("/:id", controllers.UpdateUser)
-		// UserRoutes.DELETE("/:id", controllers.DeleteUser)
+		// 	// UserRoutes.GET("/", controllers.GetUser)
+		// 	// UserRoutes.POST("/", controllers.CreateUser)
+		// 	// UserRoutes.PUT("/:id", controllers.UpdateUser)
+		// 	// UserRoutes.DELETE("/:id", controllers.DeleteUser)
 
-		UserRoutes.GET("/users", controllers.NewSessionController(store).GetUsers())
-		UserRoutes.GET("/users/:user_id", controllers.NewSessionController(store).GetUser())
-		UserRoutes.POST("/users/signup", controllers.NewSessionController(store).SignUp())
-		UserRoutes.POST("/users/login", controllers.NewSessionController(store).Login())
+		// UserRoutes.GET("/users", controllers.NewSessionController(store).GetUsers())
+		// UserRoutes.GET("/users/:user_id", controllers.NewSessionController(store).GetUser())
+		// UserRoutes.POST("/users/signup", controllers.NewSessionController(store).SignUp())
+		// UserRoutes.POST("/users/login", controllers.NewSessionController(store).Login())
 	}
 
 	// order

@@ -7,7 +7,7 @@
     <!--Navigation -->
     {{template "navigation" .}}
 	
-	
+
 		<section class="section" id="order">
 			<table>
 				<tr>
@@ -16,39 +16,33 @@
 					<td>單價</td>
 					<td>數量</td>
 				</tr>
-			{{range .Menus}}
-				<tr>
-					<td>{{ .Name }}</td>
-					<td>{{ .Description }}</td>
-					<td>{{ .Price }}</td>
-					<td>
-						<input id="{{ .Count }}" class="updateCartItem" type="number" min="0" value="{{.Count}}" style="text-align:center;width: 50px;"/>
-					</td>
-				</tr>
-
-			{{end}}	
+				<!-- 假設的菜單項目，您應該從後端數據動態生成這些行 -->
+				{{range .menuItems}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.Description}}</td>
+                <td>{{.Price}}元</td>
+                <td><input type="number" min="0" value="1" style="text-align:center;width: 50px;"/></td>
+            </tr>
+				<!-- 更多菜單項目 -->
 			</table>
-
+	
 			<form action="/confirmPrice" method="post">
-				<input type="submit" name="submit" value="Go To Checkout">
-
+				<input type="submit" name="submit" value="前往結賬">
+	
 				<table>
 					<tr>
 						<td>金額總計</td>
 					</tr>
-				
 					<tr>
-						<td>{{ .TotalPrice }}</td>
+						<td>180元</td> <!-- 這裡應該動態計算總金額 -->
 					</tr>
 				</table>
 			</form>
-
-			<div class="">
-				<span>總金額<span class="" id="totalPrice">{{ .Order.TotalPrice }}</span>元</span>
+	
+			<div>
+				<span>總金額 <span id="totalPrice">{{ .CalculateTotal }}</span>元</span> <!-- 動態顯示總金額 -->
 			</div>
-
-
-			
 		</section>
 
 	</header>

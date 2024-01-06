@@ -56,3 +56,17 @@ links.map(link => {
 // });
 
 AOS.init();
+
+
+function CalculateTotal() {
+  var total = 0;
+  var items = document.getElementsByClassName('item');
+
+  for (var i = 0; i < items.length; i++) {
+      var price = parseFloat(items[i].getElementsByClassName('price')[0].innerText);
+      var quantity = parseInt(items[i].getElementsByClassName('quantity')[0].value);
+      total += price * quantity;
+  }
+
+  document.getElementById('totalPrice').innerText = '總金額: ' + total + '元';
+}
