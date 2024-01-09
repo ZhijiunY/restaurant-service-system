@@ -75,7 +75,6 @@ func (sc *SessionController) SignupGet() gin.HandlerFunc {
 
 func (sc *SessionController) SignupPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// sc.AuthRequired()
 
 		// get form value
 		name := c.PostForm("name")
@@ -83,17 +82,14 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 		password := c.PostForm("password")
 		fmt.Println("fet value error")
 
-		// if hasSession := middleware.HasSession(c); hasSession {
-		// 	c.String(200, "already logged in")
-		// 	return
-		// }
-		// if existUser := models.UserDetailByName(name); existUser.ID != uuid.Nil {
-		// 	c.String(200, "user already exists")
-		// 	return
-		// }
-		// if pwd, err := middleware.Encrypt(password); err == nil {
-		// 	password = pwd
-		// }
+		if hasSession := middleware.HasSession(c); hasSession {
+			c.String(200, "already logged in")
+			return
+		}
+		if existUser := models.UserDetailByName(name); existUser.ID != uuid.Nil {
+			c.String(200, "user already exists")
+			return
+		}
 
 		// Validate email and password
 		if email == "" || password == "" || name == "" {
@@ -106,47 +102,38 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 
 		// Check if user already exists
 		if existUser := models.UserDetailByName(name); existUser.ID != uuid.Nil {
-			c.String(200, "user already exists")
+			// c.String(200, "user already exists")
+			c.String(http.StatusBadRequest, "user already exists")
 			return
 		}
 
 		// Hash password
-		if pwd, err := middleware.Encrypt(password); err == nil {
-			password = pwd
+		hashedPwd, err := middleware.Encrypt(password)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Password encryption failed"})
+			return
 		}
 
 		// create new user
 		newUser := &models.User{
 			ID:         uuid.New(),
 			Name:       name,
-			Password:   password,
+			Password:   hashedPwd,
 			Email:      email,
 			Created_at: time.Now(),
 			Updated_at: time.Now(),
 		}
 
 		// Store user in database
-		err := utils.DB.Create(newUser).Error
-		if err != nil {
-			// c.AbortWithError(http.StatusInternalServerError, err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to create user"})
+		if err := utils.DB.Create(newUser).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create user"})
 			return
 		}
 
-		// 在session中儲存用戶資訊
-		// session := sessions.Default(c)
-		// session.Set(userkey, newUser.ID)
-		// session.Set(userkey, email)
-		// err = session.Save()
-		// if err != nil {
-		// 	c.AbortWithError(http.StatusInternalServerError, err)
-		// 	fmt.Println("store session error 400")
-		// 	return
-		// }
 		middleware.SaveAuthSession(c, newUser.ID)
 
 		// Redirect to login page
-		c.Redirect(http.StatusSeeOther, "/user/login")
+		c.Redirect(http.StatusSeeOther, "/auth/login")
 		//c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 
 	}

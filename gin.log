@@ -3,28 +3,28 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (22): 
-	- footer
-	- head.tmpl
-	- navlogin.tmpl
-	- contact.tmpl
-	- login.tmpl
-	- home
-	- base.tmpl
-	- content
-	- base
-	- full.tmpl
-	- head
-	- header.tmpl
-	- header
-	- 
-	- index.tmpl
-	- signup.tmpl
 	- footer.tmpl
-	- navigation.tmpl
+	- head.tmpl
 	- navigation
+	- order.tmpl
+	- index.tmpl
+	- header.tmpl
+	- home
 	- navlogin
 	- menu.tmpl
-	- order.tmpl
+	- footer
+	- header
+	- navlogin.tmpl
+	- 
+	- login.tmpl
+	- signup.tmpl
+	- base.tmpl
+	- base
+	- contact.tmpl
+	- content
+	- full.tmpl
+	- head
+	- navigation.tmpl
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
@@ -44,7 +44,12 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2024-01-09 17:16:04.743169 +0800 CST m=+4.555128979] GET /auth/login 200  
-::1 - [2024-01-09 17:16:05.943056 +0800 CST m=+5.755016443] GET /auth/signup 200  
-::1 - [2024-01-09 17:16:21.307829 +0800 CST m=+21.119789783] POST /auth/signup 303  
-::1 - [2024-01-09 17:16:21.31942 +0800 CST m=+21.131380285] GET /user/login 404  
+::1 - [2024-01-09 18:56:11.798301 +0800 CST m=+34.392047823] GET / 200  
+::1 - [2024-01-09 18:56:13.067588 +0800 CST m=+35.661334496] GET /auth/login 400  
+::1 - [2024-01-09 18:56:15.017098 +0800 CST m=+37.610844972] GET /auth/signup 400  
+::1 - [2024-01-09 18:56:16.223722 +0800 CST m=+38.817468781] POST /auth/login 400  
+::1 - [2024-01-09 18:56:17.570754 +0800 CST m=+40.164500086] GET /auth/signup 200  
+::1 - [2024-01-09 18:56:31.151188 +0800 CST m=+53.744934633] POST /auth/signup 303  
+::1 - [2024-01-09 18:56:31.164584 +0800 CST m=+53.758330486] GET /auth/login 400  
+::1 - [2024-01-09 18:56:41.955663 +0800 CST m=+64.549409993] POST /auth/login 303  
+::1 - [2024-01-09 18:56:41.964212 +0800 CST m=+64.557958874] GET /menu 200  
