@@ -1,51 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-    {{template "head" .}}
-<body>
+{{define "navigation"}}
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="navigation container">
+          <div class="logo">
+            <a href="/"><h1><span> </span>HealthyFood<span> </span> </h1></a>
+            <span>HELLO {{ .Name}}</span>
+          </div>
 
-	<header class="header" id="home">
-    <!--Navigation -->
-    {{template "navigation" .}}
-	
+          <div class="menu">
+            <div class="top-nav">
+              <div class="logo">
+                <h1>FastFood<span>.</span></h1>
+              </div>
+              <div class="close">
+                <i class="fas fa-times"></i>
+              </div>
+            </div>
 
-		<section class="section" id="order">
-			<table>
-				<tr>
-					<td>商品名稱</td>
-					<td>描述</td>
-					<td>單價</td>
-					<td>數量</td>
-				</tr>
-				<!-- 假設的菜單項目，您應該從後端數據動態生成這些行 -->
-				{{range .menuItems}}
-            <tr>
-                <td>{{.Name}}</td>
-                <td>{{.Description}}</td>
-                <td>{{.Price}}元</td>
-                <td><input type="number" min="0" value="1" style="text-align:center;width: 50px;"/></td>
-            </tr>
-				<!-- 更多菜單項目 -->
-			</table>
-	
-			<form action="/confirmPrice" method="post">
-				<input type="submit" name="submit" value="前往結賬">
-	
-				<table>
-					<tr>
-						<td>金額總計</td>
-					</tr>
-					<tr>
-						<td>180元</td> <!-- 這裡應該動態計算總金額 -->
-					</tr>
-				</table>
-			</form>
-	
-			<div>
-				<span>總金額 <span id="totalPrice">{{ .CalculateTotal }}</span>元</span> <!-- 動態顯示總金額 -->
-			</div>
-		</section>
+            <div>
+              <ul class="nav-list">
+                <li class="nav-item">
+                  <a href="/menu" class="nav-link scroll-link">Menu</a>
+                </li>
+                <li class="nav-item">
+                  <a href="/order" class="nav-link scroll-link">Manager</a>
+                </li>
+                <li class="nav-item">
+                  <a href="/contact" class="nav-link scroll-link">Contact</a>
+                </li>
+                <li class="nav-item">
+                  <a href="/user/login" class="nav-link scroll-link">Hi {{.name}}</a>
+                </li>
+                <li>
+                  <form action="/user/logout" method="post">
+                    <input type="submit" name="" value="LOGOUT">
+                  </form>
+                </li>
+              </ul>
+            </div>
+          
+          </div>
 
-	</header>
-	{{template "footer" .}}
-</body>
-</html>
+          <div class="hamburger">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+      </nav>
+
+{{end}}

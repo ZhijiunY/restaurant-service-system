@@ -40,13 +40,6 @@ func InitRouter() *gin.Engine {
 	router.Static("/static", "./static")
 
 	// Grouping routes
-	MainRoutes := router.Group("/")
-	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
-		MainRoutes.GET("/", controllers.GetIndex)
-		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired())
-		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired())
-	}
-
 	// auth
 	AuthRoutes := router.Group("/auth")
 	{
@@ -57,6 +50,15 @@ func InitRouter() *gin.Engine {
 		AuthRoutes.POST("/signup", controllers.NewSessionController(store).SignupPost())
 
 		AuthRoutes.Static("/static", "./static")
+	}
+
+	// need authentication
+	MainRoutes := router.Group("/")
+	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
+		MainRoutes.GET("/", controllers.GetIndex)
+		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu())
+		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
+
 	}
 
 	// user

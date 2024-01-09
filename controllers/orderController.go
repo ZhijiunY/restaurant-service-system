@@ -10,20 +10,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func OrderAction(c *gin.Context) {
-	// TotalPrice := models.Price * models.count
-	menus := []models.Menu{
-		{Name: "Hambuger", Description: "good", Price: 10},
-		{Name: "Apple", Description: "good", Price: 20},
-		{Name: "Banana", Description: "good", Price: 30},
-		{Name: "Pizza", Description: "good", Price: 40},
-		{Name: "Salads", Description: "good", Price: 50},
-		{Name: "Cake", Description: "good", Price: 60},
+// get order page and items
+func OrderAction() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		menusItems := []models.Menu{
+			{Name: "Burger", Description: "good", Price: 10.0},
+			{Name: "Apple", Description: "good", Price: 20.0},
+			{Name: "Banana", Description: "good", Price: 30.0},
+			{Name: "Pizza", Description: "good", Price: 40.0},
+			{Name: "Salads", Description: "good", Price: 50.0},
+			{Name: "Cake", Description: "good", Price: 60.0},
+		}
+
+		// 计算总价格
+		var totalPrice float64
+		for _, menu := range menusItems {
+			totalPrice += menu.Price
+		}
+
+		c.HTML(http.StatusOK, "order.tmpl", gin.H{
+			"menuItems":      menusItems,
+			"CalculateTotal": totalPrice,
+		})
 	}
 
-	c.HTML(http.StatusOK, "order.tmpl", gin.H{
-		"Menus": menus,
-	})
 }
 
 // confrom prices
@@ -48,5 +58,3 @@ func ConfirmPrice(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"TotalPrice": totalPrice})
 	}
 }
-
-//

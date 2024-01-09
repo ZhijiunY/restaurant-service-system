@@ -200,7 +200,7 @@ li {
   }
 }
 
-/* Hero */
+/* Hero ----------*/
 .hero {
   position: relative;
   height: 100%;
@@ -278,7 +278,7 @@ li {
   }
 }
 
-/* About Section */
+/* About Section ----------*/
 .section {
   padding: 5rem 0 7rem 0;
   overflow-x: hidden;
@@ -367,7 +367,7 @@ li {
   }
 }
 
-/* Menu Section */
+/* Menu Section ----------*/
 .menu-center {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -427,7 +427,7 @@ li {
   }
 }
 
-/* Chefs */
+/* Chefs ----------*/
 .chefs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -455,8 +455,64 @@ li {
     grid-template-columns: 1fr;
   }
 }
+/* ---------- */
 
-/* Testimonials */
+/* 设置section的背景色和内边距 */
+.section {
+  background-color: #f9f9f9; /* 浅灰色背景 */
+  padding: 20px;
+  margin: 20px;
+}
+
+/* 表格样式 */
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse; /* 边框合并为单一线条 */
+}
+
+/* 表格标题行样式 */
+table tr:first-child {
+  background-color: #e7e7e7; /* 标题行背景色 */
+}
+
+/* 单元格样式 */
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+/* 输入框样式 */
+input[type="number"] {
+  text-align: center;
+  width: 50px;
+}
+
+/* 提交按钮样式 */
+input[type="submit"] {
+  background-color: #4CAF50; /* 按钮背景色 */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 鼠标悬停在按钮上时的效果 */
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* 总计金额显示的样式 */
+#totalPrice {
+  font-weight: bold;
+}
+
+
+/* ---------- */
+
+/* Testimonials ----------*/
 .testimonial {
   position: relative;
   background: url("/static/img/pic5.jpg") center/cover no-repeat fixed;
@@ -530,7 +586,7 @@ li {
   }
 }
 
-/* Contact Us */
+/* Contact Us ----------*/
 .contact-center {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
@@ -600,7 +656,7 @@ li {
   }
 }
 
-/* Long In */
+/* Long In ----------*/
 .loginBox {
 	position: absolute;
 	top: 50%;
@@ -767,7 +823,7 @@ li {
 	}
 }
 
-/* Footer */
+/* Footer ----------*/
 .footer {
   
   border-top: 1px solid #ddd;

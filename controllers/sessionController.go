@@ -50,6 +50,7 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 		}
 		c.Next()
 	}
+
 }
 
 // 註冊頁面
@@ -153,8 +154,24 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 
 func (sc *SessionController) LoginGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// 	session := sessions.Default(c)
+		// 	user := session.Get(userkey)
 
-		middleware.ClearAuthSession(c)
+		// 	if user != nil {
+		// 		c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
+		// 			"content": "Please logout first",
+		// 			"user":    user,
+		// 		})
+		// 		return
+		// 	}
+		// 	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+		// 		"content": "",
+		// 		"user":    user,
+		// 	})
+		// 	// middleware.ClearAuthSession(c)
+
+		// }
+		// middleware.ClearAuthSession(c)
 
 		session := sessions.Default(c)
 		user := session.Get(userkey)
@@ -163,19 +180,24 @@ func (sc *SessionController) LoginGet() gin.HandlerFunc {
 				"content": "Please logout first",
 				"user":    user,
 			})
-			fmt.Println("please louout first 400")
 			return
 		}
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{
 			"content": "",
 			"user":    user,
 		})
-
-		fmt.Println("login user 200")
-
 		middleware.ClearAuthSession(c)
 
 	}
+}
+
+func RenderNavigation(c *gin.Context) {
+	session := sessions.Default(c)
+	userName := session.Get("Name")
+
+	c.HTML(http.StatusOK, "navigation.tmpl", gin.H{
+		"Name": userName,
+	})
 }
 
 func (sc *SessionController) LoginPost() gin.HandlerFunc {
@@ -184,12 +206,9 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 
 		middleware.ClearAuthSession(c)
 
-		sc.AuthRequired()
-
 		hasSession := middleware.HasSession(c)
 		if hasSession {
 			c.Redirect(http.StatusSeeOther, "/menu")
-			fmt.Println("Authentication login")
 		} else {
 
 			// Get form values
@@ -206,12 +225,6 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 				return
 			}
 
-			// Check if user is already logged in
-			if hasSession := middleware.HasSession(c); hasSession {
-				c.String(200, "already logged")
-				fmt.Println("already logged")
-			}
-
 			// Check if user exists in database
 			// Verify user credentials
 			err := utils.DB.Where("email = ?", email).First(&user).Error
@@ -224,9 +237,8 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 				return
 			}
 
-			hashedPwd := user.Password
-
 			// Compare password
+			hashedPwd := user.Password
 			if match := middleware.Compare(password, hashedPwd); !match {
 				c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
 					"err": "incorrect password",
@@ -238,21 +250,17 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 			// Save user ID to session
 			middleware.SaveAuthSession(c, user.ID)
 
-			// Create cookie
-			cookie := &http.Cookie{
-				Name:  "auth_token",
-				Value: user.ID.String(),
-				Path:  "/",
-			}
-			// Set cookie
-			http.SetCookie(c.Writer, cookie)
-			fmt.Println("set cookie")
+			// 在用户登录成功后保存用户ID到会话
+			session := sessions.Default(c)
+			session.Set(userkey, user.ID)
+			session.Set("Name", user.Name) // 这里假设 user 结构体有一个 Name 字段
+			session.Save()
 
 		}
-		// Redirect to home page
+		// Redirect to menu page
 		c.Redirect(http.StatusSeeOther, "/menu")
-	}
 
+	}
 }
 
 func (sc *SessionController) LogoutPost() gin.HandlerFunc {
