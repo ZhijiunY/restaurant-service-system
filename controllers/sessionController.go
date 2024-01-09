@@ -252,31 +252,20 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 
 func (sc *SessionController) LogoutPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		sc.AuthRequired()
 
-		// clear session
-		if err := middleware.ClearAuthSession(c); err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
-			fmt.Println("Failed to delete session")
+		// Clear the user's session
+		session := sessions.Default(c)
+		session.Clear()
+		err := session.Save()
+		if err != nil {
+			// Handle the error, perhaps by logging it and redirecting with an error message
+			c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
+				"content": "Error clearing the session",
+			})
 			return
 		}
 
-		// 從用戶中注銷，並將用戶重定向回主頁
-		// Logout from the user and redirect the user back to the homepage.
-		middleware.ClearAuthSession(c)
-		c.Redirect(http.StatusMovedPermanently, "/")
+		// Redirect to the login page or home page
+		c.Redirect(http.StatusSeeOther, "/auth/login")
 	}
-
-	// session := sessions.Default(c)
-	// user := session.Get(userkey)
-
-	// if user == nil {
-	// 	return nil
-	// }
-	// session.Delete(userkey)
-	// if err := session.Save(); err != nil {
-	// 	return nil
-	// }
-
-	// c.Redirect(http.StatusMovedPermanently, "/")
 }
