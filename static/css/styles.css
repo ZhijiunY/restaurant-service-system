@@ -456,59 +456,84 @@ li {
   }
 }
 /* ---------- */
-
-/* 设置section的背景色和内边距 */
-.section {
-  background-color: #f9f9f9; /* 浅灰色背景 */
-  padding: 20px;
-  margin: 20px;
+/* order ----------*/
+/* order ----------*/
+.orderBox {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 40px;
+	border-radius: 10px;
+	box-sizing: border-box;
+	background: whitesmoke;
+	background-position: center;
+	display: flex;
+	flex-wrap: wrap; /* 允許元素換行 */
+	justify-content: space-around;
 }
 
-/* 表格样式 */
-table {
-  width: 100%;
-  margin-top: 10px;
-  border-collapse: collapse; /* 边框合并为单一线条 */
+section {
+	flex: 1; /* 讓每個 section 元素佔用相等的空間 */
+	padding: 10px;
+	width: auto; /* 基於內容自動調整寬度 */
+	margin-bottom: 20px;
 }
 
-/* 表格标题行样式 */
-table tr:first-child {
-  background-color: #e7e7e7; /* 标题行背景色 */
+.orderBox p {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	color: black;
 }
 
-/* 单元格样式 */
-td {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+.orderBox table {
+	width: 100%;
+	border-collapse: collapse;
 }
 
-/* 输入框样式 */
-input[type="number"] {
-  text-align: center;
-  width: 50px;
+.orderBox td {
+	padding: 10px; /* 增加表格單元格的內邊距 */
 }
 
-/* 提交按钮样式 */
-input[type="submit"] {
-  background-color: #4CAF50; /* 按钮背景色 */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.orderBox input[type="number"] {
+	width: auto; /* 讓數量輸入框自適應大小 */
+	text-align: center;
 }
 
-/* 鼠标悬停在按钮上时的效果 */
-input[type="submit"]:hover {
-  background-color: #45a049;
+.orderBox input[type="submit"] {
+	border: none;
+	outline: none;
+	height: 40px;
+	color: #fff;
+	font-size: 14px;
+	background: gray;
+	cursor: pointer;
+	border-radius: 20px;
 }
 
-/* 总计金额显示的样式 */
-#totalPrice {
-  font-weight: bold;
+.orderBox input[type="submit"]:hover {
+	background: olive;
 }
 
+/* 根據不同螢幕尺寸調整樣式 */
+@media screen and (max-width: 988px) {
+	.orderBox {
+		/* 根據需要調整寬度和高度 */
+	}
+}
+
+@media screen and (max-width: 640px) {
+	.orderBox {
+		/* 根據需要調整寬度和高度 */
+	}
+}
+
+@media screen and (max-width: 320px) {
+	.orderBox {
+		/* 根據需要調整寬度和高度 */
+	}
+}
 
 /* ---------- */
 

@@ -15,9 +15,9 @@ const (
 
 var secret = []byte("secret")
 
-func NewSessionController(store cookie.Store) {
-	panic("unimplemented")
-}
+// func NewSessionController(store cookie.Store) {
+// 	panic("unimplemented")
+// }
 
 func InitRouter() *gin.Engine {
 	router := gin.New()
@@ -57,7 +57,7 @@ func InitRouter() *gin.Engine {
 	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
 		MainRoutes.GET("/", controllers.GetIndex)
 		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu())
-		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
+		// MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
 
 	}
 
@@ -78,6 +78,7 @@ func InitRouter() *gin.Engine {
 	// order
 	OrderRoutes := router.Group("/order")
 	{
+		OrderRoutes.GET("/", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
 		OrderRoutes.POST("/confirmPrice", controllers.ConfirmPrice)
 
 		OrderRoutes.Static("/static", "./static")

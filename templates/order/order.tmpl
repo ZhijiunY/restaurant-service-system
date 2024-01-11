@@ -3,52 +3,53 @@
     {{template "head" .}}
 <body>
 
-	<header class="header" id="home">
-    <!--Navigation -->
-    {{template "navigation" .}}
-
-		<section class="section" id="order">
-			<div class="loginBox">
+<header class="header" id="home">
+   {{template "navigation" .}}
+	<section class="section" >
+		<div class="orderBox">
+			<!-- 遍歷每種食物類型 -->
+			{{range $foodType, $items := .categorizedMenu}}
+			<section>
+				<p>{{$foodType}}</p> <!-- 顯示食物類型作為標題 -->
 				<table>
 					<tr>
-						<td>商品名稱</td>
+						<td>品項</td>
 						<td>描述</td>
 						<td>單價</td>
 						<td>數量</td>
 					</tr>
-					<!-- 假設的菜單項目，您應該從後端數據動態生成這些行 -->
-					{{range .menuItems}}
+					<!-- 遍歷當前食物類型的所有菜單項目 -->
+					{{range $items}}
 					<tr>
-						<td>{{.Name}}</td>
-						<td>{{.Description}}</td>
-						<td>{{.Price}}元</td>
-						<td><input type="number" min="0" value="1" style="text-align:center;width: 50px;"/></td>
+						<td>{{ .Name }}</td>
+						<td>{{ .Description }}</td>
+						<td>{{ .Price }}</td>
+						<td>
+							<input type="number" class="quantity" min="0" value="0" data-price="{{ .Price }}" style="text-align:center;width: 50px;"/>
+						</td>
 					</tr>
 					{{end}}
-						<!-- 更多菜單項目 -->
-					</table>
-		
-				<form action="/confirmPrice" method="post">
-		
-					<table>
-						<tr>
-							<td>金額總計</td>
-						</tr>
-						<tr>
-							<td>180元</td> <!-- 這裡應該動態計算總金額 -->
-						</tr>
-				
-					</table>
-				</form>
-		
+				</table>
+			</section>
+			{{end}}
+			<section>
 				<div>
-					<span>總金額 <span id="totalPrice">{{ .CalculateTotal }}</span>元</span> <!-- 動態顯示總金額 -->
+					<span> 總金額 <span id="totalPrice"></span>元</span> 
 					<input type="submit" name="submit" value="前往結賬">
 				</div>
-			</div>
-		</section>
+			</section>
+			
+		</div>
+	</section>
+</header>
 
-	</header>
 	{{template "footer" .}}
+
+	 <!-- Custom Script -->
+	 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+	 <script src="./static/js/index.js"></script>
+	
 </body>
 </html>
+
+// 排版css order 頁面

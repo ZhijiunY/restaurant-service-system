@@ -43,9 +43,7 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 		user := session.Get(userkey)
 		if user == nil {
 			c.Redirect(http.StatusMovedPermanently, "/user/login")
-			// c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			// 	"message:": "need to login!!!!!!!",
-			// })
+
 			return
 		}
 		c.Next()
@@ -102,7 +100,6 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 
 		// Check if user already exists
 		if existUser := models.UserDetailByName(name); existUser.ID != uuid.Nil {
-			// c.String(200, "user already exists")
 			c.String(http.StatusBadRequest, "user already exists")
 			return
 		}
@@ -134,44 +131,22 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 
 		// Redirect to login page
 		c.Redirect(http.StatusSeeOther, "/auth/login")
-		//c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 
 	}
 }
 
 func (sc *SessionController) LoginGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 	session := sessions.Default(c)
-		// 	user := session.Get(userkey)
-
-		// 	if user != nil {
-		// 		c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-		// 			"content": "Please logout first",
-		// 			"user":    user,
-		// 		})
-		// 		return
-		// 	}
-		// 	c.HTML(http.StatusOK, "login.tmpl", gin.H{
-		// 		"content": "",
-		// 		"user":    user,
-		// 	})
-		// 	// middleware.ClearAuthSession(c)
-
-		// }
-		// middleware.ClearAuthSession(c)
-
 		session := sessions.Default(c)
 		user := session.Get(userkey)
 		if user != nil {
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
 				"content": "Please logout first",
-				"user":    user,
 			})
 			return
 		}
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{
 			"content": "",
-			"user":    user,
 		})
 		middleware.ClearAuthSession(c)
 
@@ -237,10 +212,10 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 			// Save user ID to session
 			middleware.SaveAuthSession(c, user.ID)
 
-			// 在用户登录成功后保存用户ID到会话
+			// 在用户登入成功後保存用户ID到session
 			session := sessions.Default(c)
 			session.Set(userkey, user.ID)
-			session.Set("Name", user.Name) // 这里假设 user 结构体有一个 Name 字段
+			session.Set("Name", user.Name) // 這裡假設 user 結構體有一个 Name 字段
 			session.Save()
 
 		}
@@ -269,3 +244,6 @@ func (sc *SessionController) LogoutPost() gin.HandlerFunc {
 		c.Redirect(http.StatusSeeOther, "/auth/login")
 	}
 }
+
+// 登入後出現使用者名字
+// 點餐頁面可以出現順暢的總計小計

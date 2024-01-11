@@ -3,28 +3,28 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (22): 
-	- content
-	- base
-	- footer.tmpl
+	- login.tmpl
 	- footer
-	- navigation
-	- index.tmpl
-	- signup.tmpl
-	- home
-	- 
-	- head.tmpl
 	- header.tmpl
 	- header
-	- navigation.tmpl
 	- navlogin
 	- menu.tmpl
-	- order.tmpl
-	- full.tmpl
 	- base.tmpl
+	- content
+	- full.tmpl
 	- head
+	- navigation
+	- order.tmpl
+	- 
+	- index.tmpl
+	- home
 	- navlogin.tmpl
 	- contact.tmpl
-	- login.tmpl
+	- signup.tmpl
+	- base
+	- footer.tmpl
+	- head.tmpl
+	- navigation.tmpl
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
@@ -37,16 +37,16 @@
 [GIN-debug] HEAD   /auth/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] GET    /                         --> github.com/ZhijiunY/restaurant-service-system/controllers.GetIndex (6 handlers)
 [GIN-debug] GET    /menu                     --> github.com/ZhijiunY/restaurant-service-system/controllers.GetMenu.func1 (7 handlers)
-[GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.GetOrder.func1 (7 handlers)
+[GIN-debug] GET    /order/                   --> github.com/ZhijiunY/restaurant-service-system/controllers.GetOrder.func1 (7 handlers)
 [GIN-debug] POST   /order/confirmPrice       --> github.com/ZhijiunY/restaurant-service-system/controllers.ConfirmPrice (6 handlers)
 [GIN-debug] GET    /order/static/*filepath   --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /order/static/*filepath   --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2024-01-09 22:19:44.202805 +0800 CST m=+10.538187494] GET / 200  
-::1 - [2024-01-09 22:19:45.694353 +0800 CST m=+12.029734636] GET /auth/login 400  
-::1 - [2024-01-09 22:19:54.011745 +0800 CST m=+20.347127681] POST /auth/login 303  
-::1 - [2024-01-09 22:19:54.023454 +0800 CST m=+20.358835875] GET /menu 200  
-::1 - [2024-01-09 22:19:57.888425 +0800 CST m=+24.223806821] GET /order 200  
-::1 - [2024-01-09 22:20:01.327532 +0800 CST m=+27.662913675] POST /auth/login 400  
+::1 - [2024-01-11 16:55:26.293278 +0800 CST m=+4.964827834] GET / 200  
+::1 - [2024-01-11 16:55:27.906585 +0800 CST m=+6.578135393] GET /auth/login 400  
+::1 - [2024-01-11 16:55:35.282447 +0800 CST m=+13.953997553] POST /auth/login 303  
+::1 - [2024-01-11 16:55:35.296663 +0800 CST m=+13.968212856] GET /menu 200  
+::1 - [2024-01-11 16:55:37.735943 +0800 CST m=+16.407493531] GET /order/ 200  
+::1 - [2024-01-11 16:55:37.751685 +0800 CST m=+16.423235148] GET /order/static/css/styles.css 304  

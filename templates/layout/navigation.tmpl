@@ -4,7 +4,7 @@
         <div class="navigation container">
           <div class="logo">
             <a href="/"><h1><span> </span>HealthyFood<span> </span> </h1></a>
-            <span>HELLO {{ .Name}}</span>
+            <span>HELLO</span>
           </div>
 
           <div class="menu">
@@ -28,9 +28,6 @@
                 <li class="nav-item">
                   <a href="/contact" class="nav-link scroll-link">Contact</a>
                 </li>
-                <li class="nav-item">
-                  <a href="/user/login" class="nav-link scroll-link">Hi {{.name}}</a>
-                </li>
                 <li>
                   <form action="/auth/login" method="post">
                     <input type="submit" name="" value="LOGOUT">
@@ -45,6 +42,6 @@
             <i class="fas fa-bars"></i>
           </div>
         </div>
-      </nav>
+    </nav>
 
 {{end}}

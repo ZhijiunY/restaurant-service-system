@@ -57,16 +57,60 @@ links.map(link => {
 
 AOS.init();
 
+// document.addEventListener('DOMContentLoaded', function() {
+//   function calculateTotal() {
+//     var total = 0;
+//     document.querySelectorAll('.quantity').forEach(function(input) {
+//       var price = parseFloat(input.getAttribute('data-price'));
+//       var quantity = parseInt(input.value);
+//       total += price * quantity;
+//     });
+//     document.getElementById('totalPrice').textContent = total.toFixed(2) + '元';
+//   }
 
-function CalculateTotal() {
-  var total = 0;
-  var items = document.getElementsByClassName('item');
+//   document.querySelectorAll('.quantity').forEach(function(input) {
+//     input.addEventListener('change', calculateTotal);
+//   });
 
-  for (var i = 0; i < items.length; i++) {
-      var price = parseFloat(items[i].getElementsByClassName('price')[0].innerText);
-      var quantity = parseInt(items[i].getElementsByClassName('quantity')[0].value);
-      total += price * quantity;
+//   calculateTotal();
+// });
+
+// document.addEventListener('DOMContentLoaded', function() {
+//   function calculateTotal() {
+//       var total = 0;
+//       document.querySelectorAll('.quantity').forEach(function(input) {
+//           var price = parseFloat(input.getAttribute('data-price'));
+//           var quantity = parseInt(input.value);
+//           total += price * quantity;
+//       });
+//       document.getElementById('totalPrice').textContent = total.toFixed(2) + '元';
+//   }
+
+//   document.querySelectorAll('.quantity').forEach(function(input) {
+//       input.addEventListener('change', calculateTotal);
+//   });
+
+//   calculateTotal();
+// });
+
+// 
+document.addEventListener('DOMContentLoaded', function() {
+  const quantities = document.querySelectorAll('.quantity');
+  const totalPriceElement = document.getElementById('totalPrice');
+
+  function updateTotalPrice() {
+      let total = 0;
+      quantities.forEach(quantity => {
+          const price = parseFloat(quantity.dataset.price);
+          const amount = parseInt(quantity.value);
+          total += price * amount;
+      });
+      totalPriceElement.textContent = total.toFixed(2);
   }
 
-  document.getElementById('totalPrice').innerText = '總金額: ' + total + '元';
-}
+  quantities.forEach(quantity => {
+      quantity.addEventListener('input', updateTotalPrice);
+  });
+
+  updateTotalPrice();
+});

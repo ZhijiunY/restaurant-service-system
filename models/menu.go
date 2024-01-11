@@ -10,6 +10,7 @@ import (
 type Menu struct {
 	gorm.Model
 	ID          uuid.UUID `gorm:"primaryKey" json:"id"`
+	FoodType    string    `gorm:"foodType" json:"foodType"`
 	Name        string    `gorm:"not null" json:"name"`
 	Description string    `gorm:"not null" json:"description"`
 	Price       float64   `gorm:"not null" json:"price"`
