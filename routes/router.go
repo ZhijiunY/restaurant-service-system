@@ -40,25 +40,25 @@ func InitRouter() *gin.Engine {
 	router.Static("/static", "./static")
 
 	// Grouping routes
+	// need authentication
+	MainRoutes := router.Group("/")
+	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
+		MainRoutes.GET("/", controllers.GetIndex)
+		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu())
+		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
+
+	}
+
 	// auth
 	AuthRoutes := router.Group("/auth")
 	{
-		AuthRoutes.GET("/login", controllers.NewSessionController(store).LoginGet())
+		AuthRoutes.GET("/getlogin", controllers.NewSessionController(store).LoginGet())
 		AuthRoutes.GET("/signup", controllers.NewSessionController(store).SignupGet())
 		AuthRoutes.POST("/login", controllers.NewSessionController(store).LoginPost())
 		AuthRoutes.POST("/logout", controllers.NewSessionController(store).LogoutPost())
 		AuthRoutes.POST("/signup", controllers.NewSessionController(store).SignupPost())
 
 		AuthRoutes.Static("/static", "./static")
-	}
-
-	// need authentication
-	MainRoutes := router.Group("/")
-	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
-		MainRoutes.GET("/", controllers.GetIndex)
-		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu())
-		// MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
-
 	}
 
 	// user
@@ -75,13 +75,5 @@ func InitRouter() *gin.Engine {
 		// UserRoutes.POST("/users/login", controllers.NewSessionController(store).Login())
 	}
 
-	// order
-	OrderRoutes := router.Group("/order")
-	{
-		OrderRoutes.GET("/", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
-		OrderRoutes.POST("/confirmPrice", controllers.ConfirmPrice)
-
-		OrderRoutes.Static("/static", "./static")
-	}
 	return router
 }

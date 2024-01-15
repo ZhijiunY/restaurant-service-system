@@ -17,8 +17,9 @@ import (
 var Secret = []byte("secret")
 
 const (
-	userkey  = "user"
-	emailkey = "email"
+	userkey     = "user"
+	emailkey    = "email"
+	sessionName = "my-session"
 )
 
 // Save session using cookies
@@ -28,22 +29,22 @@ func EnableCookieSession() gin.HandlerFunc {
 
 }
 
-// UserAuthSessionMiddle
-// 中間鍵 驗證是否已登入
-func AuthSession() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		session := sessions.Default(c)
-		sessionID := session.Get(userkey)
-		if sessionID == nil {
-			c.Redirect(http.StatusMovedPermanently, "/user/login")
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message:": "need to login!",
-			})
-			return
-		}
-		c.Next()
-	}
-}
+// // UserAuthSessionMiddle
+// // 中間鍵 驗證是否已登入
+// func AuthSession() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		session := sessions.Default(c)
+// 		sessionID := session.Get(userkey)
+// 		if sessionID == nil {
+// 			c.Redirect(http.StatusMovedPermanently, "/user/login")
+// 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+// 				"message:": "need to login!",
+// 			})
+// 			return
+// 		}
+// 		c.Next()
+// 	}
+// }
 
 func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
 	session := sessions.Default(c)

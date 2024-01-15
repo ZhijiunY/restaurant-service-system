@@ -20,22 +20,3 @@ type Order struct {
 	Created_at    time.Time   `json:"created_at"`
 	Updated_at    time.Time   `json:"updated_at"`
 }
-
-// GetTotalCount
-func (order *Order) GetTotalQuantity() int64 {
-	var totalQuantity int64
-	for _, v := range order.OrderItems {
-		totalQuantity = totalQuantity + v.Quantity
-	}
-	return totalQuantity
-}
-
-// GetTotalPrice
-func (order *Order) GetTotalPrice() float64 {
-	var totalPrice float64
-
-	for _, v := range order.OrderItems {
-		totalPrice = totalPrice + (float64(v.Quantity) * v.Menu.Price)
-	}
-	return totalPrice
-}

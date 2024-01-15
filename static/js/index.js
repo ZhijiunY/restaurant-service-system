@@ -31,67 +31,35 @@ window.addEventListener("scroll", () => {
 const links = [...document.querySelectorAll(".scroll-link")];
 links.map(link => {
   link.addEventListener("click", e => {
-    e.preventDefault();
+    const href = e.target.getAttribute("href");
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      // 執行頁面內跳轉的代碼
+      const id = href.slice(1);
+      const element = document.getElementById(id);
+      const fixNav = nav.classList.contains("fix-nav");
+      let position = element.offsetTop - navHeight;
 
-    const id = e.target.getAttribute("href").slice(1);
-    const element = document.getElementById(id);
-    const fixNav = nav.classList.contains("fix-nav");
-    let position = element.offsetTop - navHeight;
+      if (!fixNav) {
+        position = position;
+      }
 
-    if (!fixNav) {
-      position = position;
+      window.scrollTo({
+        top: position,
+        left: 0,
+      });
+      menu.classList.remove("show");
     }
-
-    window.scrollTo({
-      top: position,
-      left: 0,
-    });
-
-    menu.classList.remove("show");
   });
 });
+
+
 
 // document.querySelector('.loginBox input[type="submit"]').addEventListener('click', function() {
 //   window.location.href = '/login';
 // });
 
 AOS.init();
-
-// document.addEventListener('DOMContentLoaded', function() {
-//   function calculateTotal() {
-//     var total = 0;
-//     document.querySelectorAll('.quantity').forEach(function(input) {
-//       var price = parseFloat(input.getAttribute('data-price'));
-//       var quantity = parseInt(input.value);
-//       total += price * quantity;
-//     });
-//     document.getElementById('totalPrice').textContent = total.toFixed(2) + '元';
-//   }
-
-//   document.querySelectorAll('.quantity').forEach(function(input) {
-//     input.addEventListener('change', calculateTotal);
-//   });
-
-//   calculateTotal();
-// });
-
-// document.addEventListener('DOMContentLoaded', function() {
-//   function calculateTotal() {
-//       var total = 0;
-//       document.querySelectorAll('.quantity').forEach(function(input) {
-//           var price = parseFloat(input.getAttribute('data-price'));
-//           var quantity = parseInt(input.value);
-//           total += price * quantity;
-//       });
-//       document.getElementById('totalPrice').textContent = total.toFixed(2) + '元';
-//   }
-
-//   document.querySelectorAll('.quantity').forEach(function(input) {
-//       input.addEventListener('change', calculateTotal);
-//   });
-
-//   calculateTotal();
-// });
 
 // 
 document.addEventListener('DOMContentLoaded', function() {

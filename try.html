@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Favicon -->
+        <!-- Font Awesome -->
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        />
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+        <!-- Custom StyleSheet -->
+        <link rel="stylesheet" href="./static/css/styles.css" />
+        <!-- <title>Restaurant Website</title> -->
+        <title>{{ .title }}</title>
+      </head>
+  <body>
+    <!--Navigation -->
+    <nav class="nav">
+        <div class="navigation container">
+          <div class="logo">
+            <a href="/"><h1><span> </span>HealthyFood<span> </span> </h1></a>
+          </div>
+
+          <div class="menu">
+            <div class="top-nav">
+              <div class="logo">
+                <h1>FastFood<span>.</span></h1>
+              </div>
+              <div class="close">
+                <i class="fas fa-times"></i>
+              </div>
+            </div>
+
+            <div>
+              <ul class="nav-list">
+                <li class="nav-item">
+                  <a href="/menu" class="nav-link scroll-link">Menu</a>
+                </li>
+                <li class="nav-item">
+                  <a href="/order" class="nav-link scroll-link">Manager</a>
+                </li>
+                <li class="nav-item">
+                  <a href="/contact" class="nav-link scroll-link">Contact</a>
+                </li>
+                <li>
+                  <form action="/auth/logout" method="post">
+                    <input type="submit" name="" value="LOGOUT">
+                  </form>
+                </li>
+              </ul>
+            </div>
+          
+          </div>
+
+          <div class="hamburger">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+    </nav>
+
+    
+    <!-- Main -->
+
+    <!-- Menu -->
+    <section class="section" id="menu">
+      <div class="title">
+        <h1>Our Menu</h1>
+        <p>If you're looking for a culinary experience that will tantalize 
+            your taste buds, look no further than "Our Menu.</p>
+        <p>" Featuring a wide variety of dishes crafted from only the freshest 
+            ingredients, you're sure to find something that will satisfy 
+            your cravings and leave you wanting more.</p>
+      </div>
+      <div class="container menu-center">
+        <div class="menu-box" data-aos="fade-right" data-aos-duration="2000">
+          <img src="static/img/pic1.jpg" alt="" />
+          <p>Special Hambuger</p>
+        </div>
+        <div class="menu-box" data-aos="fade-down" data-aos-duration="2000">
+          <img src="static/img/pic2.jpg" alt="" />
+          <p>Special Apple</p>
+        </div>
+        <div class="menu-box" data-aos="fade-left" data-aos-duration="2000">
+          <img src="static/img/pic3.jpg" alt="" />
+          <p>Special Banana</p>
+        </div>
+        <div class="menu-box" data-aos="fade-right" data-aos-duration="2000">
+          <img src="static/img/pic4.jpg" alt="" />
+          <p>Special Pizza</p>
+        </div>
+        <div class="menu-box" data-aos="fade-up" data-aos-duration="2000">
+          <img src="static/img/pic6.jpg" alt="" />
+          <p>Special Salads</p>
+        </div>
+        <div class="menu-box" data-aos="fade-left" data-aos-duration="2000">
+          <img src="static/img/pic7.jpg" alt="" />
+          <p>Special Cake</p>
+        </div>
+      </div>
+      <div class="menu-order">
+        <a href="/order/order" data-aos="flip-down"  data-aos-duration="2000">ORDER</a>
+      </div>
+
+    </section>
+      <br>
+      <br>
+      
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Copyright &copy; 2023<span>ZhijiunY</span>. All Right Reserved</p>
+    </footer>
+     
+
+    <!-- Custom Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="./static/js/index.js"></script>
+  </body>
+</html>

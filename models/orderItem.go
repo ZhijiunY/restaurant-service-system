@@ -18,9 +18,3 @@ type OrderItem struct {
 	Created_at time.Time `json:"created_at"`
 	Updated_at time.Time `json:"updated_at"`
 }
-
-// GetNotePrice  金額小計
-func (OrderItem *OrderItem) GetNotePrice() float64 {
-	price := OrderItem.Menu.Price
-	return float64(OrderItem.Quantity) * price
-}

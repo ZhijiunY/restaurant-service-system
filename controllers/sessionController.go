@@ -42,7 +42,7 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		user := session.Get(userkey)
 		if user == nil {
-			c.Redirect(http.StatusMovedPermanently, "/user/login")
+			c.Redirect(http.StatusMovedPermanently, "/auth/getlogin")
 
 			return
 		}
@@ -130,7 +130,7 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 		middleware.SaveAuthSession(c, newUser.ID)
 
 		// Redirect to login page
-		c.Redirect(http.StatusSeeOther, "/auth/login")
+		c.Redirect(http.StatusSeeOther, "/auth/getlogin")
 
 	}
 }
@@ -140,10 +140,22 @@ func (sc *SessionController) LoginGet() gin.HandlerFunc {
 		session := sessions.Default(c)
 		user := session.Get(userkey)
 		if user != nil {
+			// session.Delete(userkey)
+
+			// if err := session.Save(); err != nil {
+			// 	// 处理保存会话时的错误
+			// 	c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
+			// 		"content": "Internal Server Error",
+			// 	})
+			// 	return
+			// }
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
 				"content": "Please logout first",
 			})
 			return
+			// // 重定向到登录页面
+			// c.Redirect(http.StatusFound, "/login")
+			// return
 		}
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{
 			"content": "",
@@ -151,15 +163,6 @@ func (sc *SessionController) LoginGet() gin.HandlerFunc {
 		middleware.ClearAuthSession(c)
 
 	}
-}
-
-func RenderNavigation(c *gin.Context) {
-	session := sessions.Default(c)
-	userName := session.Get("Name")
-
-	c.HTML(http.StatusOK, "navigation.tmpl", gin.H{
-		"Name": userName,
-	})
 }
 
 func (sc *SessionController) LoginPost() gin.HandlerFunc {
@@ -241,7 +244,7 @@ func (sc *SessionController) LogoutPost() gin.HandlerFunc {
 		}
 
 		// Redirect to the login page or home page
-		c.Redirect(http.StatusSeeOther, "/auth/login")
+		c.Redirect(http.StatusSeeOther, "/auth/getlogin")
 	}
 }
 
