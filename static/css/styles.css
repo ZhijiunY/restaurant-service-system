@@ -457,7 +457,6 @@ li {
 }
 /* ---------- */
 /* order ----------*/
-/* order ----------*/
 .orderBox {
 	position: absolute;
 	top: 50%;
@@ -469,14 +468,14 @@ li {
 	background: whitesmoke;
 	background-position: center;
 	display: flex;
-	flex-wrap: wrap; /* 允許元素換行 */
+	flex-wrap: wrap; 
 	justify-content: space-around;
 }
 
 section {
-	flex: 1; /* 讓每個 section 元素佔用相等的空間 */
+	flex: 1; 
 	padding: 10px;
-	width: auto; /* 基於內容自動調整寬度 */
+	width: auto; 
 	margin-bottom: 20px;
 }
 

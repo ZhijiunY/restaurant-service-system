@@ -61,7 +61,7 @@ links.map(link => {
 
 AOS.init();
 
-// 
+// TotalPrice
 document.addEventListener('DOMContentLoaded', function() {
   const quantities = document.querySelectorAll('.quantity');
   const totalPriceElement = document.getElementById('totalPrice');
@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const amount = parseInt(quantity.value);
           total += price * amount;
       });
+      console.log("Total Price:", total); // 調試信息
       totalPriceElement.textContent = total.toFixed(2);
   }
 
@@ -82,3 +83,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
   updateTotalPrice();
 });
+
+// // store in redis
+// function submitOrder() {
+//   var orderData = {
+//       items: []
+//   };
+
+//   document.querySelectorAll('.orderBox .quantity').forEach(input => {
+//       var itemRow = input.closest('tr');
+//       var item = {
+//           name: itemRow.cells[0].textContent,
+//           description: itemRow.cells[1].textContent,
+//           price: parseFloat(input.getAttribute('data-price')),
+//           quantity: parseInt(input.value)
+//       };
+//       if (item.quantity > 0) {
+//           orderData.items.push(item);
+//       }
+//   });
+
+//   fetch('http://localhost:8080/submit-order',{
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(orderData)
+//   })
+//   .then(response => response.json())
+//   .then(data => console.log("Order stored in Redis:", data))
+//   .catch(error => console.error('Error:', error));
+// }

@@ -4,49 +4,46 @@
 <body>
 <header class="header" id="home">
    {{template "navigation" .}}
-	<section class="section" >
-		<div class="orderBox">
+    <section class="section">
+        <div class="orderBox">
 			<!-- 遍歷每種食物類型 -->
-			{{range $foodType, $items := .categorizedMenu}}
-			<section>
-				<p>{{$foodType}}</p> <!-- 顯示食物類型作為標題 -->
-				<table>
-					<tr>
-						<td>品項</td>
-						<td>描述</td>
-						<td>單價</td>
-						<td>數量</td>
-					</tr>
-					<!-- 遍歷當前食物類型的所有菜單項目 -->
-					{{range $items}}
-					<tr>
-						<td>{{ .Name }}</td>
-						<td>{{ .Description }}</td>
-						<td>{{ .Price }}</td>
-						<td>
-							<input type="number" class="quantity" min="0" value="0" data-price="{{ .Price }}" style="text-align:center;width: 50px;"/>
-						</td>
-					</tr>
-					{{end}}
-				</table>
-			</section>
-			{{end}}
-			<section>
-				<div>
-					<span> 總金額 <span id="totalPrice"></span>元</span> 
-					<input type="submit" name="submit" value="放入購物車">
-				</div>
-			</section>
-			
-		</div>
-	</section>
+            <form action="/submit-order" method="post">
+                {{range $foodType, $items := .categorizedMenu}}
+                <div class="foodTypeSection">
+                    <p>{{$foodType}}</p>
+                    <table class="foodTable">
+                        <tr>
+                            <td>品項</td>
+							<td>描述</td>
+							<td>單價</td>
+							<td>數量</td>
+                        </tr>
+                        {{range $index, $item := $items}}
+                        <tr>
+                            <td>{{ $item.Name }}</td>
+                            <td>{{ $item.Description }}</td>
+                            <td>{{ $item.Price }}</td>
+                            <td><input type="number" class="quantity" name="items[{{$index}}][quantity]" min="0" value="0" data-price="{{ $item.Price }}" /></td>
+                        </tr>
+                        {{end}}
+                    </table>
+                </div>
+                {{end}}
+                <div class="submitSection">
+                    <span> 總金額 <span id="totalPrice"></span>元</span>
+                    <!-- <input type="button" name="submit" value="放入購物車" onclick="submitOrder()"></input> -->
+					<button type="submit" value="放入購物車" onclick="submitOrder()">放入購物車</button>
+                </div>
+            </form>
+        </div>
+    </section>
 </header>
 
-	{{template "footer" .}}
+{{template "footer" .}}
 
-	 <!-- Custom Script -->
-	 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-	 <script src="./static/js/index.js"></script>
-	
+<!-- Custom Script -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="./static/js/index.js"></script>
+
 </body>
 </html>

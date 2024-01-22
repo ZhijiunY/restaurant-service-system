@@ -2,35 +2,37 @@
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] Loaded HTML Templates (22): 
-	- head
-	- home
-	- order.tmpl
-	- index.tmpl
-	- login.tmpl
-	- content
-	- base
-	- head.tmpl
-	- footer
-	- 
-	- footer.tmpl
-	- header.tmpl
-	- navigation.tmpl
-	- menu.tmpl
+[GIN-debug] Loaded HTML Templates (23): 
 	- navlogin.tmpl
-	- navlogin
-	- contact.tmpl
+	- login.tmpl
 	- signup.tmpl
 	- base.tmpl
 	- full.tmpl
-	- header
+	- head.tmpl
+	- header.tmpl
 	- navigation
+	- home
+	- header
+	- navlogin
+	- contact.tmpl
+	- head
+	- navigation.tmpl
+	- menu.tmpl
+	- order.tmpl
+	- 
+	- index.tmpl
+	- base
+	- content
+	- footer.tmpl
+	- footer
+	- cart.tmpl
 
 [GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
 [GIN-debug] GET    /                         --> github.com/ZhijiunY/restaurant-service-system/controllers.GetIndex (6 handlers)
 [GIN-debug] GET    /menu                     --> github.com/ZhijiunY/restaurant-service-system/controllers.GetMenu.func1 (7 handlers)
-[GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.GetOrder.func1 (7 handlers)
+[GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.(*OrderController).GetOrder.func1 (7 handlers)
+[GIN-debug] POST   /submit-order             --> github.com/ZhijiunY/restaurant-service-system/controllers.(*OrderController).SubmitOrder.func1 (7 handlers)
 [GIN-debug] GET    /auth/getlogin            --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginGet.func1 (6 handlers)
 [GIN-debug] GET    /auth/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupGet.func1 (6 handlers)
 [GIN-debug] POST   /auth/login               --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginPost.func1 (6 handlers)
@@ -41,11 +43,5 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2024-01-15 17:05:23.708775 +0800 CST m=+4.738846381] GET / 200  
-::1 - [2024-01-15 17:05:25.491348 +0800 CST m=+6.521419573] GET /auth/getlogin 400  
-::1 - [2024-01-15 17:05:27.557667 +0800 CST m=+8.587738718] POST /auth/login 303  
-::1 - [2024-01-15 17:05:27.566445 +0800 CST m=+8.596516474] GET /menu 200  
-::1 - [2024-01-15 17:05:29.958122 +0800 CST m=+10.988193491] GET /order 200  
-::1 - [2024-01-15 17:05:31.274157 +0800 CST m=+12.304228617] GET /menu 200  
-::1 - [2024-01-15 17:05:33.392599 +0800 CST m=+14.422670501] GET /order 200  
-::1 - [2024-01-15 17:05:35.810967 +0800 CST m=+16.841039113] GET /cart 404  
+::1 - [2024-01-22 21:41:49.616679 +0800 CST m=+5.145127406] GET /order 200  
+::1 - [2024-01-22 21:41:54.984824 +0800 CST m=+10.513272251] POST /submit-order 500  

@@ -1,11 +1,14 @@
 package routes
 
 import (
+	"context"
+
 	"github.com/ZhijiunY/restaurant-service-system/controllers"
 	"github.com/ZhijiunY/restaurant-service-system/middleware"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 )
 
 const (
@@ -19,7 +22,7 @@ var secret = []byte("secret")
 // 	panic("unimplemented")
 // }
 
-func InitRouter() *gin.Engine {
+func InitRouter(redisClient *redis.Client) *gin.Engine {
 	router := gin.New()
 
 	router.Use(middleware.Logger())
@@ -33,6 +36,7 @@ func InitRouter() *gin.Engine {
 	store := cookie.NewStore(secret)
 	router.Use(sessions.Sessions(sessionName, store))
 	sessionController := controllers.NewSessionController(store)
+	orderController := controllers.NewOrderController(redisClient, context.Background())
 	router.Use(sessionController.LoadAndSave())
 
 	// connect to template | Static file
@@ -45,8 +49,8 @@ func InitRouter() *gin.Engine {
 	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
 		MainRoutes.GET("/", controllers.GetIndex)
 		MainRoutes.GET("/menu", controllers.NewSessionController(store).AuthRequired(), controllers.GetMenu())
-		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), controllers.GetOrder())
-
+		MainRoutes.GET("/order", controllers.NewSessionController(store).AuthRequired(), orderController.GetOrder())
+		MainRoutes.POST("/submit-order", controllers.NewSessionController(store).AuthRequired(), orderController.SubmitOrder())
 	}
 
 	// auth
