@@ -1,47 +1,61 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] Loaded HTML Templates (23): 
-	- navlogin.tmpl
-	- login.tmpl
+	- 
+	- footer
+	- contact.tmpl
+	- home
+	- navigation
+	- index.tmpl
 	- signup.tmpl
 	- base.tmpl
 	- full.tmpl
 	- head.tmpl
 	- header.tmpl
-	- navigation
-	- home
+	- cart.tmpl
+	- menu.tmpl
+	- login.tmpl
+	- footer.tmpl
 	- header
 	- navlogin
-	- contact.tmpl
+	- order.tmpl
+	- content
+	- base
 	- head
 	- navigation.tmpl
-	- menu.tmpl
-	- order.tmpl
-	- 
-	- index.tmpl
-	- base
-	- content
-	- footer.tmpl
-	- footer
-	- cart.tmpl
+	- navlogin.tmpl
 
-[GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
-[GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
-[GIN-debug] GET    /                         --> github.com/ZhijiunY/restaurant-service-system/controllers.GetIndex (6 handlers)
-[GIN-debug] GET    /menu                     --> github.com/ZhijiunY/restaurant-service-system/controllers.GetMenu.func1 (7 handlers)
-[GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.(*OrderController).GetOrder.func1 (7 handlers)
-[GIN-debug] POST   /submit-order             --> github.com/ZhijiunY/restaurant-service-system/controllers.(*OrderController).SubmitOrder.func1 (7 handlers)
-[GIN-debug] GET    /auth/getlogin            --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginGet.func1 (6 handlers)
-[GIN-debug] GET    /auth/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupGet.func1 (6 handlers)
-[GIN-debug] POST   /auth/login               --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginPost.func1 (6 handlers)
-[GIN-debug] POST   /auth/logout              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LogoutPost.func1 (6 handlers)
-[GIN-debug] POST   /auth/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupPost.func1 (6 handlers)
-[GIN-debug] GET    /auth/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
-[GIN-debug] HEAD   /auth/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (6 handlers)
+[GIN-debug] GET    /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (8 handlers)
+[GIN-debug] HEAD   /static/*filepath         --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (8 handlers)
+[GIN-debug] GET    /                         --> github.com/ZhijiunY/restaurant-service-system/controllers.GetIndex (8 handlers)
+[GIN-debug] GET    /menu                     --> github.com/ZhijiunY/restaurant-service-system/controllers.GetMenu.func1 (9 handlers)
+[GIN-debug] GET    /order                    --> github.com/ZhijiunY/restaurant-service-system/controllers.(*OrderController).GetOrder.func1 (9 handlers)
+[GIN-debug] POST   /submit-order             --> github.com/ZhijiunY/restaurant-service-system/controllers.(*OrderController).SubmitOrder.func1 (9 handlers)
+[GIN-debug] GET    /auth/getlogin            --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginGet.func1 (8 handlers)
+[GIN-debug] GET    /auth/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupGet.func1 (8 handlers)
+[GIN-debug] POST   /auth/login               --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LoginPost.func1 (8 handlers)
+[GIN-debug] POST   /auth/logout              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).LogoutPost.func1 (8 handlers)
+[GIN-debug] POST   /auth/signup              --> github.com/ZhijiunY/restaurant-service-system/controllers.(*SessionController).SignupPost.func1 (8 handlers)
+[GIN-debug] GET    /auth/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (8 handlers)
+[GIN-debug] HEAD   /auth/static/*filepath    --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (8 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [2024-01-22 21:41:49.616679 +0800 CST m=+5.145127406] GET /order 200  
-::1 - [2024-01-22 21:41:54.984824 +0800 CST m=+10.513272251] POST /submit-order 500  
+::1 - [2024-01-24 18:25:48.802941 +0800 CST m=+30.745179012] GET / 200  
+[GIN] 2024/01/24 - 18:25:48 | 200 |   24.177042ms |             ::1 | GET      "/"
+::1 - [2024-01-24 18:25:48.842865 +0800 CST m=+30.785103325] GET /static/js/index.js 304  
+[GIN] 2024/01/24 - 18:25:48 | 304 |      307.77µs |             ::1 | GET      "/static/js/index.js"
+::1 - [2024-01-24 18:25:50.250941 +0800 CST m=+32.193179659] GET /auth/getlogin 400  
+[GIN] 2024/01/24 - 18:25:50 | 400 |    3.345439ms |             ::1 | GET      "/auth/getlogin"
+::1 - [2024-01-24 18:25:51.517338 +0800 CST m=+33.459576286] POST /auth/login 303  
+[GIN] 2024/01/24 - 18:25:51 | 303 |   91.489528ms |             ::1 | POST     "/auth/login"
+::1 - [2024-01-24 18:25:51.525975 +0800 CST m=+33.468213099] GET /menu 200  
+[GIN] 2024/01/24 - 18:25:51 | 200 |    3.397155ms |             ::1 | GET      "/menu"
+::1 - [2024-01-24 18:25:53.723126 +0800 CST m=+35.665363997] GET /order 200  
+[GIN] 2024/01/24 - 18:25:53 | 200 |    4.825234ms |             ::1 | GET      "/order"
+::1 - [2024-01-24 18:26:03.961401 +0800 CST m=+45.903638920] POST /submit-order 500  
+[GIN] 2024/01/24 - 18:26:03 | 500 |    5.312616ms |             ::1 | POST     "/submit-order"

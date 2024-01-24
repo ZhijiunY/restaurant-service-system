@@ -10,10 +10,6 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-var (
-	ctx = context.Background()
-)
-
 type OrderController struct {
 	RedisClient *redis.Client
 	Ctx         context.Context
@@ -24,11 +20,6 @@ func NewOrderController(redisClient *redis.Client, ctx context.Context) *OrderCo
 		RedisClient: redisClient,
 		Ctx:         ctx,
 	}
-}
-
-type OrderItem struct {
-	Name     string `json:"name"`
-	Quantity int    `json:"quantity"`
 }
 
 // Order page
@@ -47,7 +38,7 @@ func (oc *OrderController) GetOrder() gin.HandlerFunc {
 			{FoodType: "飲料", Name: "鮮榨果汁", Description: "*****", Price: 60},
 		}
 
-		// 按 FoodType 分類的菜单项
+		// 按 FoodType 分類的菜單項
 		categorizedMenu := make(map[string][]models.Menu)
 		for _, item := range menusItems {
 			categorizedMenu[item.FoodType] = append(categorizedMenu[item.FoodType], item)
@@ -59,40 +50,40 @@ func (oc *OrderController) GetOrder() gin.HandlerFunc {
 			totalPrice += item.Price
 		}
 
-		// 将分类后的菜单和总价传递给模板
+		// 將分類後的菜單和總價傳遞給模板
 		c.HTML(http.StatusOK, "order.tmpl", gin.H{
 			"title":           "Order Website",
 			"categorizedMenu": categorizedMenu,
-			// "CalculateTotal":  totalPrice,
 		})
 	}
 }
 
 func (oc *OrderController) SubmitOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var orderItems []struct {
-			Name     string  `form:"name"`
-			Quantity int     `form:"quantity"`
-			Price    float64 `form:"price"`
-		}
 
-		if err := c.ShouldBind(&orderItems); err != nil {
+		var orderItems []models.OrderItem
+		if err := c.BindJSON(&orderItems); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
+		// 假設 rdb 是一個已經配置的 Redis 客戶端實例
 		jsonData, err := json.Marshal(orderItems)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to serialize data"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal order items"})
 			return
 		}
 
-		err = oc.RedisClient.Set(ctx, "orderData", jsonData, 0).Err()
+		err = oc.RedisClient.Set(oc.Ctx, "orderItems", jsonData, 0).Err()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to store data in Redis"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save order items to Redis"})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "Order stored in Redis"})
+		c.JSON(http.StatusOK, gin.H{
+			"message":    "Order submitted successfully",
+			"orderItems": orderItems,
+		})
+
 	}
 }

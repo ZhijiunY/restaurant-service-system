@@ -53,12 +53,6 @@ links.map(link => {
   });
 });
 
-
-
-// document.querySelector('.loginBox input[type="submit"]').addEventListener('click', function() {
-//   window.location.href = '/login';
-// });
-
 AOS.init();
 
 // TotalPrice
@@ -67,15 +61,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const totalPriceElement = document.getElementById('totalPrice');
 
   function updateTotalPrice() {
-      let total = 0;
-      quantities.forEach(quantity => {
-          const price = parseFloat(quantity.dataset.price);
-          const amount = parseInt(quantity.value);
-          total += price * amount;
-      });
-      console.log("Total Price:", total); // 調試信息
-      totalPriceElement.textContent = total.toFixed(2);
-  }
+    let total = 0;
+    quantities.forEach(quantity => {
+        const price = parseFloat(quantity.dataset.price);
+        const amount = parseInt(quantity.value);
+        total += price * amount;
+    });
+    console.log("Total Price:", total); // 調試信息
+    if (totalPriceElement) {
+        totalPriceElement.textContent = total.toFixed(2);
+    } else {
+        console.error('Total Price element not found');
+    }
+}
 
   quantities.forEach(quantity => {
       quantity.addEventListener('input', updateTotalPrice);
@@ -84,33 +82,38 @@ document.addEventListener('DOMContentLoaded', function() {
   updateTotalPrice();
 });
 
-// // store in redis
-// function submitOrder() {
-//   var orderData = {
-//       items: []
-//   };
+// submitOrder
+function submitOrder() {
+  var orderItems = [];
+  document.querySelectorAll('.foodTypeSection').forEach(section => {
+      section.querySelectorAll('.foodTable tr').forEach((row, index) => {
+          if (index > 0) { // 跳過標題行
+              var quantityInput = row.querySelector('.quantity');
+              var quantity = parseInt(quantityInput.value, 10);
+              if (quantity > 0) {
+                  orderItems.push({
+                      name: row.querySelector('input[name*="name"]').value,
+                      description: row.querySelector('input[name*="description"]').value,
+                      price: parseFloat(row.querySelector('input[name*="price"]').value),
+                      quantity: quantity
+                  });
+              }
+          }
+      });
+  });
 
-//   document.querySelectorAll('.orderBox .quantity').forEach(input => {
-//       var itemRow = input.closest('tr');
-//       var item = {
-//           name: itemRow.cells[0].textContent,
-//           description: itemRow.cells[1].textContent,
-//           price: parseFloat(input.getAttribute('data-price')),
-//           quantity: parseInt(input.value)
-//       };
-//       if (item.quantity > 0) {
-//           orderData.items.push(item);
-//       }
-//   });
-
-//   fetch('http://localhost:8080/submit-order',{
-//       method: 'POST',
-//       headers: {
-//           'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(orderData)
-//   })
-//   .then(response => response.json())
-//   .then(data => console.log("Order stored in Redis:", data))
-//   .catch(error => console.error('Error:', error));
-// }
+  // 使用 AJAX 發送數據
+  sendOrderData(orderItems);
+}
+function sendOrderData(orderItems) {
+  fetch('/submit-order', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderItems)
+  })
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+}

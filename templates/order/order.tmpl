@@ -7,7 +7,7 @@
     <section class="section">
         <div class="orderBox">
 			<!-- 遍歷每種食物類型 -->
-            <form action="/submit-order" method="post">
+            <form action="/submit-order" method="post" id="orderForm">
                 {{range $foodType, $items := .categorizedMenu}}
                 <div class="foodTypeSection">
                     <p>{{$foodType}}</p>
@@ -23,7 +23,13 @@
                             <td>{{ $item.Name }}</td>
                             <td>{{ $item.Description }}</td>
                             <td>{{ $item.Price }}</td>
-                            <td><input type="number" class="quantity" name="items[{{$index}}][quantity]" min="0" value="0" data-price="{{ $item.Price }}" /></td>
+                            <td>
+                                <input type="hidden" name="items[{{$index}}][name]" value="{{ $item.Name }}" />
+                                <input type="hidden" name="items[{{$index}}][description]" value="{{ $item.Description }}" />
+                                <input type="hidden" name="items[{{$index}}][price]" value="{{ $item.Price }}" />
+                                <input type="number" class="quantity" name="items[{{$index}}].quantity" min="0" value="0" data-price="{{ $item.Price }}" />
+
+                            </td>
                         </tr>
                         {{end}}
                     </table>
@@ -31,8 +37,8 @@
                 {{end}}
                 <div class="submitSection">
                     <span> 總金額 <span id="totalPrice"></span>元</span>
-                    <!-- <input type="button" name="submit" value="放入購物車" onclick="submitOrder()"></input> -->
-					<button type="submit" value="放入購物車" onclick="submitOrder()">放入購物車</button>
+                    <!-- <button type="submit" >放入購物車</button> -->
+                    <button type="button" onclick="submitOrder()">放入購物車</button>
                 </div>
             </form>
         </div>
