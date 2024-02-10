@@ -80,10 +80,11 @@ func (oc *OrderController) SubmitOrder() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"message":    "Order submitted successfully",
-			"orderItems": orderItems,
-		})
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"message":    "Order submitted successfully",
+		// 	"orderItems": orderItems,
+		// })
+		c.Redirect(http.StatusSeeOther, "/show-orders") // 替换 '/new-page-url' 为您的目标页面 URL
 
 	}
 }

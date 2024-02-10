@@ -9,9 +9,7 @@ import (
 
 type OrderItem struct {
 	gorm.Model
-	ID uuid.UUID `gorm:"primaryKey" json:"id"`
-	// OrderID     int64     `gorm:"not null" json:"order_id"`
-	// MenuID      int64     `gorm:"not null" json:"menu_id"`
+	ID          uuid.UUID `gorm:"primaryKey" json:"id"`
 	Quantity    int       `json:"quantity" gorm:"not null"  form:"quantity"`
 	Name        string    `json:"name" gorm:"type:varchar(100);not null" form:"name"`
 	Description string    `gorm:"type:text" form:"description"`

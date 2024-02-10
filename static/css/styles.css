@@ -462,7 +462,6 @@ li {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	padding: 40px;
 	border-radius: 10px;
 	box-sizing: border-box;
 	background: whitesmoke;
@@ -470,6 +469,10 @@ li {
 	display: flex;
 	flex-wrap: wrap; 
 	justify-content: space-around;
+
+  max-height: 500px; /* 设置最大高度 */
+  overflow-y: auto;  /* 启用垂直滚动条 */
+  padding: 15px;
 }
 
 section {
@@ -515,23 +518,30 @@ section {
 	background: olive;
 }
 
-/* 根據不同螢幕尺寸調整樣式 */
-@media screen and (max-width: 988px) {
-	.orderBox {
-		/* 根據需要調整寬度和高度 */
-	}
+.foodTable {
+  width: 100%;
+  /* 其他表格样式 */
 }
 
-@media screen and (max-width: 640px) {
-	.orderBox {
-		/* 根據需要調整寬度和高度 */
-	}
+/* 小屏幕设备（如手机） */
+@media (max-width: 600px) {
+  .orderBox {
+      max-height: 300px;
+  }
 }
 
-@media screen and (max-width: 320px) {
-	.orderBox {
-		/* 根據需要調整寬度和高度 */
-	}
+/* 中等屏幕设备（如平板） */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .orderBox {
+      max-height: 400px;
+  }
+}
+
+/* 大屏幕设备（如桌面电脑） */
+@media (min-width: 1025px) {
+  .orderBox {
+      max-height: 500px;
+  }
 }
 
 /* ---------- */

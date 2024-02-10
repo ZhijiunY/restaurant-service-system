@@ -105,6 +105,8 @@ function submitOrder() {
   // 使用 AJAX 發送數據
   sendOrderData(orderItems);
 }
+
+// sendOrderData
 function sendOrderData(orderItems) {
   fetch('/submit-order', {
       method: 'POST',

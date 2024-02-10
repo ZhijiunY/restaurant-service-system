@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    {{template "head" .}}
+<body>
+<header class="header" id="home">
+   {{template "navigation" .}}
+    <section class="section">
+        <h1>Order Items</h1>
+    <div>
+        {{range .orderItems}}
+            <p>Name: {{.Name}}, Description: {{.Description}}, Price: {{.Price}}, Quantity: {{.Quantity}}</p>
+        {{end}}
+    </div>
+    </section>
+</header>
+
+{{template "footer" .}}
+
+<!-- Custom Script -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="./static/js/index.js"></script>
+
+</body>
+</html>
