@@ -8,6 +8,7 @@ import (
 	"github.com/ZhijiunY/restaurant-service-system/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"github.com/skip2/go-qrcode"
 )
 
 type OrderController struct {
@@ -101,8 +102,76 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 			return
 		}
 
+		var totalAmount float64
+		for _, item := range orderItems {
+			totalAmount += item.Price * float64(item.Quantity)
+		}
+
 		c.HTML(http.StatusOK, "show-orders.tmpl", gin.H{
-			"OrderItems": orderItems,
+			"OrderItems":  orderItems,
+			"TotalAmount": totalAmount,
 		})
+	}
+}
+
+// func (oc *OrderController) ShowOrderQRCode() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		// 从 Redis 获取 orderItems 数据
+// 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
+// 		if err != nil {
+// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
+// 			return
+// 		}
+
+// 		// 生成 QR 碼
+// 		qrCode, err := qrcode.Encode(jsonData, qrcode.Medium, 256)
+// 		if err != nil {
+// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate QR code"})
+// 			return
+// 		}
+
+// 		// 生成並顯示QR碼
+// 		c.Writer.Header().Set("Content-Type", "image/png")
+// 		c.Writer.Write(qrCode)
+// 	}
+// }
+
+func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 從 Redis 獲取 orderItems 數據
+		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
+			return
+		}
+
+		var orderItems []models.OrderItem
+		err = json.Unmarshal([]byte(jsonData), &orderItems)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to unmarshal order items"})
+			return
+		}
+
+		// 只包含品名、數量和價格的數據格式化為JSON字符串
+		simplifiedData := make([]map[string]interface{}, len(orderItems))
+		for i, item := range orderItems {
+			simplifiedData[i] = map[string]interface{}{
+				"品名": item.Name,
+				"數量": item.Quantity,
+				"價格": item.Price,
+			}
+		}
+		simplifiedJSON, _ := json.Marshal(simplifiedData)
+
+		// 使用simplifiedJSON生成QR碼
+		qrCode, err := qrcode.Encode(string(simplifiedJSON), qrcode.Medium, 256)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate QR code"})
+			return
+		}
+
+		// 直接返回QR碼圖片
+		c.Writer.Header().Set("Content-Type", "image/png")
+		c.Writer.Write(qrCode)
 	}
 }

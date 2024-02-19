@@ -48,6 +48,7 @@ func InitRouter(redisClient *redis.Client) *gin.Engine {
 		MainRoutes.GET("/order", sessionController.AuthRequired(), orderController.GetOrder())
 		MainRoutes.POST("/submit-order", sessionController.AuthRequired(), orderController.SubmitOrder())
 		MainRoutes.GET("/show-orders", sessionController.AuthRequired(), orderController.ShowOrders())
+		MainRoutes.GET("/generate-qr", sessionController.AuthRequired(), orderController.GenerateOrderQRCode())
 	}
 
 	// auth

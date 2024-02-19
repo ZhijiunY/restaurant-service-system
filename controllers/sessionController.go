@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -42,10 +43,12 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		user := session.Get(userkey)
 		if user == nil {
-			c.Redirect(http.StatusMovedPermanently, "/auth/getlogin")
+			log.Println("用户未登录，重定向到登录页面")
+			c.Redirect(http.StatusSeeOther, "/auth/getlogin")
 
 			return
 		}
+		log.Println("用户已登录，继续处理请求")
 		c.Next()
 	}
 
