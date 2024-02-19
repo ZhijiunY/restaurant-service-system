@@ -5,12 +5,25 @@
 <header class="header" id="home">
    {{template "navigation" .}}
     <section class="section">
-        <h1>Order Items</h1>
-    <div>
-        {{range .orderItems}}
-            <p>Name: {{.Name}}, Description: {{.Description}}, Price: {{.Price}}, Quantity: {{.Quantity}}</p>
-        {{end}}
-    </div>
+        <div class="orderBox">
+            <h1>訂單資料</h1>
+
+            <table>
+                <tr>
+                  <th>品名</th>
+                  <th>數量</th>
+                  <th>價格</th>
+                </tr>
+                {{range .OrderItems}}
+                <tr>
+                  <td>{{.Name}}</td>
+                  <td>{{.Quantity}}</td>
+                  <td>{{.Price}}</td>
+                </tr>
+                {{end}}
+            </table>  
+            <a href="/">取餐條碼</a>
+
     </section>
 </header>
 

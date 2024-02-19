@@ -8,9 +8,7 @@ import (
 
 type Order struct {
 	gorm.Model
-	ID string `gorm:"primaryKey" json:"id"`
-	// UserID        int64       `gorm:"not null" json:"user_id"`
-	// TableID       int64       `gorm:"not null" json:"table_id"`
+	ID            string      `gorm:"primaryKey" json:"id"`
 	OrderDate     time.Time   `gorm:"not null" json:"order_date"`
 	TotalPrice    int64       `gorm:"not null" json:"total_price"`
 	TotalQuantity int64       `gorm:"not null" json:"total_quantity"`

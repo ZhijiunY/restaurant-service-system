@@ -47,7 +47,7 @@ func InitRouter(redisClient *redis.Client) *gin.Engine {
 		MainRoutes.GET("/menu", sessionController.AuthRequired(), controllers.GetMenu())
 		MainRoutes.GET("/order", sessionController.AuthRequired(), orderController.GetOrder())
 		MainRoutes.POST("/submit-order", sessionController.AuthRequired(), orderController.SubmitOrder())
-		// MainRoutes.GET("/show-orders", sessionController.AuthRequired(), orderController.ShowOrders())
+		MainRoutes.GET("/show-orders", sessionController.AuthRequired(), orderController.ShowOrders())
 	}
 
 	// auth

@@ -67,7 +67,6 @@ func (oc *OrderController) SubmitOrder() gin.HandlerFunc {
 			return
 		}
 
-		// 假設 rdb 是一個已經配置的 Redis 客戶端實例
 		jsonData, err := json.Marshal(orderItems)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal order items"})
@@ -80,11 +79,30 @@ func (oc *OrderController) SubmitOrder() gin.HandlerFunc {
 			return
 		}
 
-		// c.JSON(http.StatusOK, gin.H{
-		// 	"message":    "Order submitted successfully",
-		// 	"orderItems": orderItems,
-		// })
-		c.Redirect(http.StatusSeeOther, "/show-orders") // 替换 '/new-page-url' 为您的目标页面 URL
+		c.Redirect(http.StatusSeeOther, "/show-orders")
 
+	}
+}
+
+func (oc *OrderController) ShowOrders() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 从 Redis 获取 orderItems 数据
+		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
+			return
+		}
+
+		var orderItems []models.OrderItem
+		// 解析 JSON 数据到 orderItems
+		err = json.Unmarshal([]byte(jsonData), &orderItems)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to unmarshal order items"})
+			return
+		}
+
+		c.HTML(http.StatusOK, "show-orders.tmpl", gin.H{
+			"OrderItems": orderItems,
+		})
 	}
 }
