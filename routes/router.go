@@ -6,62 +6,83 @@ import (
 	"github.com/ZhijiunY/restaurant-service-system/controllers"
 	"github.com/ZhijiunY/restaurant-service-system/middleware"
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/sessions/postgres"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"gorm.io/gorm"
 )
 
 const (
 	sessionName = "my-session"
-	userkey     = "user"
+	secretKey   = "secret"
 )
 
-var secret = []byte("secret")
-
-func InitRouter(redisClient *redis.Client) *gin.Engine {
+func InitRouter(redisClient *redis.Client, db *gorm.DB) *gin.Engine {
 	router := gin.Default()
 
-	router.Use(middleware.Logger())
-	router.Use(gin.Recovery())
+	configureMiddlewares(router, db)
+	configureRoutes(router, redisClient, db)
 
-	// BasicAuth
-	router.Use(gin.BasicAuth(gin.Accounts{"Simba": "1234"}))
+	return router
+}
 
-	// session
-	middleware.EnableCookieSession()
-	store := cookie.NewStore(secret)
+func configureMiddlewares(router *gin.Engine, db *gorm.DB) {
+	router.Use(
+		middleware.Logger(), gin.Recovery(),
+		gin.BasicAuth(gin.Accounts{"Simba": "1234"}),
+	)
+
+	// 配置會話存儲
+	store := configureSessionStore(db)
+	router.Use(sessions.Sessions(sessionName, store))
+}
+
+func configureSessionStore(db *gorm.DB) sessions.Store {
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic("failed to get sql.DB from gorm.DB: " + err.Error())
+	}
+
+	store, err := postgres.NewStore(sqlDB, []byte(secretKey), nil, []byte("something-very-secret"))
+	if err != nil {
+		panic("failed to create session store: " + err.Error())
+	}
+	return store
+}
+
+func configureRoutes(router *gin.Engine, redisClient *redis.Client, db *gorm.DB) {
+	store := configureSessionStore(db)
 	sessionController := controllers.NewSessionController(store)
 	orderController := controllers.NewOrderController(redisClient, context.Background())
 
-	router.Use(sessions.Sessions(sessionName, store))
-	router.Use(sessionController.LoadAndSave())
-
-	// connect to template | Static file
 	router.LoadHTMLGlob("./templates/**/*")
 	router.Static("/static", "./static")
 
-	// Grouping routes
-	MainRoutes := router.Group("/")
-	{ // 需要通過 middleware.AuthSessionMiddle() 才能進入後面的路由
-		MainRoutes.GET("/", controllers.GetIndex)
-		MainRoutes.GET("/menu", sessionController.AuthRequired(), controllers.GetMenu())
-		MainRoutes.GET("/order", sessionController.AuthRequired(), orderController.GetOrder())
-		MainRoutes.POST("/submit-order", sessionController.AuthRequired(), orderController.SubmitOrder())
-		MainRoutes.GET("/show-orders", sessionController.AuthRequired(), orderController.ShowOrders())
-		MainRoutes.GET("/generate-qr", sessionController.AuthRequired(), orderController.GenerateOrderQRCode())
-	}
+	setupMainRoutes(router, sessionController)
+	setupOrderRoutes(router, orderController)
+	setupAuthRoutes(router, sessionController)
+}
 
-	// auth
-	AuthRoutes := router.Group("/auth")
-	{
-		AuthRoutes.GET("/getlogin", sessionController.LoginGet())
-		AuthRoutes.GET("/signup", sessionController.SignupGet())
-		AuthRoutes.POST("/login", sessionController.LoginPost())
-		AuthRoutes.POST("/logout", sessionController.LogoutPost())
-		AuthRoutes.POST("/signup", sessionController.SignupPost())
+func setupMainRoutes(router *gin.Engine, sessionController *controllers.SessionController) {
+	router.GET("/", controllers.GetIndex)
+	router.GET("/menu", sessionController.AuthRequired(), controllers.GetMenu())
+}
 
-		AuthRoutes.Static("/static", "./static")
-	}
+func setupOrderRoutes(router *gin.Engine, orderController *controllers.OrderController) {
+	orderRoutes := router.Group("/order")
+	orderRoutes.GET("/", orderController.GetOrder())
+	orderRoutes.POST("/submit-order", orderController.SubmitOrder())
+	orderRoutes.GET("/show-orders", orderController.ShowOrders())
+	orderRoutes.GET("/generate-qr", orderController.GenerateOrderQRCode())
+	orderRoutes.Static("/static", "./static")
+}
 
-	return router
+func setupAuthRoutes(router *gin.Engine, sessionController *controllers.SessionController) {
+	authRoutes := router.Group("/auth")
+	authRoutes.GET("/getlogin", sessionController.LoginGet())
+	authRoutes.GET("/signup", sessionController.SignupGet())
+	authRoutes.POST("/login", sessionController.LoginPost())
+	authRoutes.POST("/logout", sessionController.LogoutPost())
+	authRoutes.POST("/signup", sessionController.SignupPost())
+	authRoutes.Static("/static", "./static")
 }

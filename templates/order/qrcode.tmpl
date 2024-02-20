@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Order QR Code</title>
-</head>
+<html lang="en">
+    {{template "head" .}}
 <body>
-    <h2>Order QR Code</h2>
-    <img src="/generate-qr" alt="Order QR Code">
-    <a href="/orders">返回訂單</a>
+<header class="header" id="home">
+    <img src="/generate-qr" alt="Order QR Code" />
+</header>
+
+{{template "footer" .}}
+
+<!-- Custom Script -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="./static/js/index.js"></script>
+
 </body>
 </html>

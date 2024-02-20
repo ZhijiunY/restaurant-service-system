@@ -6,8 +6,10 @@ import (
 	"net/http"
 
 	"github.com/ZhijiunY/restaurant-service-system/models"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"github.com/gofrs/uuid"
 	"github.com/skip2/go-qrcode"
 )
 
@@ -138,6 +140,12 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 
 func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		// 从会话中获取用户ID和名称
+		session := sessions.Default(c)
+		userID, _ := session.Get("userkey").(uuid.UUID) // 确保类型转换正确
+		userName, _ := session.Get("Name").(string)
+
 		// 從 Redis 獲取 orderItems 數據
 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
 		if err != nil {
@@ -156,9 +164,11 @@ func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 		simplifiedData := make([]map[string]interface{}, len(orderItems))
 		for i, item := range orderItems {
 			simplifiedData[i] = map[string]interface{}{
-				"品名": item.Name,
-				"數量": item.Quantity,
-				"價格": item.Price,
+				"UserID":   userID,
+				"UserName": userName,
+				"品名":       item.Name,
+				"數量":       item.Quantity,
+				"價格":       item.Price,
 			}
 		}
 		simplifiedJSON, _ := json.Marshal(simplifiedData)

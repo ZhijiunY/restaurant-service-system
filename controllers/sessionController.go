@@ -52,6 +52,21 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 		c.Next()
 	}
 
+	// 	session := sessions.Default(c)
+	// 	userID := session.Get("userkey") // 假设在登录时，用户ID是以"userkey"为键保存在会话中的
+	// 	if userID == nil {
+	// 		log.Println("用户未登录，重定向到登录页面")
+	// 		// 如果会话中没有"userkey"，说明用户未登录
+	// 		c.Set("warning", "You must log in to see this page!") // 可以设置一个警告信息，但是在Gin中，一般直接使用会话或者是重定向
+	// 		c.Redirect(http.StatusSeeOther, "/auth/getlogin")     // 重定向用户到登录页面
+	// 		c.Abort()                                             // 防止调用后续的处理器
+	// 		return
+	// 	}
+	// 	// 如果用户已登录，继续处理请求
+	// 	log.Println("用户已登录，继续处理请求")
+	// 	c.Next()
+	// }
+
 }
 
 // 註冊頁面
@@ -214,7 +229,7 @@ func (sc *SessionController) LoginPost() gin.HandlerFunc {
 
 			// 在用户登入成功後保存用户ID到session
 			session := sessions.Default(c)
-			session.Set(userkey, user.ID)
+			session.Set("ID", user.ID)
 			session.Set("Name", user.Name) // 這裡假設 user 結構體有一个 Name 字段
 			session.Save()
 

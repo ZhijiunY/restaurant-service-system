@@ -25,15 +25,9 @@ var redisClient *redis.Client
 func main() {
 	// setupLogging()
 
-	// connect to PostgreSQL database
-	utils.ConnectToDb()
-
-	// Migrations
-	migrations.Migrate()
-
-	// Initialize Router
-	router := routes.InitRouter(utils.RedisClient)
-	log.Println("Server started!")
+	utils.ConnectToDb()                                      // connect to database
+	migrations.Migrate()                                     // migrate migrations
+	router := routes.InitRouter(utils.RedisClient, utils.DB) // Initialize Router
+	log.Println("Server started on port 8080")
 	router.Run(":8080")
-
 }

@@ -7,7 +7,7 @@
     <section class="section">
         <div class="orderBox">
 			<!-- 遍歷每種食物類型 -->
-            <form action="/submit-order" method="post" id="orderForm">
+            <form action="/order/submit-order" method="post" id="orderForm">
                 {{range $foodType, $items := .categorizedMenu}}
                 <div class="foodTypeSection">
                     <p>{{$foodType}}</p>

@@ -15,30 +15,34 @@ var (
 )
 
 func ConnectToDb() {
+	connectToPostgres()
+	connectToRedis()
+}
 
+func connectToPostgres() {
+	var err error
+	// PostgreSQL 連接配置
+	dsn := "postgres://postgres:password@localhost:5432/restaurant_service"
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Failed to connect to PostgreSQL: %v", err)
+	}
+	log.Println("Successfully connected to PostgreSQL")
+}
+
+func connectToRedis() {
 	var err error
 	ctx := context.Background()
-
-	// gorm, postgres initialization
-	db, err := gorm.Open(postgres.Open("postgres://postgres:password@localhost:5432/restaurant_service"), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect to postgres")
+	// Redis 連接配置
+	redisOptions := &redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
 	}
-	DB = db
-
-	// Redis initialization
-	RedisClient = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // 或者是你的 Redis 地址
-		Password: "",               // no password set
-		DB:       0,                // use default DB
-	})
-
-	// 檢查 Redis 連接
+	RedisClient = redis.NewClient(redisOptions)
 	_, err = RedisClient.Ping(ctx).Result()
 	if err != nil {
-		log.Fatal("Failed to connect to Redis:", err)
+		log.Fatalf("Failed to connect to Redis: %v", err)
 	}
-
-	log.Println("Connected to PostgreSQL and Redis")
-
+	log.Println("Successfully connected to Redis")
 }
