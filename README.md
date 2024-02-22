@@ -3,6 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/ZhijiunY/restaurant-service-system?status.svg)](https://godoc.org/github.com/ZhijiunY/restaurant-service-system)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ZhijiunY/restaurant-service-system)](https://goreportcard.com/report/github.com/ZhijiunY/restaurant-service-system)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/<YOUR_DOCKER_USERNAME>/<YOUR_IMAGE_NAME>/latest)
+<!-- [中文版](README.zh.md) -->
 
 
 
@@ -44,6 +45,7 @@ go mod tidy
 The project uses **GORM** for database operations. Run migrations to set up your database schema:
 ```
 go run migrations/migrate.go
+![postgreSql](/img/postgresql.png)
 ```
 This will create the necessary tables in your PostgreSQL database.
 5. Running the server:
@@ -52,6 +54,13 @@ To start the server, run:
 go run main.go
 ```
 This will start the Gin web server on **port 8080**.
+
+### Database
+1. PostgreSQL 
+![postgresql](/img/postgresql.png)
+
+2. Redis
+![redis](/img/redis.png) 
 
 ### Usage
 Once the server is running, you can access the following endpoints:
@@ -92,10 +101,17 @@ func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 Redis is used for storing session data, providing fast access and management of session information across requests.
 
 ### Static Files and Templates
-The project serves *static files* and *HTML templates* for the *frontend*. The templates are located in the ./templates directory, and static files (e.g., CSS, JavaScript) are served from the ./static directory.
+The project serves **static files** and **HTML templates** for the **frontend**. The templates are located in the `./templates` directory, and static files (e.g., CSS, JavaScript) are served from the `./static` directory.
 
 ### Logging
 Logging is commented out in the main.go file but can be easily enabled by uncommenting the setupLogging function and its call. This function configures Gin to log to both a file and stdout.
+
+## Technologies Used
+- Go - The main programming language used.
+- Gin - HTTP web framework.
+- PostgreSQL - Open source relational database.
+- Redis - In-memory data structure store, used as a database, cache, and message broker.
+- GORM - ORM library for Golang.
 
 ## Contribution
 Feel free to fork the repository and submit pull requests to contribute to the project.

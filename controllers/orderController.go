@@ -27,6 +27,14 @@ func NewOrderController(redisClient *redis.Client, ctx context.Context) *OrderCo
 // func GetOrder(c *gin.Context) {
 func (oc *OrderController) GetOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		userName := session.Get("Name")
+		if userName == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User Name not found"})
+			return
+		}
+		// userName, _ := c.Get("userName")
+
 		menusItems := []models.Menu{
 			{FoodType: "主食", Name: "北京烤鴨", Description: "**", Price: 380},
 			{FoodType: "主食", Name: "意式千層麵", Description: "*", Price: 240},
@@ -55,6 +63,7 @@ func (oc *OrderController) GetOrder() gin.HandlerFunc {
 		c.HTML(http.StatusOK, "order.tmpl", gin.H{
 			"title":           "Order Website",
 			"categorizedMenu": categorizedMenu,
+			"userName":        userName,
 		})
 	}
 }
@@ -79,14 +88,17 @@ func (oc *OrderController) SubmitOrder() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save order items to Redis"})
 			return
 		}
-
-		c.Redirect(http.StatusSeeOther, "/show-orders")
-
 	}
 }
 
 func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		userName := session.Get("Name")
+		if userName == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User Name not found"})
+			return
+		}
 		// 从 Redis 获取 orderItems 数据
 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
 		if err != nil {
@@ -110,6 +122,7 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 		c.HTML(http.StatusOK, "show-orders.tmpl", gin.H{
 			"OrderItems":  orderItems,
 			"TotalAmount": totalAmount,
+			"userName":    userName,
 		})
 	}
 }

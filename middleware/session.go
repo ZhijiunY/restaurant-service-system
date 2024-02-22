@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/ZhijiunY/restaurant-service-system/models"
-	"github.com/ZhijiunY/restaurant-service-system/utils"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -15,6 +14,15 @@ import (
 
 var Secret = []byte("secret")
 
+// const (
+//
+//	userkey   = "user"
+//	ID        = "ID"
+//	userNamee = "Name"
+//	emailkey  = "email"
+//	mysession = "mysession"
+//
+// )
 const (
 	userkey   = "user"
 	ID        = "userID"
@@ -72,37 +80,25 @@ func GetSessionUserId(c *gin.Context) uuid.UUID {
 	return sessionID.(uuid.UUID)
 }
 
-// 函數從當前請求中獲取使用者的 session 資訊
-// 包括是否有有效的 session、使用者名稱等
-// 並將這些資訊封裝到一個 map 中返回。
-// 在這個函數中，如果當前請求包含有效的 session
-// 還會從資料庫中查詢出相應的使用者資訊。
-func GetUserSession(c *gin.Context) map[string]interface{} {
-	hasSession := HasSession(c)
-	userID := uuid.Nil
-	userName := ""
-	if hasSession {
-		userId := GetSessionUserId(c)
-
-		var user models.User
-		if err := utils.DB.Where("id = ?", userId).First(&user).Error; err == nil {
-			userID = user.ID
-		}
-
-	}
-	// 從HTTP請求參數中獲取名稱
-	data := make(map[string]interface{})
-	data["hasSession"] = hasSession
-	data["userId"] = userID
-	data["userName"] = userName
-	return data
-
-}
-
 // CheckSession for User
 func CheckSession(c *gin.Context) bool {
 	var user models.User
 	session := sessions.Default(c)
 	sessionID := session.Get(user.ID)
 	return sessionID != nil
+}
+
+func UserAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		userName := session.Get("Name")
+		if userName == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User Name not found"})
+			c.Abort()
+			return
+		}
+		// 將 userName 設置到 Gin 上下文中，以便後續的處理器可以使用
+		c.Set("userName", userName)
+		c.Next()
+	}
 }
