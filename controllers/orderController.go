@@ -9,8 +9,6 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
-	"github.com/gofrs/uuid"
-	"github.com/skip2/go-qrcode"
 )
 
 type OrderController struct {
@@ -116,23 +114,62 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 	}
 }
 
-// func (oc *OrderController) ShowOrderQRCode() gin.HandlerFunc {
+// func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 // 	return func(c *gin.Context) {
-// 		// 从 Redis 获取 orderItems 数据
+
+// 		session := sessions.Default(c)
+// 		// userID, _ := session.Get("userkey").(uuid.UUID) // 确保类型转换正确
+// 		// userName, _ := session.Get("Name").(string)
+
+// 		// userID := session.Get("ID").(uuid.UUID)  // 修改這裡以匹配LoginPost中的鍵名
+// 		// userName := session.Get("Name").(string) // 直接獲取userName，假設它總是存在的
+// 		userID, exists := session.Get("ID").(uuid.UUID)
+// 		if !exists {
+// 			c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in session"})
+// 			return
+// 		}
+
+// 		user, err := models.GetUserById(userID)
+// 		if err != nil {
+// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve user from database"})
+// 			return
+// 		}
+
+// 		// 從 Redis 獲取 orderItems 數據
 // 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
 // 		if err != nil {
 // 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
 // 			return
 // 		}
 
-// 		// 生成 QR 碼
-// 		qrCode, err := qrcode.Encode(jsonData, qrcode.Medium, 256)
+// 		var orderItems []models.OrderItem
+// 		err = json.Unmarshal([]byte(jsonData), &orderItems)
+// 		if err != nil {
+// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to unmarshal order items"})
+// 			return
+// 		}
+
+// 		// 只包含品名、數量和價格的數據格式化為JSON字符串
+// 		simplifiedData := make([]map[string]interface{}, len(orderItems))
+// 		for i, item := range orderItems {
+// 			simplifiedData[i] = map[string]interface{}{
+// 				"UserID":   user.ID,
+// 				"UserName": user.Name,
+// 				"品名":       item.Name,
+// 				"數量":       item.Quantity,
+// 				"價格":       item.Price,
+// 			}
+// 		}
+// 		simplifiedJSON, _ := json.Marshal(simplifiedData)
+
+// 		// 使用simplifiedJSON生成QR碼
+// 		qrCode, err := qrcode.Encode(string(simplifiedJSON), qrcode.Medium, 256)
 // 		if err != nil {
 // 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate QR code"})
 // 			return
 // 		}
 
-// 		// 生成並顯示QR碼
+// 		// 直接返回QR碼圖片
 // 		c.Writer.Header().Set("Content-Type", "image/png")
 // 		c.Writer.Write(qrCode)
 // 	}
@@ -140,48 +177,91 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 
 func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// 	session := sessions.Default(c)
+		// 	sessionID := session.Get("user.ID") // 直接獲取 session 中的 UserID
+		// 	if sessionID == nil {
+		// 		c.JSON(http.StatusBadRequest, gin.H{
+		// 			"error": "User ID not found in session",
+		// 		})
+		// 		return
+		// 	}
 
-		// 从会话中获取用户ID和名称
-		session := sessions.Default(c)
-		userID, _ := session.Get("userkey").(uuid.UUID) // 确保类型转换正确
-		userName, _ := session.Get("Name").(string)
+		// 	// userID, ok := sessionID.(uuid.UUID) // 進行類型斷言
+		// 	// if !ok {
+		// 	// 	c.JSON(http.StatusBadRequest, gin.H{
+		// 	// 		"error": "User ID in session is not of type uuid.UUID",
+		// 	// 	})
+		// 	// 	return
+		// 	// }
 
-		// 從 Redis 獲取 orderItems 數據
-		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
+		// 	// user, err := models.GetUserById(userID) // 假設 GetUserById 正確實現並且能處理錯誤
+		// 	// if err != nil {
+		// 	// 	c.JSON(http.StatusInternalServerError, gin.H{
+		// 	// 		"error": "Failed to retrieve user from database",
+		// 	// 	})
+		// 	// 	return
+		// 	// }
+
+		// 	// 從 Redis 獲取 orderItems 數據，這部分代碼保持不變
+		// 	jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
+		// 	if err != nil {
+		// 		c.JSON(http.StatusInternalServerError, gin.H{
+		// 			"error": "Failed to retrieve order items from Redis",
+		// 		})
+		// 		return
+		// 	}
+
+		// 	var orderItems []models.OrderItem
+		// 	err = json.Unmarshal([]byte(jsonData), &orderItems)
+		// 	if err != nil {
+		// 		c.JSON(http.StatusInternalServerError, gin.H{
+		// 			"error": "Failed to unmarshal order items",
+		// 		})
+		// 		return
+		// 	}
+
+		// 	// 使用查詢到的用戶資訊和訂單項目生成 QR 碼數據
+		// 	simplifiedData := make([]map[string]interface{}, len(orderItems))
+		// 	for i, item := range orderItems {
+		// 		simplifiedData[i] = map[string]interface{}{
+		// 			"UserID":   session.Get("user.ID"),
+		// 			"UserName": session.Get("Name"),
+		// 			"品名":       item.Name,
+		// 			"數量":       item.Quantity,
+		// 			"價格":       item.Price,
+		// 		}
+		// 	}
+		// 	simplifiedJSON, _ := json.Marshal(simplifiedData)
+
+		// 	// 生成 QR 碼
+		// 	qrCode, err := qrcode.Encode(string(simplifiedJSON), qrcode.Medium, 256)
+		// 	if err != nil {
+		// 		c.JSON(http.StatusInternalServerError, gin.H{
+		// 			"error": "Failed to generate QR code",
+		// 		})
+		// 		return
+		// 	}
+
+		// 	// 直接返回 QR 碼圖片
+		// 	c.Writer.Header().Set("Content-Type", "image/png")
+		// 	c.Writer.Write(qrCode)
+		// }
+		session := sessions.Default(c) // 獲取當前的 session
+
+		// 從 session 中獲取用戶 ID 和 Name
+		userID := session.Get("ID")
+		userName := session.Get("Name")
+
+		// 檢查用戶 ID 和 Name 是否存在
+		if userID == nil || userName == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "未找到用戶信息或用戶未登入"})
 			return
 		}
 
-		var orderItems []models.OrderItem
-		err = json.Unmarshal([]byte(jsonData), &orderItems)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to unmarshal order items"})
-			return
-		}
-
-		// 只包含品名、數量和價格的數據格式化為JSON字符串
-		simplifiedData := make([]map[string]interface{}, len(orderItems))
-		for i, item := range orderItems {
-			simplifiedData[i] = map[string]interface{}{
-				"UserID":   userID,
-				"UserName": userName,
-				"品名":       item.Name,
-				"數量":       item.Quantity,
-				"價格":       item.Price,
-			}
-		}
-		simplifiedJSON, _ := json.Marshal(simplifiedData)
-
-		// 使用simplifiedJSON生成QR碼
-		qrCode, err := qrcode.Encode(string(simplifiedJSON), qrcode.Medium, 256)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate QR code"})
-			return
-		}
-
-		// 直接返回QR碼圖片
-		c.Writer.Header().Set("Content-Type", "image/png")
-		c.Writer.Write(qrCode)
+		// 使用從 session 中獲取的用戶 ID 和 Name 生成響應
+		c.JSON(http.StatusOK, gin.H{
+			"userID":   userID,
+			"userName": userName,
+		})
 	}
 }

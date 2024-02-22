@@ -43,7 +43,7 @@ func configureSessionStore(db *gorm.DB) sessions.Store {
 		panic("failed to get sql.DB from gorm.DB: " + err.Error())
 	}
 
-	store, err := postgres.NewStore(sqlDB, []byte(secretKey), nil, []byte("something-very-secret"))
+	store, err := postgres.NewStore(sqlDB, []byte("secret"))
 	if err != nil {
 		panic("failed to create session store: " + err.Error())
 	}
@@ -59,8 +59,8 @@ func configureRoutes(router *gin.Engine, redisClient *redis.Client, db *gorm.DB)
 	router.Static("/static", "./static")
 
 	setupMainRoutes(router, sessionController)
-	setupOrderRoutes(router, orderController)
 	setupAuthRoutes(router, sessionController)
+	setupOrderRoutes(router, sessionController, orderController)
 }
 
 func setupMainRoutes(router *gin.Engine, sessionController *controllers.SessionController) {
@@ -68,12 +68,12 @@ func setupMainRoutes(router *gin.Engine, sessionController *controllers.SessionC
 	router.GET("/menu", sessionController.AuthRequired(), controllers.GetMenu())
 }
 
-func setupOrderRoutes(router *gin.Engine, orderController *controllers.OrderController) {
+func setupOrderRoutes(router *gin.Engine, sessionController *controllers.SessionController, orderController *controllers.OrderController) {
 	orderRoutes := router.Group("/order")
 	orderRoutes.GET("/", orderController.GetOrder())
-	orderRoutes.POST("/submit-order", orderController.SubmitOrder())
-	orderRoutes.GET("/show-orders", orderController.ShowOrders())
-	orderRoutes.GET("/generate-qr", orderController.GenerateOrderQRCode())
+	orderRoutes.POST("/submit-order", sessionController.AuthRequired(), orderController.SubmitOrder())
+	orderRoutes.GET("/show-orders", sessionController.AuthRequired(), orderController.ShowOrders())
+	orderRoutes.GET("/generate-qr", sessionController.AuthRequired(), orderController.GenerateOrderQRCode())
 	orderRoutes.Static("/static", "./static")
 }
 

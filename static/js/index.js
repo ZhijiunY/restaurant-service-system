@@ -108,7 +108,7 @@ function submitOrder() {
 
 // sendOrderData
 function sendOrderData(orderItems) {
-  fetch('/submit-order', {
+  fetch('/order/submit-order', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'

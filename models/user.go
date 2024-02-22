@@ -27,12 +27,20 @@ func UserDetailByName(name string) (user User) {
 	return
 }
 
-func UserDetailByEmail(email string) (user User) {
+func GetUserByEmail(email string) (user User) {
 	utils.DB.Where("email = ?", email).First(&user)
 	return
 }
 
-func UserDetail(id uuid.UUID) (user User) {
-	utils.DB.Where("id = ?", id).First(&user)
-	return
+//	func GetUserById(id uuid.UUID) (user User) {
+//		utils.DB.Where("id = ?", id).First(&user)
+//		return
+//	}
+func GetUserById(id uuid.UUID) (User, error) {
+	var user User
+	result := utils.DB.Where("id = ?", id).First(&user)
+	if result.Error != nil {
+		return User{}, result.Error
+	}
+	return user, nil
 }

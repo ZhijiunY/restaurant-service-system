@@ -7,7 +7,6 @@ import (
 	"github.com/ZhijiunY/restaurant-service-system/models"
 	"github.com/ZhijiunY/restaurant-service-system/utils"
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
@@ -17,36 +16,20 @@ import (
 var Secret = []byte("secret")
 
 const (
-	userkey     = "user"
-	emailkey    = "email"
-	sessionName = "my-session"
+	userkey   = "user"
+	ID        = "userID"
+	Name      = "userName"
+	emailkey  = "email"
+	mysession = "mysession"
 )
 
-// Save session using cookies
-func EnableCookieSession() gin.HandlerFunc {
-	store := cookie.NewStore([]byte(userkey))
-	return sessions.Sessions("mysession", store)
-
-}
-
-// // UserAuthSessionMiddle
-// // 中間鍵 驗證是否已登入
-// func AuthSession() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		session := sessions.Default(c)
-// 		sessionID := session.Get(userkey)
-// 		if sessionID == nil {
-// 			c.Redirect(http.StatusMovedPermanently, "/user/login")
-// 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-// 				"message:": "need to login!",
-// 			})
-// 			return
-// 		}
-// 		c.Next()
-// 	}
+// // Save session using cookies
+// func EnableCookieSession() gin.HandlerFunc {
+// 	store := cookie.NewStore([]byte(userkey))
+// 	return sessions.Sessions(mysession, store)
 // }
 
-func SaveAuthSession(c *gin.Context, userID uuid.UUID) {
+func SaveIDSession(c *gin.Context, userID uuid.UUID) {
 	session := sessions.Default(c)
 	session.Set(userkey, userID.String()) // 將UUID轉換成字串
 	err := session.Save()
@@ -82,11 +65,11 @@ func ClearAuthSession(c *gin.Context) error {
 // Get Session for User
 func GetSessionUserId(c *gin.Context) uuid.UUID {
 	session := sessions.Default(c)
-	sessionValue := session.Get("userkey")
-	if sessionValue == nil {
+	sessionID := session.Get(ID)
+	if sessionID == nil {
 		return uuid.Nil
 	}
-	return sessionValue.(uuid.UUID)
+	return sessionID.(uuid.UUID)
 }
 
 // 函數從當前請求中獲取使用者的 session 資訊
@@ -118,7 +101,8 @@ func GetUserSession(c *gin.Context) map[string]interface{} {
 
 // CheckSession for User
 func CheckSession(c *gin.Context) bool {
+	var user models.User
 	session := sessions.Default(c)
-	sessionID := session.Get(userkey)
+	sessionID := session.Get(user.ID)
 	return sessionID != nil
 }

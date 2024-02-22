@@ -17,6 +17,8 @@ import (
 const (
 	userkey  = "user"
 	emailkey = "email"
+	ID       = "ID"
+	userName = "Name"
 )
 
 type SessionController struct {
@@ -41,53 +43,44 @@ func (sc *SessionController) LoadAndSave() gin.HandlerFunc {
 func (sc *SessionController) AuthRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		user := session.Get(userkey)
-		if user == nil {
-			log.Println("用户未登录，重定向到登录页面")
-			c.Redirect(http.StatusSeeOther, "/auth/getlogin")
 
+		// 檢查Session中是否存在用戶ID
+		userID := session.Get(ID)
+		if userID == nil {
+			// 如果用戶ID不存在，則認為用戶未登入，重定向到登入頁面
+			log.Println("User is not logged in, redirected to login page")
+			c.Redirect(http.StatusSeeOther, "/auth/getlogin")
+			c.Abort() // 確保不再繼續處理後續的請求處理函數
 			return
 		}
-		log.Println("用户已登录，继续处理请求")
+
+		// 如果用戶ID存在，則認為用戶已登入，繼續處理後續的請求處理函數
+		log.Println("The user is logged in, continue processing the request")
 		c.Next()
 	}
-
-	// 	session := sessions.Default(c)
-	// 	userID := session.Get("userkey") // 假设在登录时，用户ID是以"userkey"为键保存在会话中的
-	// 	if userID == nil {
-	// 		log.Println("用户未登录，重定向到登录页面")
-	// 		// 如果会话中没有"userkey"，说明用户未登录
-	// 		c.Set("warning", "You must log in to see this page!") // 可以设置一个警告信息，但是在Gin中，一般直接使用会话或者是重定向
-	// 		c.Redirect(http.StatusSeeOther, "/auth/getlogin")     // 重定向用户到登录页面
-	// 		c.Abort()                                             // 防止调用后续的处理器
-	// 		return
-	// 	}
-	// 	// 如果用户已登录，继续处理请求
-	// 	log.Println("用户已登录，继续处理请求")
-	// 	c.Next()
-	// }
-
 }
 
 // 註冊頁面
 func (sc *SessionController) SignupGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		user := session.Get(userkey)
-		if user != nil {
-			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-				"content": "Please logout first",
-				"user":    user,
-			})
+
+		// 檢查Session中是否已有用戶ID，來判斷用戶是否已登入
+		userID := session.Get("ID")
+		if userID != nil {
+			// 如果用戶已經登入，則重定向到主頁面或菜單頁面，並提示用戶先登出
+			c.Redirect(http.StatusSeeOther, "/")
 			return
 		}
+
+		// 如果用戶未登入，則顯示註冊頁面
 		c.HTML(http.StatusOK, "signup.tmpl", gin.H{
 			"content": "",
-			"user":    user,
-			"auth":    user,
 		})
 	}
 }
+
+// 根據LoginPost去重構Signup，並使用繁體中文說明
 
 func (sc *SessionController) SignupPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -145,98 +138,72 @@ func (sc *SessionController) SignupPost() gin.HandlerFunc {
 			return
 		}
 
-		middleware.SaveAuthSession(c, newUser.ID)
+		middleware.SaveIDSession(c, newUser.ID)
 
 		// Redirect to login page
 		c.Redirect(http.StatusSeeOther, "/auth/getlogin")
-
 	}
 }
 
 func (sc *SessionController) LoginGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		user := session.Get(userkey)
-		if user != nil {
 
-			session.Clear()
-			err := session.Save()
-			if err != nil {
-				// 處理保存會話時的錯誤
-				c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
-					"content": "Internal Server Error",
-				})
-				return
-			}
+		// 檢查Session中是否已有用戶ID，來判斷用戶是否已登入
+		userID := session.Get("ID")
+		if userID != nil {
+			// 如果已經登入，則重定向到菜單頁面
+			c.Redirect(http.StatusSeeOther, "/menu")
+			return
 		}
-		c.HTML(http.StatusOK, "login.tmpl", gin.H{
-			"content": "",
-		})
-		middleware.ClearAuthSession(c)
+
+		// 如果用戶未登入，則顯示登入頁面
+		c.HTML(http.StatusOK, "login.tmpl", gin.H{"content": ""})
 
 	}
 }
 
 func (sc *SessionController) LoginPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var user models.User
+		// 獲取Session
+		session := sessions.Default(c)
 
-		middleware.ClearAuthSession(c)
+		// 先清除可能存在的Session
+		session.Clear()
 
-		hasSession := middleware.HasSession(c)
-		if hasSession {
-			c.Redirect(http.StatusSeeOther, "/menu")
-		} else {
+		// 獲取表單數據
+		email := c.PostForm("email")
+		password := c.PostForm("password")
 
-			// Get form values
-			email := c.PostForm("email")
-			password := c.PostForm("password")
-
-			// Validate email and password
-			if email == "" || password == "" {
-				c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-					"content": "Email and password cannot be empty",
-					"user":    nil,
-				})
-				fmt.Println("Email and password cannot be empty")
-				return
-			}
-
-			// Check if user exists in database
-			// Verify user credentials
-			err := utils.DB.Where("email = ?", email).First(&user).Error
-			if err != nil {
-				c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-					"content": "Invalid email or password",
-					"user":    nil,
-				})
-				fmt.Println("Invalid email or password")
-				return
-			}
-
-			// Compare password
-			hashedPwd := user.Password
-			if match := middleware.Compare(password, hashedPwd); !match {
-				c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{
-					"err": "incorrect password",
-				})
-				fmt.Println("invalid password")
-				return
-			}
-
-			// Save user ID to session
-			middleware.SaveAuthSession(c, user.ID)
-
-			// 在用户登入成功後保存用户ID到session
-			session := sessions.Default(c)
-			session.Set("ID", user.ID)
-			session.Set("Name", user.Name) // 這裡假設 user 結構體有一个 Name 字段
-			session.Save()
-
+		// 驗證郵箱和密碼是否為空
+		if email == "" || password == "" {
+			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"content": "Email and password cannot be empty"})
+			return
 		}
-		// Redirect to menu page
-		c.Redirect(http.StatusSeeOther, "/menu")
 
+		// 檢查用戶是否存在於數據庫
+		var user models.User
+		if err := utils.DB.Where("email = ?", email).First(&user).Error; err != nil {
+			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"content": "Invalid email or password"})
+			return
+		}
+
+		// 比較密碼
+		if !middleware.Compare(password, user.Password) { // 假設utils.Compare是比較密碼的函數
+			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"err": "Incorrect password"})
+			return
+		}
+
+		// 認證成功，將用戶ID和名稱保存到Session
+		session.Set(ID, user.ID.String())
+		session.Set(userName, user.Name)
+		if err := session.Save(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+			return
+		}
+
+		// 重定向到菜單頁面
+		c.Redirect(http.StatusSeeOther, "/menu")
 	}
 }
 
