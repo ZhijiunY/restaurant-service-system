@@ -51,9 +51,9 @@ func (oc *OrderController) GetOrder() gin.HandlerFunc {
 		}
 
 		for _, menuItem := range menusItems {
-			result := utils.DB.Create(&menuItem) // 创建菜单项
+			result := utils.DB.Create(&menuItem)
 			if result.Error != nil {
-				log.Printf("插入菜单项错误: %v\n", result.Error)
+				log.Printf("插入菜單錯誤: %v\n", result.Error)
 			}
 		}
 
@@ -103,7 +103,7 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "User Name not found"})
 			return
 		}
-		// 从 Redis 获取 orderItems 数据
+		// 從Redis 獲取數據
 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
@@ -111,7 +111,7 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 		}
 
 		var OrderItems []models.OrderItem
-		// 解析 JSON 数据到 orderItems
+		// 解析 JSON 數據到 orderItems
 		err = json.Unmarshal([]byte(jsonData), &OrderItems)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to unmarshal order items"})
@@ -131,77 +131,9 @@ func (oc *OrderController) ShowOrders() gin.HandlerFunc {
 	}
 }
 
-// func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-
-// 		session := sessions.Default(c)
-// 		// userID, _ := session.Get("userkey").(uuid.UUID) // 确保类型转换正确
-// 		// userName, _ := session.Get("Name").(string)
-
-// 		// userID := session.Get("ID").(uuid.UUID)  // 修改這裡以匹配LoginPost中的鍵名
-// 		// userName := session.Get("Name").(string) // 直接獲取userName，假設它總是存在的
-// 		userID, exists := session.Get("ID").(uuid.UUID)
-// 		if !exists {
-// 			c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in session"})
-// 			return
-// 		}
-
-// 		user, err := models.GetUserById(userID)
-// 		if err != nil {
-// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve user from database"})
-// 			return
-// 		}
-
-// 		// 從 Redis 獲取 orderItems 數據
-// 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
-// 		if err != nil {
-// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve order items from Redis"})
-// 			return
-// 		}
-
-// 		var orderItems []models.OrderItem
-// 		err = json.Unmarshal([]byte(jsonData), &orderItems)
-// 		if err != nil {
-// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to unmarshal order items"})
-// 			return
-// 		}
-
-// 		// 只包含品名、數量和價格的數據格式化為JSON字符串
-// 		simplifiedData := make([]map[string]interface{}, len(orderItems))
-// 		for i, item := range orderItems {
-// 			simplifiedData[i] = map[string]interface{}{
-// 				"UserID":   user.ID,
-// 				"UserName": user.Name,
-// 				"品名":       item.Name,
-// 				"數量":       item.Quantity,
-// 				"價格":       item.Price,
-// 			}
-// 		}
-// 		simplifiedJSON, _ := json.Marshal(simplifiedData)
-
-// 		// 使用simplifiedJSON生成QR碼
-// 		qrCode, err := qrcode.Encode(string(simplifiedJSON), qrcode.Medium, 256)
-// 		if err != nil {
-// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate QR code"})
-// 			return
-// 		}
-
-// 		// 直接返回QR碼圖片
-// 		c.Writer.Header().Set("Content-Type", "image/png")
-// 		c.Writer.Write(qrCode)
-// 	}
-// }
-
 func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// session := sessions.Default(c)
-		// sessionID := session.Get("ID") // 直接獲取 session 中的 UserID
-		// if sessionID == nil {
-		// 	c.JSON(http.StatusBadRequest, gin.H{
-		// 		"error": "User ID not found in session",
-		// 	})
-		// 	return
-		// }
+
 		session := sessions.Default(c)
 		userID := session.Get("ID")
 		userName := session.Get("Name")
@@ -211,22 +143,6 @@ func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "未找到用戶信息或用戶未登入"})
 			return
 		}
-
-		// userID, ok := sessionID.(uuid.UUID) // 進行類型斷言
-		// if !ok {
-		// 	c.JSON(http.StatusBadRequest, gin.H{
-		// 		"error": "User ID in session is not of type uuid.UUID",
-		// 	})
-		// 	return
-		// }
-
-		// user, err := models.GetUserById(userID) // 假設 GetUserById 正確實現並且能處理錯誤
-		// if err != nil {
-		// 	c.JSON(http.StatusInternalServerError, gin.H{
-		// 		"error": "Failed to retrieve user from database",
-		// 	})
-		// 	return
-		// }
 
 		// 從 Redis 獲取 orderItems 數據，這部分代碼保持不變
 		jsonData, err := oc.RedisClient.Get(oc.Ctx, "orderItems").Result()
@@ -272,24 +188,4 @@ func (oc *OrderController) GenerateOrderQRCode() gin.HandlerFunc {
 		c.Writer.Header().Set("Content-Type", "image/png")
 		c.Writer.Write(qrCode)
 	}
-
-	// 	//---
-	// 	session := sessions.Default(c) // 獲取當前的 session
-
-	// 	// 從 session 中獲取用戶 ID 和 Name
-	// 	userID := session.Get("ID")
-	// 	userName := session.Get("Name")
-
-	// 	// 檢查用戶 ID 和 Name 是否存在
-	// 	if userID == nil || userName == nil {
-	// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未找到用戶信息或用戶未登入"})
-	// 		return
-	// 	}
-
-	// 	// 使用從 session 中獲取的用戶 ID 和 Name 生成響應
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"userID":   userID,
-	// 		"userName": userName,
-	// 	})
-	// }
 }

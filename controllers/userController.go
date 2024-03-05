@@ -1,10 +1,6 @@
 package controllers
 
 import (
-	"net/http"
-
-	"github.com/ZhijiunY/restaurant-service-system/models"
-	"github.com/ZhijiunY/restaurant-service-system/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -17,26 +13,14 @@ type UserController struct {
 
 // get user
 func GetUsers(c *gin.Context) {
-	// db := utils.DB
 
-	// // 从URL参数中获取用户ID
-	// userID := c.Param("id")
+	// var user models.User
+	// result := utils.DB.Take(&user).Error
 
-	// // 在数据库中查找指定ID的用户
-	// if err := db.Where("id = ?", userID).First(&user).Error; err != nil {
-	// 	c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-	// 	return
-	// }
-
-	// c.JSON(http.StatusOK, user)
-
-	var user models.User
-	result := utils.DB.Take(&user).Error //开头就写最简单的，获取一条记录，不指定排序
-
-	c.JSON(http.StatusOK, gin.H{
-		"code": 1,
-		"data": result,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"code": 1,
+	// 	"data": result,
+	// })
 }
 
 func CreateUser(c *gin.Context) {
