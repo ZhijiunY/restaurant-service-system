@@ -32,9 +32,6 @@ DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_NAME=your_database_name
 DB_PORT=your_database_port
-REDIS_ADDR=your_redis_address
-REDIS_PASSWORD=your_redis_password
-REDIS_DB=your_redis_db
 ```
 3. Install Go dependencies:
 Navigate to the project directory and install the required Go modules:
@@ -54,6 +51,9 @@ To start the server, run:
 go run main.go
 ```
 This will start the Gin web server on **port 8080**.
+
+### System Architecture
+![System Architecture](/img/RSS_System%20Architecture.png)
 
 ### Database
 1. PostgreSQL 
