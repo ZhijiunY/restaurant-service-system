@@ -42,7 +42,6 @@ go mod tidy
 The project uses **GORM** for database operations. Run migrations to set up your database schema:
 ```
 go run migrations/migrate.go
-![postgreSql](/img/postgresql.png)
 ```
 This will create the necessary tables in your PostgreSQL database.
 5. Running the server:
